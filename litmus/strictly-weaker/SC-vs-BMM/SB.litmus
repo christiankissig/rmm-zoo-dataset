@@ -1,0 +1,18 @@
+C SB
+"Store buffering: store->load reordering. The principal relaxation of the
+ Buffered Memory Model (BMM) over SC is exactly the per-thread store buffer, so
+ BMM exhibits the classic SB outcome r0=r0=0 (each load overtakes the program-
+ order-earlier store still sitting in the buffer). SC forbids it: a single
+ global total order consistent with program order cannot place both loads before
+ both stores. BMM is TSO-style and proved TSO-equivalent for this relaxation, so
+ it is modelled here by the portable abstract-tso.cat; SC by abstract-sc.cat."
+{ int x=0; int y=0; }
+P0 (atomic_int* x, atomic_int* y) {
+  atomic_store_explicit(x,1,memory_order_relaxed);
+  int r0 = atomic_load_explicit(y,memory_order_relaxed);
+}
+P1 (atomic_int* x, atomic_int* y) {
+  atomic_store_explicit(y,1,memory_order_relaxed);
+  int r0 = atomic_load_explicit(x,memory_order_relaxed);
+}
+exists (0:r0=0 /\ 1:r0=0)

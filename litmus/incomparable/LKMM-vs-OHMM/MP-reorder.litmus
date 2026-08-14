@@ -1,0 +1,26 @@
+C MP-reorder
+"Message passing with two INDEPENDENT writes on the writer and two independent
+ reads on the reader (no syntactic dependency between the pairs). This is the
+ 'reordering of independent memory accesses' shape. OHMM permits the
+ non-message-passing outcome r1=1 /\ r2=0: its abstract machine has a global
+ event buffer in which independent (non-dependent) events may be reordered
+ before they propagate, so the store to y can surface before the store to x.
+ LKMM, whose ordering is assembled from explicit Linux barriers, has NO such
+ reordering for these plain READ_ONCE/WRITE_ONCE accesses across smp_wmb()/
+ smp_rmb(): with the barriers present it FORBIDS the outcome, and the two models
+ also disagree on which trace-preserving transformations are sound (Table 3 of
+ the survey: LKMM and OHMM have different transformation profiles). Conversely
+ LKMM expresses RCU and smp_* barriers OHMM cannot, so neither subsumes the
+ other. Neither verdict is machine-run here: OHMM has no herd7/cat model, and
+ the plain-access reordering is OHMM-specific, not an LKMM execution. Verdicts
+ are CITED from the literature. See README."
+{ int x=0; int y=0; }
+P0 (atomic_int* x, atomic_int* y) {
+  atomic_store_explicit(x,1,memory_order_relaxed);
+  atomic_store_explicit(y,1,memory_order_relaxed);
+}
+P1 (atomic_int* x, atomic_int* y) {
+  int r1 = atomic_load_explicit(y,memory_order_relaxed);
+  int r2 = atomic_load_explicit(x,memory_order_relaxed);
+}
+exists (1:r1=1 /\ 1:r2=0)

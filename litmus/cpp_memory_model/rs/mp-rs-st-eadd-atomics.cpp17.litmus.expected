@@ -1,0 +1,16 @@
+Test mp-rs-st-eadd-atomics Forbidden
+States 7
+1:a=0; 1:b=0;
+1:a=1; 1:b=0;
+1:a=2; 1:b=1;
+1:a=3; 1:b=0;
+1:a=3; 1:b=1;
+1:a=4; 1:b=0;
+1:a=4; 1:b=1;
+Ok
+Witnesses
+Positive: 16 Negative: 0
+Condition ~exists (1:a=2 /\ 1:b=0)
+Observation mp-rs-st-eadd-atomics Never 0 16
+Hash=7be42b6d808fe9ea4f6e0865ff19afd1
+

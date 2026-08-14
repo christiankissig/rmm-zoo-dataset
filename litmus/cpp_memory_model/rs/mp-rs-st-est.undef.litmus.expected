@@ -1,0 +1,20 @@
+Test mp-rs-st-est-racy Allowed
+States 10
+1:a=0; 1:b=0; [x]=2;
+1:a=0; 1:b=0; [x]=3;
+1:a=1; 1:b=0; [x]=2;
+1:a=1; 1:b=0; [x]=3;
+1:a=2; 1:b=0; [x]=2;
+1:a=2; 1:b=0; [x]=3;
+1:a=3; 1:b=0; [x]=2;
+1:a=3; 1:b=0; [x]=3;
+1:a=3; 1:b=1; [x]=2;
+1:a=3; 1:b=1; [x]=3;
+Undef
+Witnesses
+Positive: 1 Negative: 14
+Flag *undef*
+Condition exists ([x]=2 /\ 1:a=3 /\ 1:b=0)
+Observation mp-rs-st-est-racy Sometimes 1 14
+Hash=5120210740f0781e859ae6261dae5f54
+

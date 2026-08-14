@@ -1,0 +1,18 @@
+C MP+relacq
+"Message passing with a release store and an acquire load. C11's DRF-SC guarantee
+ (a single, global scope) FORBIDS reading the flag set but the data stale: the
+ synchronising release/acquire makes the program race-free and orders the data
+ write before the data read. herd7 -c11 => Never. The HRF companion
+ MP+scoped-relaxed.litmus has the producer and consumer synchronise at a COMMON
+ sub-global scope they do not actually share, so under HRF the program contains a
+ heterogeneous (scoped) data race and the outcome is admitted."
+{ int x=0; int f=0; }
+P0 (int* x, atomic_int* f) {
+  *x = 1;
+  atomic_store_explicit(f,1,memory_order_release);
+}
+P1 (int* x, atomic_int* f) {
+  int r0 = atomic_load_explicit(f,memory_order_acquire);
+  int r1 = *x;
+}
+exists (1:r0=1 /\ 1:r1=0)

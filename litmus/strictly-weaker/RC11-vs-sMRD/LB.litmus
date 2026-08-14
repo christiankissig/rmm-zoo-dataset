@@ -1,0 +1,27 @@
+C LB
+"Load buffering after a sound compiler optimisation. The source program is the
+ false-dependency LB of sMRD Example 1.2: P0 reads x into r1 and stores to y a
+ value that a compiler may constant-fold to 1 (the dependency is semantically
+ false), shown here already folded to a plain y=1. P1 reads y into r2 and stores
+ r2 to x. The outcome r1=1 /\ r2=1 is a genuine coherent execution -- no value is
+ invented, y=1 is really written -- reachable only by reordering P0's load ahead
+ of its store.
+
+ RC11 FORBIDS it: its no-thin-air axiom is the blanket acyclic(po union rf) over
+ ALL accesses, which rejects this load->store cycle regardless of whether the
+ dependency is real. (This is RC11 being deliberately too strong on LB, which is
+ also why constant-folding the store is unsound under RC11.) sMRD ALLOWS it: it
+ bans only dp-union-rf cycles, the false dp edge is gone, so the outcome stands
+ -- matching C11 and what GCC/Clang actually do. The RC11 verdict is machine-run
+ (rc11.cat); the permissive side is shown via c11_orig.cat (C11), which sMRD
+ matches on this outcome. See README."
+{ int x=0; int y=0; }
+P0 (atomic_int* x, atomic_int* y) {
+  int r1 = atomic_load_explicit(x,memory_order_relaxed);
+  atomic_store_explicit(y,1,memory_order_relaxed);
+}
+P1 (atomic_int* x, atomic_int* y) {
+  int r2 = atomic_load_explicit(y,memory_order_relaxed);
+  atomic_store_explicit(x,r2,memory_order_relaxed);
+}
+exists (0:r1=1 /\ 1:r2=1)

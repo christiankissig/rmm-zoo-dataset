@@ -1,0 +1,17 @@
+// sMRD Example 1.1a (mordor-family syntax): load buffering with a FALSE
+// dependency masked by undefined behaviour. The store to y is guarded by a
+// computation (1/!r1) that is DEFINED only when r1 == 0; a compiler may assume
+// well-definedness, constant-fold the store to y := 1, and break the
+// read(x)->write(y) dependency. sMRD removes this semantically-false dependency
+// and ALLOWS r0=r1=1; MRD, reasoning over concrete values, keeps the dependency
+// and FORBIDS it. (Approximated here as a constant-folded store; the UB guard is
+// what distinguishes the two models -- see README.)
+x := 0; y := 0;
+{
+  r0 := x;
+  y := 1            // sMRD: false dep removed (UB-justified); MRD: dep retained
+}|||{
+  r1 := y;
+  x := r1
+}
+%% allow (r0 = 1 && r1 = 1) []     // sMRD verdict; MRD forbids this outcome

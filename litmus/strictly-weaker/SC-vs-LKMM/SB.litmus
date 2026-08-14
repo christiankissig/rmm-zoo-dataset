@@ -1,0 +1,24 @@
+C SB
+(*
+ * Store buffering with plain *_ONCE accesses and no barrier between each
+ * thread's store and its load. Allowed under LKMM, forbidden under SC.
+ * Witnesses SC -> LKMM (LKMM is strictly weaker).
+ *
+ * Check with herd7 and the kernel model:
+ *   herd7 -model linux-kernel.cat SB.litmus   # Sometimes 0:r0=0 1:r1=0
+ *)
+{}
+
+P0(int *x, int *y)
+{
+	WRITE_ONCE(*x, 1);
+	int r0 = READ_ONCE(*y);
+}
+
+P1(int *x, int *y)
+{
+	WRITE_ONCE(*y, 1);
+	int r1 = READ_ONCE(*x);
+}
+
+exists (0:r0=0 /\ 1:r1=0)

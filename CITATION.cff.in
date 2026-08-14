@@ -1,0 +1,31 @@
+# Citation metadata for the Relaxed Memory Model Zoo dataset.
+#
+# Generated from CITATION.cff.in by tools/render.py: the version and release date
+# below are stamped in from the git tag at build time (see RELEASING.md), and the
+# result is published with the dataset it describes, at
+#
+#   https://rmm-zoo.kissig.org/data/CITATION.cff
+cff-version: 1.2.0
+message: "If you use the Relaxed Memory Model Zoo (the dataset or the map), please cite it as below."
+title: "The Relaxed Memory Model Zoo"
+abstract: >-
+  An interactive, openly published map of hardware and programming-language
+  memory models, ordered by the inclusion of their allowed execution
+  behaviours (strength), together with the machine-readable dataset
+  (models.json: models, ordering edges with typed evidence, references, and
+  per-model property vectors) behind it.
+type: dataset
+authors:
+  - family-names: Kissig
+    given-names: Christian
+version: "@VERSION@"
+date-released: "@DATE@"
+license: BSD-3-Clause
+url: "https://rmm-zoo.kissig.org"
+repository-code: "https://github.com/christiankissig/rmm-zoo-dataset"
+keywords:
+  - weak memory models
+  - relaxed memory
+  - memory consistency
+  - shared-memory concurrency
+  - litmus tests

@@ -1,0 +1,20 @@
+C LB-oota
+"Out-of-thin-air load buffering (LB+datas), the paper's s[x=f;g=x] | t[y=g;f=y]
+ shape, outcome r1=r2=1. C11 PERMITS it: no acyclicity on rf union dependency.
+ GOS (Generative Operational Semantics) FORBIDS it: its speculation must be
+ non-self-justifying and initial (a stratification / acyclic-causality condition),
+ and in the LB+data cycle the un-speculated branch can only ever write 0, so the
+ speculation can never be finalised. This is the C11-allows / GOS-forbids
+ direction; the reverse (GOS proves external DRF, which C11 does not) is a
+ reasoning-guarantee difference, not a litmus outcome -- see README. Verdicts
+ CITED: herd7 cannot construct an OOTA execution, so it reports Never."
+{ int x=0; int y=0; }
+P0 (atomic_int* x, atomic_int* y) {
+  int r1 = atomic_load_explicit(x,memory_order_relaxed);
+  atomic_store_explicit(y,r1,memory_order_relaxed);
+}
+P1 (atomic_int* x, atomic_int* y) {
+  int r2 = atomic_load_explicit(y,memory_order_relaxed);
+  atomic_store_explicit(x,r2,memory_order_relaxed);
+}
+exists (0:r1=1 /\ 1:r2=1)

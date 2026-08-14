@@ -1,0 +1,14 @@
+PPC MP+sync+po
+"Writer fenced, reader does two plain loads => isolates load->load reordering.
+ Allowed by POWER (loads reorder freely), forbidden by PSO (loads stay ordered).
+ This is the only direction that separates them: see README -- on the standard
+ litmus families PSO turns out to be *included in* POWER (PSO has no behaviour
+ POWER lacks), so the 'incomparable' label is generous."
+{ 0:r2=x; 0:r4=y; 1:r2=y; 1:r4=x; }
+ P0           | P1            ;
+ li r1,1      | lwz r1,0(r2)  ;
+ stw r1,0(r2) | lwz r3,0(r4)  ;
+ sync         |               ;
+ li r3,1      |               ;
+ stw r3,0(r4) |               ;
+exists (1:r1=1 /\ 1:r3=0)

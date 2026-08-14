@@ -1,0 +1,21 @@
+C RS
+"Direction 2 (C11 forbids, C++20 allows) -- the genuine test. A release store on f
+ is followed by a RELAXED store of 2 to f by the SAME thread; the reader acquires f
+ and observes 2. Under C++11/14/17 that relaxed store is part of the RELEASE
+ SEQUENCE headed by the release store, so an acquire that reads it synchronises with
+ the release and the data write happens-before the data read: (1:r0=2, 1:r1=0) is
+ FORBIDDEN. herd7 -model c11_orig.cat => Never (verified). C++20 weakened release
+ sequences (P0982): only RMWs -- not later same-thread relaxed stores -- continue
+ them, so reading 2 carries no release and the stale read is ALLOWED. The C++20
+ side is shown by the companion RS+cpp20.litmus."
+{ int data=0; int f=0; }
+P0 (int* data, atomic_int* f) {
+  *data = 1;
+  atomic_store_explicit(f,1,memory_order_release);
+  atomic_store_explicit(f,2,memory_order_relaxed);
+}
+P1 (int* data, atomic_int* f) {
+  int r0 = atomic_load_explicit(f,memory_order_acquire);
+  int r1 = *data;
+}
+exists (1:r0=2 /\ 1:r1=0)

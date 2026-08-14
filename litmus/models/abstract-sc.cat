@@ -1,0 +1,12 @@
+SC
+(* Abstract Sequential Consistency.
+   A single global total order consistent with program order: no reordering
+   of any kind.  Portable across architectures (uses only generic relations). *)
+
+include "cos.cat"
+
+(* per-location coherence is implied, but state it for clarity *)
+acyclic po-loc | rf | co | fr as scperloc
+
+(* global memory order *)
+acyclic po | rf | co | fr as sc

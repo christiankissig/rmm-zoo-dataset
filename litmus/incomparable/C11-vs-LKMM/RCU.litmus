@@ -1,0 +1,29 @@
+C RCU
+(*
+ * RCU grace-period ordering. P0 publishes, waits for a grace period with
+ * synchronize_rcu(), then writes again; P1 reads both inside an RCU read-side
+ * critical section. LKMM forbids the "see the second write but not the first"
+ * outcome — the grace period guarantees the critical section sees a consistent
+ * snapshot. C11 has no RCU primitive, so it cannot even express this test.
+ * Witnesses the LKMM side of C11 <-> LKMM incomparability.
+ *
+ *   herd7 -model linux-kernel.cat RCU.litmus   # Never 1:r0=1 1:r1=0
+ *)
+{}
+
+P0(int *x, int *y)
+{
+	WRITE_ONCE(*x, 1);
+	synchronize_rcu();
+	WRITE_ONCE(*y, 1);
+}
+
+P1(int *x, int *y)
+{
+	rcu_read_lock();
+	int r0 = READ_ONCE(*y);
+	int r1 = READ_ONCE(*x);
+	rcu_read_unlock();
+}
+
+exists (1:r0=1 /\ 1:r1=0)

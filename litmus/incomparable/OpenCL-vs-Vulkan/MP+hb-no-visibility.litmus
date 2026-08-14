@@ -1,0 +1,33 @@
+C MP+hb-no-visibility
+"Message passing with a scoped release/acquire but NO availability/visibility
+ operations. Genuine Vulkan (SPIR-V) source sketch:
+
+   // producer
+   x = 1;
+   OpAtomicStore f, Device, Release, 1          // release, but write not 'made available'
+   // consumer
+   r0 = OpAtomicLoad f, Device, Acquire         // acquire, but x not 'made visible'
+   r1 = x
+
+ Vulkan splits ordering into THREE steps: happens-before, then AVAILABILITY (push
+ the write out to a memory domain) and VISIBILITY (pull it into the reader). A bare
+ release/acquire gives happens-before but, across a memory domain, NOT availability
+ or visibility, so Vulkan still ALLOWS the stale read (1:r0=1, 1:r1=0) unless the
+ program issues availability+visibility (e.g. memory_semantics with
+ MakeAvailable/MakeVisible and the right storage-class/memory scope). OpenCL has no
+ such split: a scoped acquire that synchronises also makes the released writes
+ visible, so OpenCL FORBIDS this outcome. => Vulkan allows / OpenCL forbids.
+
+ The reverse direction (OpenCL allows / Vulkan forbids) is feature-level too:
+ OpenCL's scope set and all_svm_devices / fine-grained SVM atomics have no exact
+ Vulkan counterpart. herd7 ships neither model; see README."
+{ int x=0; int f=0; }
+P0 (int* x, atomic_int* f) {
+  *x = 1;
+  atomic_store_explicit(f,1,memory_order_release);
+}
+P1 (int* x, atomic_int* f) {
+  int r0 = atomic_load_explicit(f,memory_order_acquire);
+  int r1 = *x;
+}
+exists (1:r0=1 /\ 1:r1=0)

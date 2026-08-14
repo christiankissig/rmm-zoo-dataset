@@ -1,0 +1,19 @@
+C LB-relaxed
+"Plain relaxed load buffering (no dependencies, no thin-air value invention). RC11
+ enforces the no-thin-air axiom acyclic(po | rf), which forbids ALL load-buffering
+ shapes, so RC11 reports Never. C++20 did NOT adopt that axiom (P0668 fixed seq_cst
+ but deliberately left thin-air unresolved), so C++20 -- exactly like C11/C++17 --
+ permits this LB. The C++20 side is modelled with herd7's original C11 model
+ (c11_orig.cat), whose relaxed/thin-air fragment C++20 leaves unchanged => Sometimes.
+   herd7 -model rc11.cat     => Never      (RC11 forbids)
+   herd7 -model c11_orig.cat => Sometimes  (C++20, via the unchanged C11 fragment)"
+{ int x=0; int y=0; }
+P0 (atomic_int* x, atomic_int* y) {
+  int r1 = atomic_load_explicit(x,memory_order_relaxed);
+  atomic_store_explicit(y,1,memory_order_relaxed);
+}
+P1 (atomic_int* x, atomic_int* y) {
+  int r2 = atomic_load_explicit(y,memory_order_relaxed);
+  atomic_store_explicit(x,1,memory_order_relaxed);
+}
+exists (0:r1=1 /\ 1:r2=1)

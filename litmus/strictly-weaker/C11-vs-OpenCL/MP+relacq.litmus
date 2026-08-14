@@ -1,0 +1,17 @@
+C MP+relacq
+"Message passing with a release store and an acquire load. Flat C11 (and OpenCL
+ at all-svm-devices scope, where the two coincide) FORBIDS reading the flag set
+ but the data stale: the release/acquire pair establishes happens-before from the
+ data write to the data read. herd7 -c11 => Never. The OpenCL companion
+ MP+wg-relaxed.litmus narrows the same release/acquire to work_group scope across
+ two work-groups, where it provides no synchronisation and the outcome reappears."
+{ int x=0; int f=0; }
+P0 (int* x, atomic_int* f) {
+  *x = 1;
+  atomic_store_explicit(f,1,memory_order_release);
+}
+P1 (int* x, atomic_int* f) {
+  int r0 = atomic_load_explicit(f,memory_order_acquire);
+  int r1 = *x;
+}
+exists (1:r0=1 /\ 1:r1=0)

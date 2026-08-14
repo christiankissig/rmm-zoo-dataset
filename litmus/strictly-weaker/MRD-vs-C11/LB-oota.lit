@@ -1,0 +1,22 @@
+// Out-of-thin-air via value invention (cf. SMRD paper, "invent-in-the-load").
+// The value 42 can only appear by speculating it into existence. C11's relaxed
+// atomics permit (r0 = 42 && r1 = 42); MRD forbids it.
+x := 0; y := 0;
+{
+  r0 := y;
+  if (r0 != 42) {
+    r0 := y;
+    if (r0 != 42) {
+      r0 := y;
+      if (r0 != 42) { x := r0 }
+      else { x := 42 }
+    }
+    else { x := 42 }
+  }
+  else { x := 42 }
+}|||{
+  r1 := x;
+  if (r1 = 42) { y := 42 }
+  else { y := r1 }
+}
+%% forbid (r0 = 42 && r1 = 42) []

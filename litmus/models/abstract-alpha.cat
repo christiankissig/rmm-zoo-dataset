@@ -1,0 +1,59 @@
+Alpha
+(* Abstract DEC Alpha memory model.
+
+   Alpha is the one commodity architecture that does NOT preserve dependencies:
+   a load whose address (or data / control) depends on an earlier load may still
+   read a stale value -- "dependent-load reordering" -- unless an explicit memory
+   barrier separates them.  This is Alpha's defining relaxation and the historical
+   motivation for Linux's smp_read_barrier_depends()/RCU machinery
+   (Alglave, Maranget & Tautschnig, Herding Cats, TOPLAS 2014, p.18).
+
+   Consequences encoded below:
+     * preserved program order (ppo) is EMPTY -- no addr/data/ctrl dependency is
+       globally ordered; cross-location ordering comes ONLY from mb/wmb fences;
+     * per-location coherence (SC-PER-LOCATION) still holds;
+     * no-thin-air still holds (values never appear from nowhere);
+     * the model is NON-multi-copy-atomic: a write is made visible to other
+       threads through barrier propagation, not atomically.  It therefore uses
+       the generic Herding-Cats decomposition (no single global happens-before
+       with a global rfe, unlike the multi-copy-atomic abstract-rmo.cat). *)
+
+include "cos.cat"
+
+(* --- Alpha barriers.  MB is a full fence; WMB orders write->write only.
+   Also accept the fence names herd7 emits for other front-ends, so the same
+   file applies to an AArch64/ARM/PPC encoding of the test. --- *)
+let FULL =
+      (try MB       with emptyset)
+    | (try MFENCE   with emptyset)
+    | (try DMB.SY   with emptyset)
+    | (try DMB      with emptyset)
+    | (try SYNC     with emptyset)
+    | (try FENCE    with emptyset)
+let WFULL =
+      (try WMB      with emptyset)
+    | (try DMB.ST   with emptyset)
+let fence = fencerel(FULL) | (fencerel(WFULL) & (W * W))
+
+(* Alpha preserves NO syntactic dependency -- this is the whole point. *)
+let ppo = 0
+
+(* 1. SC per location: writes to one address are seen in one coherence order. *)
+let com = rf | co | fr
+acyclic po-loc | com as scperloc
+
+(* 2. no thin air: preserved happens-before is ppo (empty) | fences | rfe.
+   Because ppo is empty, only barriers and reads-from create global order, so a
+   dependency alone can never close a cycle -- hence dependent loads reorder. *)
+let hb = ppo | fence | rfe
+acyclic hb as nothinair
+
+(* 3. propagation: barriers and reads-into-barriers propagate writes in a global
+   order compatible with coherence (non-multi-copy-atomic: propagation, not an
+   atomic single-copy write). *)
+let prop = fence | (rfe ; fence)
+acyclic co | prop as propagation
+
+(* 4. observation: a read cannot observe a write already superseded by the time
+   the write's effects have propagated ahead of it. *)
+irreflexive fre ; prop ; hb* as observation

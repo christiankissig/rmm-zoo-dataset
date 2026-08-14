@@ -1,0 +1,12 @@
+Test mp-rs-strel Forbidden
+States 3
+1:a=0; 1:b=0;
+1:a=1; 1:b=0;
+1:a=2; 1:b=1;
+Ok
+Witnesses
+Positive: 3 Negative: 0
+Condition ~exists (1:a=2 /\ 1:b=0)
+Observation mp-rs-strel Never 0 3
+Hash=6e2c0683e68d00fcd2280ae9e88caed4
+

@@ -1,0 +1,62 @@
+# Run the litmus suite (and the graph-data consistency gate) on every push and PR.
+#
+# litmus/run.sh checks each herd7-runnable witness against its recorded verdict
+# (Never / Sometimes), so a data edit that invalidates a witness — or a herd7
+# upgrade that changes a verdict — fails here rather than on the live site.
+name: litmus
+
+# Feature branches are covered by pull_request; restricting push to master keeps
+# a branch with an open PR from running the suite twice per commit.
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+# One run per ref: a new push supersedes an in-flight run on the same branch.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  litmus:
+    name: herd7 litmus suite + consistency check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      # zarith (a herdtools7 dependency) needs libgmp. Installing it up front,
+      # against a freshly synced index, avoids the transient `sudo apt` failure
+      # opam's depext handling otherwise has to notice and retry through.
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes libgmp-dev
+
+      # herdtools7 is only packaged from Ubuntu 26.04 on, so install it from
+      # opam. setup-ocaml caches the opam root, so the compiler and herd7 are
+      # rebuilt only when this key changes, not on every run.
+      - uses: ocaml/setup-ocaml@v3
+        with:
+          ocaml-compiler: "5.2"
+
+      # Pinned: the expected outcomes in litmus/run.sh were recorded against
+      # 7.58. Bump deliberately, re-running the suite locally first.
+      - name: Install herd7
+        run: opam install --yes herdtools7.7.58
+
+      - name: herd7 version
+        run: opam exec -- herd7 -version
+
+      # Every herd7-checkable witness vs. its expected verdict. Prints one
+      # PASS/FAIL line per check and exits non-zero if any FAIL.
+      - name: Run litmus suite
+        run: opam exec -- bash litmus/run.sh
+
+      # Graph-data gate: DAG, no contradictions, property/cat integrity, and every
+      # ordering edge backed by a witness directory of the right direction.
+      # (Its optional check 6 re-runs the suite above; both take ~1s.)
+      - name: Check graph consistency
+        run: opam exec -- make check

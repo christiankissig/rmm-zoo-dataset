@@ -1,0 +1,25 @@
+PSO
+(* Abstract Partial Store Order (SPARC PSO), multi-copy atomic.
+   TSO + store->store reordering to different addresses.  Loads still stay in
+   program order (R->R, R->W preserved); W->W is NOT preserved.
+   A full fence restores all ordering. *)
+
+include "cos.cat"
+
+let FULL =
+      (try MFENCE   with emptyset)
+    | (try DMB.SY   with emptyset)
+    | (try DMB.ISH  with emptyset)
+    | (try DMB.ST   with emptyset)   (* store-store barrier still orders W;W *)
+    | (try SYNC     with emptyset)
+    | (try FENCE    with emptyset)
+let fence = fencerel(FULL)
+
+acyclic po-loc | rf | co | fr as scperloc
+empty rmw & (fre;coe) as atom
+
+(* preserved program order: loads stay ordered, but W;po;W is relaxed *)
+let ppo = [R];po;[R] | [R];po;[W]
+
+let ghb = ppo | fence | rfe | co | fr
+acyclic ghb as pso

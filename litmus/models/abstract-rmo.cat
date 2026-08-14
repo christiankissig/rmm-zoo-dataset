@@ -1,0 +1,25 @@
+RMO
+(* Abstract Relaxed Memory Order (SPARC RMO), multi-copy atomic.
+   All four reorderings allowed between *independent* operations.  Only
+   syntactic dependencies (address / data / control) and per-location
+   coherence are preserved.  A full fence restores ordering. *)
+
+include "cos.cat"
+
+let FULL =
+      (try MFENCE   with emptyset)
+    | (try DMB.SY   with emptyset)
+    | (try DMB.ISH  with emptyset)
+    | (try SYNC     with emptyset)
+    | (try FENCE    with emptyset)
+let fence = fencerel(FULL)
+
+acyclic po-loc | rf | co | fr as scperloc
+empty rmw & (fre;coe) as atom
+
+(* only dependencies are preserved in program order *)
+let dep = (try addr with 0) | (try data with 0) | (try ctrl with 0)
+let ppo = dep
+
+let ghb = ppo | fence | rfe | co | fr
+acyclic ghb as rmo

@@ -1,0 +1,13 @@
+Test mp-rs-add-st-cpp11 Forbidden
+States 4
+1:a=0; 1:b=0;
+1:a=1; 1:b=0;
+1:a=2; 1:b=1;
+1:a=3; 1:b=1;
+Ok
+Witnesses
+Positive: 4 Negative: 0
+Condition ~exists (1:a=3 /\ 1:b=0)
+Observation mp-rs-add-st-cpp11 Never 0 4
+Hash=e7c86162b0ae389cae7e2090b081b7a2
+

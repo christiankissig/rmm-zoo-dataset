@@ -1,0 +1,22 @@
+C mp-rs-add-est
+"Release-sequence axis (P0982), all-atomic so no data race. ALLOWED under C++11/14/17, FORBIDDEN under C++20: cpp11.cat/cpp17.cat Sometimes, cpp2w.cat Never (herd7). Together with RS.litmus (which flips the other way) this witnesses C++20 <> C11 incomparability on the release-sequence axis alone. Vendored from gonzalobg/cpp_memory_model; model in ../../models/cpp/."
+{ [x] = 0; [y] = 0;  }
+
+P0 (int* x, int* y) {
+  atomic_store_explicit(y, 1, memory_order_relaxed);
+  atomic_store_explicit(x, 1, memory_order_release);
+  atomic_fetch_add_explicit(x, 1, memory_order_relaxed);  
+}
+
+P1 (int* x, int* y) {
+  int a = atomic_load_explicit(x, memory_order_acquire);
+  if (a == 3) {
+    int b = atomic_load_explicit(y, memory_order_relaxed);
+  }
+}
+
+P2 (int* x) {
+  atomic_store_explicit(x, 2, memory_order_relaxed);
+}
+
+exists([x]=3 /\ 1:a=3 /\ 1:b=0)

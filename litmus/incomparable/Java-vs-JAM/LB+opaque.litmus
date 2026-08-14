@@ -1,0 +1,37 @@
+C LB+opaque
+"Plain load buffering with REAL values (no thin-air). P0 reads x into r1 and
+ stores 1 to y; P1 reads y into r2 and stores 1 to x. The outcome r1=r2=1 needs
+ each load to see the partner's store -- a load/store REORDERING, but every value
+ read (1) is genuinely written, so this is NOT out-of-thin-air.
+
+ This is the JMM-allows / JAM-forbids direction. The relaxed atomics here stand
+ in for JAM's OPAQUE access mode (JDK 9 VarHandle.getOpaque/setOpaque), a tier
+ the original JMM does not have.
+
+ JAM FORBIDS it at opaque. JAM imposes acyclic(po|rf) for opaque-or-stronger
+ accesses, and r1=r2=1 closes a po|rf cycle (load x ->po store y ->rf load y ->po
+ store x ->rf load x), so opaque mode rules it out -- exactly the ordering
+ guarantee that JDK 9 introduced opaque to provide.
+
+ The original JMM ALLOWS it. The JMM has only ordinary and volatile accesses; it
+ maps these fields to ORDINARY, whose semantics is its happens-before +
+ commitment causality. That machinery permits the LB reordering -- r1=r2=1 is a
+ well-behaved, fully committed JMM execution (the 1s are real, so there is no
+ thin-air to reject). With no opaque tier, the JMM cannot express the stronger
+ ordering JAM enforces, so it admits an outcome JAM forbids.
+
+ Together with cyc_na.litmus (JAM allows, JMM forbids) this makes the two models
+ incomparable: neither's permitted behaviours contain the other's.
+
+ Verdicts are CITED, not machine-run: no shared checker hosts both the JMM and
+ JAM. See README."
+{ int x=0; int y=0; }
+P0 (atomic_int* x, atomic_int* y) {                  /* JAM opaque mode */
+  int r1 = atomic_load_explicit(x,memory_order_relaxed);
+  atomic_store_explicit(y,1,memory_order_relaxed);
+}
+P1 (atomic_int* x, atomic_int* y) {                  /* JAM opaque mode */
+  int r2 = atomic_load_explicit(y,memory_order_relaxed);
+  atomic_store_explicit(x,1,memory_order_relaxed);
+}
+exists (0:r1=1 /\ 1:r2=1)

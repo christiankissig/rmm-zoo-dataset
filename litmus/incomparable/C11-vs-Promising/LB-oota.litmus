@@ -1,0 +1,15 @@
+C LB-oota
+"Out-of-thin-air load buffering (the C11 thin-air example). C11 permits r1=r2=42;
+ Promising Semantics forbids it (its certified-promise mechanism cannot fabricate
+ thin-air values). Neither side is exhibited here: herd7 cannot construct OOTA
+ (reports Never), and Promising is not a herd7 model. See README."
+{ int x=0; int y=0; }
+P0 (atomic_int* x, atomic_int* y) {
+  int r1 = atomic_load_explicit(x,memory_order_relaxed);
+  atomic_store_explicit(y,r1,memory_order_relaxed);
+}
+P1 (atomic_int* x, atomic_int* y) {
+  int r2 = atomic_load_explicit(y,memory_order_relaxed);
+  atomic_store_explicit(x,r2,memory_order_relaxed);
+}
+exists (0:r1=42 /\ 1:r2=42)

@@ -1,0 +1,12 @@
+RISCV SB+fence.tso
+"RISC-V's fence.tso orders R->R, R->W and W->W but NOT store->load, so SB+fence.tso
+ is allowed on RVWMO. ARMv8 has no single instruction with exactly TSO-fence
+ semantics. On the common instruction set herd's aarch64.cat and riscv.cat
+ coincide on every test we swept (see README); the separation is instruction-level."
+{ 0:x10=x; 0:x12=y; 1:x10=y; 1:x12=x; }
+ P0              | P1              ;
+ ori x11,x0,1   | ori x11,x0,1    ;
+ sw x11,0(x10)  | sw x11,0(x10)   ;
+ fence.tso      | fence.tso       ;
+ lw x13,0(x12)  | lw x13,0(x12)   ;
+exists (0:x13=0 /\ 1:x13=0)

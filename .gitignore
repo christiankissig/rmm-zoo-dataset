@@ -1,0 +1,20 @@
+# Build output
+dist/
+
+# Rendered from CITATION.cff.in at build time (tools/render.py) and served from
+# the site at /data/CITATION.cff — never committed, so it cannot name a version
+# other than the one the deploy stamped in.
+CITATION.cff
+
+# Working notes, kept out of the published repository.
+ROADMAP.md
+
+# OS / editor cruft
+.DS_Store
+*.log
+
+# litmus build artifacts
+litmus/**/*.class
+
+# Python tooling
+tools/__pycache__/

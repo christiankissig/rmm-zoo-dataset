@@ -1,0 +1,11 @@
+AArch64 MP+dmb.sy+addr
+"Reader has an address dependency between the two loads; writer is fenced.
+ Forbidden by RMO (dependency preserved), allowed by bare Coherence (deps ignored)."
+{ 0:X1=x; 0:X3=y; 1:X1=y; 1:X3=x; }
+ P0           | P1                    ;
+ MOV W0,#1    | LDR W0,[X1]           ;
+ STR W0,[X1]  | EOR W4,W0,W0          ;
+ DMB SY       | LDR W2,[X3,W4,SXTW]   ;
+ MOV W2,#1    |                       ;
+ STR W2,[X3]  |                       ;
+exists (1:X0=1 /\ 1:X2=0)

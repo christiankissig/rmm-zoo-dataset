@@ -1,0 +1,30 @@
+C MP+inclusion-scopes
+"Message passing where the producer releases at a LARGER scope and the consumer
+ acquires at a SMALLER, included scope. Genuine scoped source:
+
+   // producer
+   x = 1;
+   atomic_store(&f, 1, release, scope(device));        // device scope
+   // consumer (a work-item inside that device)
+   r0 = atomic_load(&f, acquire, scope(work_group));   // work_group scope
+   r1 = x;
+
+ HRF-direct requires the two scopes to MATCH EXACTLY to synchronise, and
+ HRF-indirect only adds explicit transitive chains; neither recognises this
+ device-release / work_group-acquire pair, so the program is a scoped race and the
+ stale-data outcome (1:r0=1, 1:r1=0) is among the behaviours HRF admits. HRF-Relaxed
+ / Scoped-C11 loosens matching to scope INCLUSION: the work_group is contained in
+ the device, so the operations synchronise, the program is race-free, and an
+ entire class of such inclusion-synchronising programs becomes well-defined that
+ HRF did not admit. This is a model-DEFINITION difference (the matching rule), not
+ a reordering herd7 can enumerate; herd7 has no scoped model. See README."
+{ int x=0; int f=0; }
+P0 (atomic_int* x, atomic_int* f) {
+  atomic_store_explicit(x,1,memory_order_relaxed);
+  atomic_store_explicit(f,1,memory_order_relaxed);
+}
+P1 (atomic_int* x, atomic_int* f) {
+  int r0 = atomic_load_explicit(f,memory_order_relaxed);
+  int r1 = atomic_load_explicit(x,memory_order_relaxed);
+}
+exists (1:r0=1 /\ 1:r1=0)

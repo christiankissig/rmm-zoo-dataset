@@ -1,0 +1,19 @@
+C LB-oota
+"Out-of-thin-air load buffering (the canonical C/C++ thin-air example, LB+datas).
+ C11 relaxed atomics PERMIT r1=r2=42: the standard's text fails to forbid the
+ value 42 being conjured from a cyclic justification. Symbolic MRD (sMRD)
+ FORBIDS it: it detects a semantic dependency from each read to the dependent
+ write, yielding a cycle in (rf union sd), and rules the outcome out. Verdicts
+ are CITED, not machine-run here: herd7 cannot construct an OOTA execution (it
+ ties every read to a value actually written, so it reports Never), and there is
+ no sMRD/mordor checker bundled in this repo. See README and the .lit companion."
+{ int x=0; int y=0; }
+P0 (atomic_int* x, atomic_int* y) {
+  int r1 = atomic_load_explicit(x,memory_order_relaxed);
+  atomic_store_explicit(y,r1,memory_order_relaxed);
+}
+P1 (atomic_int* x, atomic_int* y) {
+  int r2 = atomic_load_explicit(y,memory_order_relaxed);
+  atomic_store_explicit(x,r2,memory_order_relaxed);
+}
+exists (0:r1=42 /\ 1:r2=42)

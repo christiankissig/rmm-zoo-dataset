@@ -1,0 +1,19 @@
+C MP+relacq
+"Message passing with a release store and an acquire load -- the strongest shape
+ CRC can express, since CRC's fragment is non-atomic + release/acquire +
+ SC-fences and deliberately OMITS relaxed atomics (to sidestep thin-air). The
+ release/acquire pair builds happens-before from the data write to the data read,
+ so the stale-data outcome r0=1 /\ r1=0 is a coherence violation: CRC FORBIDS it,
+ and so does flat C11 on this annotation. herd7 -c11 => Never. This is the CRC
+ (stronger) side; the C11 (weaker) side is the relaxed companion MP+relaxed.litmus,
+ which CRC cannot even write down and C11 allows."
+{ int x=0; int f=0; }
+P0 (int* x, atomic_int* f) {
+  *x = 1;
+  atomic_store_explicit(f,1,memory_order_release);
+}
+P1 (int* x, atomic_int* f) {
+  int r0 = atomic_load_explicit(f,memory_order_acquire);
+  int r1 = *x;
+}
+exists (1:r0=1 /\ 1:r1=0)

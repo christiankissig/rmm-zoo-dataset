@@ -1,0 +1,24 @@
+C LB
+"Load buffering r1=x; y=1; || r2=y; x=1;  outcome r1=r2=1. RAO ('Relaxed Atomic +
+ Ordering', Saraswat et al. 2007) explains relaxed behaviour by applying
+ reorderings/transformations OVER a sequentially consistent execution, so it
+ admits each independent read/write being reordered and ALLOWS this LB outcome.
+ C11 with all-relaxed atomics also allows plain LB, so this exact program does
+ NOT separate them: the separation appears only where C11 uses stronger
+ (non-atomic / SC) modes that forbid the reorder while RAO -- which has no mode
+ system, only uniform transformations -- still admits it. RAO also CLAIMS the
+ external DRF guarantee while permitting thin-air, two properties shown
+ incompatible in general (Batty et al., ESOP 2015); the survey attributes the
+ claim to a restricted input language (no general conditionals). Both verdicts
+ are model-level / CITED -- RAO has no herd7 model and no published litmus
+ isolates a single C11-separating outcome. See README."
+{ int x=0; int y=0; }
+P0 (atomic_int* x, atomic_int* y) {
+  int r1 = atomic_load_explicit(x,memory_order_relaxed);
+  atomic_store_explicit(y,1,memory_order_relaxed);
+}
+P1 (atomic_int* x, atomic_int* y) {
+  int r2 = atomic_load_explicit(y,memory_order_relaxed);
+  atomic_store_explicit(x,1,memory_order_relaxed);
+}
+exists (0:r1=1 /\ 1:r2=1)

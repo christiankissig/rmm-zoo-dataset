@@ -1,0 +1,8 @@
+AArch64 WRC+addrs
+"Same WRC+addrs in AArch64 syntax. Forbidden by ARMv8 (multi-copy atomic)."
+{ 0:X1=x; 1:X1=x; 1:X3=y; 2:X1=y; 2:X3=x; }
+ P0          | P1                  | P2                  ;
+ MOV W0,#1   | LDR W0,[X1]         | LDR W0,[X1]         ;
+ STR W0,[X1] | EOR W4,W0,W0        | EOR W4,W0,W0        ;
+            | STR W0,[X3,W4,SXTW]  | LDR W2,[X3,W4,SXTW] ;
+exists (1:X0=1 /\ 2:X0=1 /\ 2:X2=0)

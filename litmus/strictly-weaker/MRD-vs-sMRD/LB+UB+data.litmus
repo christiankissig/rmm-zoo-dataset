@@ -1,0 +1,26 @@
+C LB+UB+data
+"sMRD Example 1.1a: load buffering with a FALSE dependency masked by undefined
+ behaviour. P0 reads x into r1, then stores to y the value 1/!r1 -- which is
+ only DEFINED when r1==0 (otherwise it is a division by zero, i.e. UB). A
+ compiler may therefore assume r1==0, constant-fold the store to a plain y=1,
+ and break the read(x)->write(y) dependency. P1 reads y into r2 and stores r2 to
+ x. The outcome r1=1 /\ r2=1 then becomes reachable.
+
+ sMRD (Symbolic MRD) ALLOWS it: its symbolic dependency calculus reasons about
+ undefined behaviour, sees the dependency is semantically false, removes it, and
+ with no dp edge there is no (dp union rf) cycle to discard. This matches GCC/
+ Clang, which perform exactly this optimisation. MRD (Modular Relaxed
+ Dependencies) FORBIDS it: MRD computes dependencies over CONCRETE locations and
+ values from program syntax, is UB-unaware, keeps the read(x)->write(y) data
+ dependency, and so retains a (dp union rf) cycle and rules the outcome out.
+ Neither model is in herd7; verdicts are CITED. See README."
+{ int x=0; int y=0; }
+P0 (atomic_int* x, atomic_int* y) {
+  int r1 = atomic_load_explicit(x,memory_order_relaxed);
+  atomic_store_explicit(y, 1/(1-r1), memory_order_relaxed);   /* the paper's 1/!r1: defined only when r1==0 */
+}
+P1 (atomic_int* x, atomic_int* y) {
+  int r2 = atomic_load_explicit(y,memory_order_relaxed);
+  atomic_store_explicit(x, r2, memory_order_relaxed);
+}
+exists (0:r1=1 /\ 1:r2=1)

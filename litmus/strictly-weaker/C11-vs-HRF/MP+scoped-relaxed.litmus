@@ -1,0 +1,29 @@
+C MP+scoped-relaxed
+"Heterogeneous message passing under HRF. The producer and consumer each issue a
+ release/acquire scoped to their OWN work-group, so they never synchronise at a
+ shared scope. The genuine HRF-style source is:
+
+   // producer, work-group A
+   x = 1;
+   atomic_store(&f, 1, release, scope(A));     // scope A only
+   // consumer, work-group B
+   r0 = atomic_load(&f, acquire, scope(B));    // scope B only
+   r1 = x;
+
+ HRF generalises DRF to a scope hierarchy: two synchronising operations order each
+ other only when they name a COMMON scope. Here they do not, so x is touched by a
+ heterogeneous (scoped) data race and HRF gives no SC-like guarantee — the MP
+ outcome is allowed, exactly as for relaxed accesses (modelled here with relaxed
+ atomics, herd7 -c11 => Sometimes). Flat C11 has a single global scope, so the
+ same release/acquire DO synchronise and the outcome is forbidden (MP+relacq.litmus).
+ Choosing a common scope (e.g. device) for both recovers the C11 guarantee."
+{ int x=0; int f=0; }
+P0 (atomic_int* x, atomic_int* f) {
+  atomic_store_explicit(x,1,memory_order_relaxed);
+  atomic_store_explicit(f,1,memory_order_relaxed);
+}
+P1 (atomic_int* x, atomic_int* f) {
+  int r0 = atomic_load_explicit(f,memory_order_relaxed);
+  int r1 = atomic_load_explicit(x,memory_order_relaxed);
+}
+exists (1:r0=1 /\ 1:r1=0)

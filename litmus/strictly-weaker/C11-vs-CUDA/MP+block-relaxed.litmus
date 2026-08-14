@@ -1,0 +1,30 @@
+C MP+block-relaxed
+"CUDA message passing whose release/acquire are at cuda::thread_scope_block, with
+ the producer and consumer in DIFFERENT thread blocks. The genuine CUDA source is:
+
+   // producer, block 0
+   x = 1;
+   cuda::atomic_ref<int, cuda::thread_scope_block> f_ref(f);
+   f_ref.store(1, cuda::memory_order_release);
+   // consumer, block 1
+   cuda::atomic_ref<int, cuda::thread_scope_block> f_ref(f);
+   r0 = f_ref.load(cuda::memory_order_acquire);
+   r1 = x;
+
+ A block-scoped release/acquire orders only threads in the SAME block; across
+ blocks it carries no happens-before, so it behaves exactly like
+ memory_order_relaxed. We model that with relaxed atomics: the MP outcome herd7
+ -c11 reports as Sometimes is the behaviour CUDA ALLOWS at block scope and flat C11
+ FORBIDS (see MP+relacq.litmus). Promoting the scope to thread_scope_system
+ recovers C11 and the outcome vanishes. CUDA's cuda::atomic is lowered to the PTX
+ memory model (Lustig et al. 2019)."
+{ int x=0; int f=0; }
+P0 (atomic_int* x, atomic_int* f) {
+  atomic_store_explicit(x,1,memory_order_relaxed);
+  atomic_store_explicit(f,1,memory_order_relaxed);
+}
+P1 (atomic_int* x, atomic_int* f) {
+  int r0 = atomic_load_explicit(f,memory_order_relaxed);
+  int r1 = atomic_load_explicit(x,memory_order_relaxed);
+}
+exists (1:r0=1 /\ 1:r1=0)

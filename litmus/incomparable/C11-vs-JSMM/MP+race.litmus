@@ -1,0 +1,24 @@
+C MP+race
+"JavaScript MM (JSMM) vs C11 -- the separation is NOT thin-air (JSMM, being
+ C11-based, ALSO admits OOTA). It is about data races. This is the paper's Fig. 6
+ shape: a program that races a non-atomic (JS 'Unordered') access against
+ SeqCst atomics on the same location. C11 treats the non-atomic race as
+ UNDEFINED BEHAVIOUR (catch-fire: any outcome 'allowed' vacuously). JSMM gives
+ the racy access a DEFINED, byte-justified semantics and its SC-atomics validity
+ rule pins the access in the total order, FORBIDDING the witness. So C11
+ 'allows' (via catch-fire) an outcome JSMM rules out. herd7's -c11 does not
+ implement catch-fire (it models the access as a plain write), so it CANNOT
+ adjudicate this distinction -- both verdicts are CITED. See README; the reverse
+ direction (mixed-size tearing) is described there too."
+{ int b=0; }
+P0 (atomic_int* b) {
+  atomic_store_explicit(b,1,memory_order_seq_cst);
+  int r1 = atomic_load_explicit(b,memory_order_seq_cst);
+  *((int*) b) = 2;                                   /* non-atomic (JS Unordered) racy write */
+  int r2 = atomic_load_explicit(b,memory_order_seq_cst);
+}
+P1 (atomic_int* b) {
+  atomic_store_explicit(b,1,memory_order_seq_cst);
+  atomic_store_explicit(b,2,memory_order_seq_cst);
+}
+exists (0:r1=1 /\ 0:r2=1)

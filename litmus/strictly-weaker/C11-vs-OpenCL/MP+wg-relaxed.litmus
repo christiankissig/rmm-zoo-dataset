@@ -1,0 +1,27 @@
+C MP+wg-relaxed
+"OpenCL message passing whose release/acquire are at memory_scope_work_group, with
+ P0 and P1 in DIFFERENT work-groups. The genuine OpenCL source is:
+
+   // P0, work-group A
+   x = 1;
+   atomic_store_explicit(&f, 1, memory_order_release, memory_scope_work_group);
+   // P1, work-group B
+   r0 = atomic_load_explicit(&f, memory_order_acquire, memory_scope_work_group);
+   r1 = x;
+
+ A work_group-scoped release/acquire synchronises only threads in the SAME
+ work-group; across work-groups it carries no happens-before, so it behaves
+ exactly like memory_order_relaxed. We model that here with relaxed atomics: the
+ MP outcome herd7 -c11 reports as Sometimes is the behaviour OpenCL ALLOWS at
+ work_group scope and flat C11 FORBIDS (see MP+relacq.litmus). Promoting the scope
+ to memory_scope_all_svm_devices recovers C11 and the outcome vanishes."
+{ int x=0; int f=0; }
+P0 (atomic_int* x, atomic_int* f) {
+  atomic_store_explicit(x,1,memory_order_relaxed);
+  atomic_store_explicit(f,1,memory_order_relaxed);
+}
+P1 (atomic_int* x, atomic_int* f) {
+  int r0 = atomic_load_explicit(f,memory_order_relaxed);
+  int r1 = atomic_load_explicit(x,memory_order_relaxed);
+}
+exists (1:r0=1 /\ 1:r1=0)

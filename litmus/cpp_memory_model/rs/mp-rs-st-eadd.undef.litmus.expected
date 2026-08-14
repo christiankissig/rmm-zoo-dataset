@@ -1,0 +1,20 @@
+Test mp-rs-st-eadd Allowed
+States 10
+1:a=0; 1:b=0; [x]=3;
+1:a=0; 1:b=0; [x]=4;
+1:a=1; 1:b=0; [x]=3;
+1:a=1; 1:b=0; [x]=4;
+1:a=2; 1:b=0; [x]=3;
+1:a=3; 1:b=0; [x]=3;
+1:a=3; 1:b=0; [x]=4;
+1:a=3; 1:b=1; [x]=3;
+1:a=3; 1:b=1; [x]=4;
+1:a=4; 1:b=0; [x]=4;
+Undef
+Witnesses
+Positive: 2 Negative: 13
+Flag *undef*
+Condition exists ([x]=3 /\ 1:a=3 /\ 1:b=0)
+Observation mp-rs-st-eadd Sometimes 2 13
+Hash=5d759040d81d736b701c7b0feaaaf93b
+

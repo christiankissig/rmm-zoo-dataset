@@ -1,0 +1,21 @@
+C LB-oota
+"Out-of-thin-air load buffering (LB+datas). P0 reads x into r1 and stores r1 to
+ y; P1 reads y into r2 and stores r2 to x. The outcome r1=r2=1 (the papers'
+ self-justifying value; 1 here, the suite elsewhere uses 42) invents a value from
+ a cyclic justification in rf union dep. C11 PERMITS it: its relaxed-atomics
+ axioms have no acyclicity requirement on rf union dependency. WJES (Well-
+ Justified Event Structures) FORBIDS it: well-justification requires each read to
+ be justified by a write the environment cannot avoid providing, and the cyclic
+ OOTA configuration has no such justifying write. This is the C11-allows /
+ WJES-forbids direction; see TC7.litmus for the reverse. Verdicts CITED: herd7
+ cannot construct an OOTA execution, so it reports Never. See README."
+{ int x=0; int y=0; }
+P0 (atomic_int* x, atomic_int* y) {
+  int r1 = atomic_load_explicit(x,memory_order_relaxed);
+  atomic_store_explicit(y,r1,memory_order_relaxed);
+}
+P1 (atomic_int* x, atomic_int* y) {
+  int r2 = atomic_load_explicit(y,memory_order_relaxed);
+  atomic_store_explicit(x,r2,memory_order_relaxed);
+}
+exists (0:r1=1 /\ 1:r2=1)

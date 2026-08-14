@@ -1,0 +1,23 @@
+C RS+cpp20
+"Direction 2 (C11 forbids, C++20 allows) -- the C++20 model. Same shape as
+ RS.litmus, but under C++20's weakened release sequences (P0982) the later
+ same-thread relaxed store of 2 is NOT part of the release sequence headed by the
+ release store, so an acquire that reads 2 receives no release: there is no
+ happens-before to the data write. We model that absence of synchronisation by
+ making the heading store non-releasing (relaxed) -- the relaxed store of 2 is
+ exactly what the C++20 acquire sees, with no release attached -- so the stale read
+ is observable.
+   herd7 -model c11_orig.cat => Sometimes  (the C++20 outcome)
+ Keeping the release AND counting it into the release sequence (the C++11 rule) is
+ RS.litmus, which is Never. The two files bracket the P0982 change."
+{ int data=0; int f=0; }
+P0 (int* data, atomic_int* f) {
+  *data = 1;
+  atomic_store_explicit(f,1,memory_order_relaxed);
+  atomic_store_explicit(f,2,memory_order_relaxed);
+}
+P1 (int* data, atomic_int* f) {
+  int r0 = atomic_load_explicit(f,memory_order_acquire);
+  int r1 = *data;
+}
+exists (1:r0=2 /\ 1:r1=0)

@@ -1,0 +1,11 @@
+ARM MP+dmb+addr
+"Reader has an address dependency between the two loads; writer is fenced.
+ Forbidden by ARM (dependency preserved), allowed by bare Coherence (deps ignored)."
+{ 0:r1=x; 0:r3=y; 1:r1=y; 1:r3=x; }
+ P0           | P1            ;
+ MOV r0,#1    | LDR r0,[r1]   ;
+ STR r0,[r1]  | EOR r2,r0,r0  ;
+ DMB          | LDR r4,[r3,r2];
+ MOV r2,#1    |               ;
+ STR r2,[r3]  |               ;
+exists (1:r0=1 /\ 1:r4=0)

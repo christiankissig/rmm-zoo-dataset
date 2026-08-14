@@ -1,0 +1,26 @@
+C LB-oota
+"Out-of-thin-air load buffering over the WEAKEST access mode (LB+datas /
+ cyc_na). P0 reads x into r1 and stores r1 to y; P1 reads y into r2 and stores
+ r2 to x. The outcome r1=r2=42 invents 42 from a cyclic justification in po|rf.
+
+ RC11 FORBIDS it: RC11's no-thin-air fix is the BLANKET axiom acyclic(po|rf)
+ applied to ALL accesses, plain ones included. JAM (Java Access Modes) ALLOWS
+ it: JAM is inspired by RC11 and adopts the same acyclicity fix, but ONLY for
+ opaque-or-stronger accesses; for plain (non-atomic) accesses it deliberately
+ leaves the cycle unconstrained, so the plain-mode version of this program (JAM
+ test cyc_na) keeps the po|rf cycle and the thin-air outcome is permitted. The
+ all-relaxed companion maps to JAM opaque mode, where BOTH models forbid it --
+ isolating the separation to the plain level. Verdicts are CITED: herd7 cannot
+ construct an OOTA execution (it ties reads to written values), so it reports
+ Never; that reflects the tool, while RC11's prohibition is its axiom and JAM's
+ permission is a property of its plain-mode rules. See README."
+{ int x=0; int y=0; }
+P0 (atomic_int* x, atomic_int* y) {
+  int r1 = atomic_load_explicit(x,memory_order_relaxed);
+  atomic_store_explicit(y,r1,memory_order_relaxed);
+}
+P1 (atomic_int* x, atomic_int* y) {
+  int r2 = atomic_load_explicit(y,memory_order_relaxed);
+  atomic_store_explicit(x,r2,memory_order_relaxed);
+}
+exists (0:r1=42 /\ 1:r2=42)

@@ -1,0 +1,18 @@
+C MP+relacq
+"Message passing with a release store and an acquire load. CUDA at
+ cuda::thread_scope_system (and flat C11, where they coincide) FORBIDS reading the
+ flag set but the data stale: the release/acquire pair orders the data write
+ before the data read. herd7 -c11 => Never. The CUDA companion
+ MP+block-relaxed.litmus narrows the same release/acquire to
+ cuda::thread_scope_block with the two threads in different thread blocks, where it
+ provides no synchronisation and the outcome reappears."
+{ int x=0; int f=0; }
+P0 (int* x, atomic_int* f) {
+  *x = 1;
+  atomic_store_explicit(f,1,memory_order_release);
+}
+P1 (int* x, atomic_int* f) {
+  int r0 = atomic_load_explicit(f,memory_order_acquire);
+  int r1 = *x;
+}
+exists (1:r0=1 /\ 1:r1=0)

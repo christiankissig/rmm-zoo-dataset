@@ -1,0 +1,21 @@
+C LB-oota
+"Out-of-thin-air load buffering (LB+datas). P0 reads x into r1 and stores r1 to
+ y; P1 reads y into r2 and stores r2 to x. The outcome r1=r2=42 invents 42 from a
+ cyclic justification. C11 PERMITS it (the thin-air problem: its relaxed-atomics
+ axioms place no acyclicity on rf union dependency). Weakestmo FORBIDS it: it
+ grounds reads in event structures and the cyclic OOTA configuration is never
+ ew-justified / is filtered out. The Weakestmo authors state the model is
+ 'stronger than C11 (which allows OOTA) and weaker than RC11', so C11 is strictly
+ weaker -- every separating outcome is C11-allows / Weakestmo-forbids; there is no
+ reverse witness. Verdicts CITED: herd7 cannot construct an OOTA execution, so it
+ reports Never. See README."
+{ int x=0; int y=0; }
+P0 (atomic_int* x, atomic_int* y) {
+  int r1 = atomic_load_explicit(x,memory_order_relaxed);
+  atomic_store_explicit(y,r1,memory_order_relaxed);
+}
+P1 (atomic_int* x, atomic_int* y) {
+  int r2 = atomic_load_explicit(y,memory_order_relaxed);
+  atomic_store_explicit(x,r2,memory_order_relaxed);
+}
+exists (0:r1=42 /\ 1:r2=42)

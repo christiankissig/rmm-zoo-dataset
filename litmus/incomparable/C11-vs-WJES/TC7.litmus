@@ -1,0 +1,28 @@
+C TC7
+"Pugh causality test case TC7 -- the load->load reordering counterexample that
+ WJES's authors exhibit. P0 reads z, then reads x and writes y=x; P1 reads y,
+ writes z=y, then writes x=1. The outcome r0=r1=r2=1 (every read sees 1) requires
+ P0's two INDEPENDENT reads (z then x) to be reordered: the value 1 originates at
+ the genuine store x=1 and propagates x->y->z, so P0 can only read z=1 if its
+ read of z floats past its read of x. No value is invented -- this is a real
+ coherent execution.
+
+ C11 ALLOWS it (and so do ARMv7/ARMv8/POWER hardware): relaxed reads are
+ unordered, so the load->load reorder is permitted. herd7 -c11 => Sometimes.
+ WJES FORBIDS it: no well-justified configuration contains all three reads-of-1,
+ so WJES is too strong here -- which is exactly why the naive compilation of WJES
+ to ARM/POWER is non-optimal (it would need extra fences). This is the
+ WJES-forbids / C11-allows direction. WJES has no herd7 model, so its verdict is
+ cited; the C11 verdict is machine-run. See README."
+{ int x=0; int y=0; int z=0; }
+P0 (atomic_int* x, atomic_int* y, atomic_int* z) {
+  int r0 = atomic_load_explicit(z,memory_order_relaxed);
+  int r1 = atomic_load_explicit(x,memory_order_relaxed);
+  atomic_store_explicit(y,r1,memory_order_relaxed);
+}
+P1 (atomic_int* x, atomic_int* y, atomic_int* z) {
+  int r2 = atomic_load_explicit(y,memory_order_relaxed);
+  atomic_store_explicit(z,r2,memory_order_relaxed);
+  atomic_store_explicit(x,1,memory_order_relaxed);
+}
+exists (0:r0=1 /\ 0:r1=1 /\ 1:r2=1)

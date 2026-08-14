@@ -1,0 +1,29 @@
+TSO
+(* Abstract Total Store Order (textbook TSO / x86-TSO, multi-copy atomic).
+   Only store->load reordering is relaxed.  Preserved program order keeps
+   R->R, R->W and W->W.  A full fence restores ordering.
+   Written with generic relations + guarded fence sets so it runs on x86,
+   AArch64, RISC-V, ... tests alike. *)
+
+include "cos.cat"
+
+(* full fences across architectures (guarded so unknown ones are empty) *)
+let FULL =
+      (try MFENCE   with emptyset)   (* x86   *)
+    | (try DMB.SY   with emptyset)   (* AArch64 *)
+    | (try DMB.ISH  with emptyset)
+    | (try SYNC     with emptyset)   (* PPC   *)
+    | (try FENCE    with emptyset)   (* RISC-V generic fence event *)
+let fence = fencerel(FULL)
+
+(* per-location coherence *)
+acyclic po-loc | rf | co | fr as scperloc
+
+(* rmw atomicity *)
+empty rmw & (fre;coe) as atom
+
+(* preserved program order: everything except W;po;R *)
+let ppo = [R];po;[R] | [R];po;[W] | [W];po;[W]
+
+let ghb = ppo | fence | rfe | co | fr
+acyclic ghb as tso

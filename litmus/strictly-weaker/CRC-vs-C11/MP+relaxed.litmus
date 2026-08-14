@@ -1,0 +1,18 @@
+C MP+relaxed
+"The same message-passing shape with RELAXED atomics on the flag. C11 ALLOWS the
+ stale-data outcome r0=1 /\ r1=0: relaxed accesses carry no happens-before, so
+ the writer's two stores and the reader's two loads may each be observed out of
+ order. herd7 -c11 => Sometimes. CRC has NO relaxed accesses in its fragment, so
+ this program lies outside CRC's language entirely -- equivalently, CRC's weakest
+ atomic (release/acquire, MP+relacq.litmus) forbids the outcome. Thus C11 permits
+ a behaviour CRC excludes: CRC is strictly stronger."
+{ int x=0; int f=0; }
+P0 (atomic_int* x, atomic_int* f) {
+  atomic_store_explicit(x,1,memory_order_relaxed);
+  atomic_store_explicit(f,1,memory_order_relaxed);
+}
+P1 (atomic_int* x, atomic_int* f) {
+  int r0 = atomic_load_explicit(f,memory_order_relaxed);
+  int r1 = atomic_load_explicit(x,memory_order_relaxed);
+}
+exists (1:r0=1 /\ 1:r1=0)

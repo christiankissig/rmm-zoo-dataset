@@ -1,0 +1,734 @@
+{
+  "ARM|Coherence": {
+    "relationship": "strictly-weaker",
+    "summary": "Distinguishing behaviour: ignoring an address dependency.",
+    "tests": [
+      {
+        "name": "MP+dmb+addr",
+        "file": "MP+dmb+addr.litmus",
+        "lang": "smrd",
+        "code": "ARM MP+dmb+addr\n\"Reader has an address dependency between the two loads; writer is fenced.\n Forbidden by ARM (dependency preserved), allowed by bare Coherence (deps ignored).\"\n{ 0:r1=x; 0:r3=y; 1:r1=y; 1:r3=x; }\n P0           | P1            ;\n MOV r0,#1    | LDR r0,[r1]   ;\n STR r0,[r1]  | EOR r2,r0,r0  ;\n DMB          | LDR r4,[r3,r2];\n MOV r2,#1    |               ;\n STR r2,[r3]  |               ;\nexists (1:r0=1 /\\ 1:r4=0)\n"
+      }
+    ]
+  },
+  "ARMv8|ARM": {
+    "relationship": "strictly-weaker",
+    "summary": "Distinguishing behaviour: non-multi-copy-atomic store propagation.",
+    "tests": [
+      {
+        "name": "WRC+addrs.aarch64",
+        "file": "WRC+addrs.aarch64.litmus",
+        "lang": "smrd",
+        "code": "AArch64 WRC+addrs\n\"Same WRC+addrs in AArch64 syntax. Forbidden by ARMv8 (multi-copy atomic).\"\n{ 0:X1=x; 1:X1=x; 1:X3=y; 2:X1=y; 2:X3=x; }\n P0          | P1                  | P2                  ;\n MOV W0,#1   | LDR W0,[X1]         | LDR W0,[X1]         ;\n STR W0,[X1] | EOR W4,W0,W0        | EOR W4,W0,W0        ;\n            | STR W0,[X3,W4,SXTW]  | LDR W2,[X3,W4,SXTW] ;\nexists (1:X0=1 /\\ 2:X0=1 /\\ 2:X2=0)\n"
+      },
+      {
+        "name": "WRC+addrs.arm",
+        "file": "WRC+addrs.arm.litmus",
+        "lang": "smrd",
+        "code": "ARM WRC+addrs\n\"Write-to-read causality with address dependencies. A non-multi-copy-atomic\n behaviour: allowed by ARMv7 (non-MCA), forbidden by ARMv8 (MCA).\n P0 writes x; P1 reads x then (addr-dep) writes y; P2 reads y then (addr-dep)\n reads x. Seeing P1:x=1, P2:y=1 but P2:x=0 means the two writes were not seen\n in the same order by everyone.\"\n{ 0:r1=x; 1:r1=x; 1:r3=y; 2:r1=y; 2:r3=x; }\n P0          | P1            | P2            ;\n MOV r0,#1   | LDR r0,[r1]   | LDR r0,[r1]   ;\n STR r0,[r1] | EOR r2,r0,r0  | EOR r2,r0,r0  ;\n            | STR r0,[r3,r2] | LDR r4,[r3,r2];\nexists (1:r0=1 /\\ 2:r0=1 /\\ 2:r4=0)\n"
+      }
+    ]
+  },
+  "C11|C++17": {
+    "relationship": "strictly-weaker",
+    "summary": "C++17 is strictly weaker than C11/C++11/14: it narrows release sequences. Under C++11/14 a release sequence headed by a release store is continued by later relaxed stores of the same thread; from C++17 it is continued only by read-modify-writes. Removing that clause removes happens-before edges, so a message-passing pattern that synchronised under C++11 stops synchronising under C++17 — C++17 admits an outcome C++11 forbids. Because the change only ever removes synchronisation (the C++17 release-sequence relation is a subset of the C++11 one, everything else equal), it is monotone by construction: C++17 forbids nothing C++11 allows. Hence a genuine strict order, not incomparability.",
+    "tests": [
+      {
+        "name": "mp-rs-st-eadd-atomics.cpp11",
+        "file": "mp-rs-st-eadd-atomics.cpp11.litmus",
+        "lang": "smrd",
+        "code": "C mp-rs-st-eadd-atomics\n{ [x] = 0; [y] = 0;  }\n\nP0 (int* x, int* y) {\n  atomic_store_explicit(y, 1, memory_order_relaxed);\n  atomic_store_explicit(x, 1, memory_order_release);\n  atomic_store_explicit(x, 3, memory_order_relaxed);\n}\n\nP1 (int* x, int* y) {\n  int a = atomic_load_explicit(x, memory_order_acquire);\n  if (a > 1) {\n    int b = atomic_load_explicit(y, memory_order_relaxed);\n  }\n}\n\nP2 (int* x) {\n  atomic_fetch_add_explicit(x, 1, memory_order_relaxed);\n}\n\n~exists((1:a=2 \\/ 1:a=4) /\\ 1:b=0)"
+      }
+    ]
+  },
+  "C11|CUDA": {
+    "relationship": "strictly-weaker",
+    "summary": "Distinguishing behaviour: a release/acquire pair that synchronises under flat C11 but, narrowed to cuda::threadscopeblock across two thread blocks, provides no happens-before — so message passing leaks a stale value.",
+    "tests": [
+      {
+        "name": "MP+block-relaxed",
+        "file": "MP+block-relaxed.litmus",
+        "lang": "smrd",
+        "code": "C MP+block-relaxed\n\"CUDA message passing whose release/acquire are at cuda::thread_scope_block, with\n the producer and consumer in DIFFERENT thread blocks. The genuine CUDA source is:\n\n   // producer, block 0\n   x = 1;\n   cuda::atomic_ref<int, cuda::thread_scope_block> f_ref(f);\n   f_ref.store(1, cuda::memory_order_release);\n   // consumer, block 1\n   cuda::atomic_ref<int, cuda::thread_scope_block> f_ref(f);\n   r0 = f_ref.load(cuda::memory_order_acquire);\n   r1 = x;\n\n A block-scoped release/acquire orders only threads in the SAME block; across\n blocks it carries no happens-before, so it behaves exactly like\n memory_order_relaxed. We model that with relaxed atomics: the MP outcome herd7\n -c11 reports as Sometimes is the behaviour CUDA ALLOWS at block scope and flat C11\n FORBIDS (see MP+relacq.litmus). Promoting the scope to thread_scope_system\n recovers C11 and the outcome vanishes. CUDA's cuda::atomic is lowered to the PTX\n memory model (Lustig et al. 2019).\"\n{ int x=0; int f=0; }\nP0 (atomic_int* x, atomic_int* f) {\n  atomic_store_explicit(x,1,memory_order_relaxed);\n  atomic_store_explicit(f,1,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* f) {\n  int r0 = atomic_load_explicit(f,memory_order_relaxed);\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n}\nexists (1:r0=1 /\\ 1:r1=0)\n"
+      },
+      {
+        "name": "MP+relacq",
+        "file": "MP+relacq.litmus",
+        "lang": "smrd",
+        "code": "C MP+relacq\n\"Message passing with a release store and an acquire load. CUDA at\n cuda::thread_scope_system (and flat C11, where they coincide) FORBIDS reading the\n flag set but the data stale: the release/acquire pair orders the data write\n before the data read. herd7 -c11 => Never. The CUDA companion\n MP+block-relaxed.litmus narrows the same release/acquire to\n cuda::thread_scope_block with the two threads in different thread blocks, where it\n provides no synchronisation and the outcome reappears.\"\n{ int x=0; int f=0; }\nP0 (int* x, atomic_int* f) {\n  *x = 1;\n  atomic_store_explicit(f,1,memory_order_release);\n}\nP1 (int* x, atomic_int* f) {\n  int r0 = atomic_load_explicit(f,memory_order_acquire);\n  int r1 = *x;\n}\nexists (1:r0=1 /\\ 1:r1=0)\n"
+      }
+    ]
+  },
+  "C11|HRF": {
+    "relationship": "strictly-weaker",
+    "summary": "Distinguishing behaviour: synchronisation through scopes the two threads do not share, turning a C11-ordered message pass into a scoped data race.",
+    "tests": [
+      {
+        "name": "MP+relacq",
+        "file": "MP+relacq.litmus",
+        "lang": "smrd",
+        "code": "C MP+relacq\n\"Message passing with a release store and an acquire load. C11's DRF-SC guarantee\n (a single, global scope) FORBIDS reading the flag set but the data stale: the\n synchronising release/acquire makes the program race-free and orders the data\n write before the data read. herd7 -c11 => Never. The HRF companion\n MP+scoped-relaxed.litmus has the producer and consumer synchronise at a COMMON\n sub-global scope they do not actually share, so under HRF the program contains a\n heterogeneous (scoped) data race and the outcome is admitted.\"\n{ int x=0; int f=0; }\nP0 (int* x, atomic_int* f) {\n  *x = 1;\n  atomic_store_explicit(f,1,memory_order_release);\n}\nP1 (int* x, atomic_int* f) {\n  int r0 = atomic_load_explicit(f,memory_order_acquire);\n  int r1 = *x;\n}\nexists (1:r0=1 /\\ 1:r1=0)\n"
+      },
+      {
+        "name": "MP+scoped-relaxed",
+        "file": "MP+scoped-relaxed.litmus",
+        "lang": "smrd",
+        "code": "C MP+scoped-relaxed\n\"Heterogeneous message passing under HRF. The producer and consumer each issue a\n release/acquire scoped to their OWN work-group, so they never synchronise at a\n shared scope. The genuine HRF-style source is:\n\n   // producer, work-group A\n   x = 1;\n   atomic_store(&f, 1, release, scope(A));     // scope A only\n   // consumer, work-group B\n   r0 = atomic_load(&f, acquire, scope(B));    // scope B only\n   r1 = x;\n\n HRF generalises DRF to a scope hierarchy: two synchronising operations order each\n other only when they name a COMMON scope. Here they do not, so x is touched by a\n heterogeneous (scoped) data race and HRF gives no SC-like guarantee — the MP\n outcome is allowed, exactly as for relaxed accesses (modelled here with relaxed\n atomics, herd7 -c11 => Sometimes). Flat C11 has a single global scope, so the\n same release/acquire DO synchronise and the outcome is forbidden (MP+relacq.litmus).\n Choosing a common scope (e.g. device) for both recovers the C11 guarantee.\"\n{ int x=0; int f=0; }\nP0 (atomic_int* x, atomic_int* f) {\n  atomic_store_explicit(x,1,memory_order_relaxed);\n  atomic_store_explicit(f,1,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* f) {\n  int r0 = atomic_load_explicit(f,memory_order_relaxed);\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n}\nexists (1:r0=1 /\\ 1:r1=0)\n"
+      }
+    ]
+  },
+  "C11|OpenCL": {
+    "relationship": "strictly-weaker",
+    "summary": "Distinguishing behaviour: a release/acquire pair that synchronises under flat C11 but, narrowed to memoryscopeworkgroup across two work-groups, provides no happens-before — so message passing leaks a stale value.",
+    "tests": [
+      {
+        "name": "MP+relacq",
+        "file": "MP+relacq.litmus",
+        "lang": "smrd",
+        "code": "C MP+relacq\n\"Message passing with a release store and an acquire load. Flat C11 (and OpenCL\n at all-svm-devices scope, where the two coincide) FORBIDS reading the flag set\n but the data stale: the release/acquire pair establishes happens-before from the\n data write to the data read. herd7 -c11 => Never. The OpenCL companion\n MP+wg-relaxed.litmus narrows the same release/acquire to work_group scope across\n two work-groups, where it provides no synchronisation and the outcome reappears.\"\n{ int x=0; int f=0; }\nP0 (int* x, atomic_int* f) {\n  *x = 1;\n  atomic_store_explicit(f,1,memory_order_release);\n}\nP1 (int* x, atomic_int* f) {\n  int r0 = atomic_load_explicit(f,memory_order_acquire);\n  int r1 = *x;\n}\nexists (1:r0=1 /\\ 1:r1=0)\n"
+      },
+      {
+        "name": "MP+wg-relaxed",
+        "file": "MP+wg-relaxed.litmus",
+        "lang": "smrd",
+        "code": "C MP+wg-relaxed\n\"OpenCL message passing whose release/acquire are at memory_scope_work_group, with\n P0 and P1 in DIFFERENT work-groups. The genuine OpenCL source is:\n\n   // P0, work-group A\n   x = 1;\n   atomic_store_explicit(&f, 1, memory_order_release, memory_scope_work_group);\n   // P1, work-group B\n   r0 = atomic_load_explicit(&f, memory_order_acquire, memory_scope_work_group);\n   r1 = x;\n\n A work_group-scoped release/acquire synchronises only threads in the SAME\n work-group; across work-groups it carries no happens-before, so it behaves\n exactly like memory_order_relaxed. We model that here with relaxed atomics: the\n MP outcome herd7 -c11 reports as Sometimes is the behaviour OpenCL ALLOWS at\n work_group scope and flat C11 FORBIDS (see MP+relacq.litmus). Promoting the scope\n to memory_scope_all_svm_devices recovers C11 and the outcome vanishes.\"\n{ int x=0; int f=0; }\nP0 (atomic_int* x, atomic_int* f) {\n  atomic_store_explicit(x,1,memory_order_relaxed);\n  atomic_store_explicit(f,1,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* f) {\n  int r0 = atomic_load_explicit(f,memory_order_relaxed);\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n}\nexists (1:r0=1 /\\ 1:r1=0)\n"
+      }
+    ]
+  },
+  "CRC|C11": {
+    "relationship": "strictly-weaker",
+    "summary": "Compositional Relaxed Concurrency (CRC) (Dodds, Batty, Gotsman, Compositional Verification of Compiler Optimisations on Relaxed Memory, ESOP 2018) is a semantics for a fragment of C11: non-atomic accesses with catch-fire semantics, release/acquire atomics, and sequentially-consistent fences. It deliberately omits relaxed atomics \"to avoid well-known problems with thin-air values,\" and its SC fences are taken stronger than C11's. Because CRC's fragment cannot even express the relaxed accesses through which C11 admits message-passing and thin-air behaviour, every behaviour of a CRC program is also a C11 behaviour while C11 has extra ones CRC forbids. So CRC is strictly stronger -- C11 is strictly weaker.",
+    "tests": [
+      {
+        "name": "MP+relacq",
+        "file": "MP+relacq.litmus",
+        "lang": "smrd",
+        "code": "C MP+relacq\n\"Message passing with a release store and an acquire load -- the strongest shape\n CRC can express, since CRC's fragment is non-atomic + release/acquire +\n SC-fences and deliberately OMITS relaxed atomics (to sidestep thin-air). The\n release/acquire pair builds happens-before from the data write to the data read,\n so the stale-data outcome r0=1 /\\ r1=0 is a coherence violation: CRC FORBIDS it,\n and so does flat C11 on this annotation. herd7 -c11 => Never. This is the CRC\n (stronger) side; the C11 (weaker) side is the relaxed companion MP+relaxed.litmus,\n which CRC cannot even write down and C11 allows.\"\n{ int x=0; int f=0; }\nP0 (int* x, atomic_int* f) {\n  *x = 1;\n  atomic_store_explicit(f,1,memory_order_release);\n}\nP1 (int* x, atomic_int* f) {\n  int r0 = atomic_load_explicit(f,memory_order_acquire);\n  int r1 = *x;\n}\nexists (1:r0=1 /\\ 1:r1=0)\n"
+      },
+      {
+        "name": "MP+relaxed",
+        "file": "MP+relaxed.litmus",
+        "lang": "smrd",
+        "code": "C MP+relaxed\n\"The same message-passing shape with RELAXED atomics on the flag. C11 ALLOWS the\n stale-data outcome r0=1 /\\ r1=0: relaxed accesses carry no happens-before, so\n the writer's two stores and the reader's two loads may each be observed out of\n order. herd7 -c11 => Sometimes. CRC has NO relaxed accesses in its fragment, so\n this program lies outside CRC's language entirely -- equivalently, CRC's weakest\n atomic (release/acquire, MP+relacq.litmus) forbids the outcome. Thus C11 permits\n a behaviour CRC excludes: CRC is strictly stronger.\"\n{ int x=0; int f=0; }\nP0 (atomic_int* x, atomic_int* f) {\n  atomic_store_explicit(x,1,memory_order_relaxed);\n  atomic_store_explicit(f,1,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* f) {\n  int r0 = atomic_load_explicit(f,memory_order_relaxed);\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n}\nexists (1:r0=1 /\\ 1:r1=0)\n"
+      }
+    ]
+  },
+  "CSRA|C11": {
+    "relationship": "strictly-weaker",
+    "summary": "CSRA -- A Concurrency Semantics for Relaxed Atomics that Permits Optimisation and Avoids Thin-Air Executions (Pichon-Pharabod & Sewell, POPL 2016) -- pairs a POWER-inspired memory subsystem with per-thread event structures. Its authors are explicit that it is a subset of C/C++11: \"it would be desirable to have all the behaviours of our memory model ... be admitted by C/C++11. The converse is not to be expected, of course, as the point of our model is to exclude the thin-air executions that C/C++11 allows\" (§9). So the only outcomes separating the two are out-of-thin-air ones C11 admits -- making C11 strictly weaker, like the sibling MRD-vs-C11, sMRD-vs-C11, and Weakestmo-vs-C11 edges.",
+    "tests": [
+      {
+        "name": "LB-oota",
+        "file": "LB-oota.litmus",
+        "lang": "smrd",
+        "code": "C LB-oota\n\"Out-of-thin-air load buffering, CSRA's 'Example 2' shape: each thread stores 42\n ONLY in the branch taken when it has already read 42. P0 reads x; if it is 42 it\n writes y=42. P1 reads y; if it is 42 it writes x=42. The outcome r1=r2=42\n conjures 42 from a self-justifying cycle. C11 PERMITS it (its relaxed atomics do\n not forbid thin-air). CSRA FORBIDS it: because the write x=42 occurs in only one\n branch, CSRA's deordering cannot hoist it ahead of the read that guards it, so\n both reads can only see 0. CSRA's authors state it is a subset of C/C++11 by\n design ('the converse is not to be expected ... the point of our model is to\n exclude the thin-air executions that C/C++11 allows'), so C11 is strictly weaker\n and the only separating outcomes are OOTA ones. Verdicts CITED: herd7 cannot\n construct an OOTA execution, so it reports Never. See README.\"\n{ int x=0; int y=0; }\nP0 (atomic_int* x, atomic_int* y) {\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n  if (r1 == 42) atomic_store_explicit(y,42,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* y) {\n  int r2 = atomic_load_explicit(y,memory_order_relaxed);\n  if (r2 == 42) atomic_store_explicit(x,42,memory_order_relaxed);\n}\nexists (0:r1=42 /\\ 1:r2=42)\n"
+      }
+    ]
+  },
+  "HRF|ScopedC11": {
+    "relationship": "strictly-weaker",
+    "summary": "Distinguishing behaviour: synchronisation between different but inclusion-related scopes — legal under HRF-Relaxed, not recognised by HRF.",
+    "tests": [
+      {
+        "name": "MP+inclusion-scopes",
+        "file": "MP+inclusion-scopes.litmus",
+        "lang": "smrd",
+        "code": "C MP+inclusion-scopes\n\"Message passing where the producer releases at a LARGER scope and the consumer\n acquires at a SMALLER, included scope. Genuine scoped source:\n\n   // producer\n   x = 1;\n   atomic_store(&f, 1, release, scope(device));        // device scope\n   // consumer (a work-item inside that device)\n   r0 = atomic_load(&f, acquire, scope(work_group));   // work_group scope\n   r1 = x;\n\n HRF-direct requires the two scopes to MATCH EXACTLY to synchronise, and\n HRF-indirect only adds explicit transitive chains; neither recognises this\n device-release / work_group-acquire pair, so the program is a scoped race and the\n stale-data outcome (1:r0=1, 1:r1=0) is among the behaviours HRF admits. HRF-Relaxed\n / Scoped-C11 loosens matching to scope INCLUSION: the work_group is contained in\n the device, so the operations synchronise, the program is race-free, and an\n entire class of such inclusion-synchronising programs becomes well-defined that\n HRF did not admit. This is a model-DEFINITION difference (the matching rule), not\n a reordering herd7 can enumerate; herd7 has no scoped model. See README.\"\n{ int x=0; int f=0; }\nP0 (atomic_int* x, atomic_int* f) {\n  atomic_store_explicit(x,1,memory_order_relaxed);\n  atomic_store_explicit(f,1,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* f) {\n  int r0 = atomic_load_explicit(f,memory_order_relaxed);\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n}\nexists (1:r0=1 /\\ 1:r1=0)\n"
+      }
+    ]
+  },
+  "MRD|C11": {
+    "relationship": "strictly-weaker",
+    "summary": "Distinguishing behaviour: out-of-thin-air (OOTA) reads.",
+    "tests": [
+      {
+        "name": "LB-oota.c11",
+        "file": "LB-oota.c11.litmus",
+        "lang": "smrd",
+        "code": "C LB-oota\n\"Out-of-thin-air load buffering. C11 relaxed atomics permit r1=r2=42 (the\n standard fails to forbid it). herd cannot *exhibit* OOTA executions, so it\n reports Never here; the permission is a property of the C11 axioms, not of\n what herd enumerates. See the README and the mordor (.lit) companion.\"\n{ int x=0; int y=0; }\nP0 (atomic_int* x, atomic_int* y) {\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n  atomic_store_explicit(y,r1,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* y) {\n  int r2 = atomic_load_explicit(y,memory_order_relaxed);\n  atomic_store_explicit(x,r2,memory_order_relaxed);\n}\nexists (0:r1=42 /\\ 1:r2=42)\n"
+      },
+      {
+        "name": "LB-oota",
+        "file": "LB-oota.lit",
+        "lang": "smrd",
+        "code": "// Out-of-thin-air via value invention (cf. SMRD paper, \"invent-in-the-load\").\n// The value 42 can only appear by speculating it into existence. C11's relaxed\n// atomics permit (r0 = 42 && r1 = 42); MRD forbids it.\nx := 0; y := 0;\n{\n  r0 := y;\n  if (r0 != 42) {\n    r0 := y;\n    if (r0 != 42) {\n      r0 := y;\n      if (r0 != 42) { x := r0 }\n      else { x := 42 }\n    }\n    else { x := 42 }\n  }\n  else { x := 42 }\n}|||{\n  r1 := x;\n  if (r1 = 42) { y := 42 }\n  else { y := r1 }\n}\n%% forbid (r0 = 42 && r1 = 42) []\n"
+      }
+    ]
+  },
+  "MRD|sMRD": {
+    "relationship": "strictly-weaker",
+    "summary": "Distinguishing behaviour: false dependencies that only symbolic reasoning can remove.",
+    "tests": [
+      {
+        "name": "LB+UB+data",
+        "file": "LB+UB+data.lit",
+        "lang": "smrd",
+        "code": "// sMRD Example 1.1a (mordor-family syntax): load buffering with a FALSE\n// dependency masked by undefined behaviour. The store to y is guarded by a\n// computation (1/!r1) that is DEFINED only when r1 == 0; a compiler may assume\n// well-definedness, constant-fold the store to y := 1, and break the\n// read(x)->write(y) dependency. sMRD removes this semantically-false dependency\n// and ALLOWS r0=r1=1; MRD, reasoning over concrete values, keeps the dependency\n// and FORBIDS it. (Approximated here as a constant-folded store; the UB guard is\n// what distinguishes the two models -- see README.)\nx := 0; y := 0;\n{\n  r0 := x;\n  y := 1            // sMRD: false dep removed (UB-justified); MRD: dep retained\n}|||{\n  r1 := y;\n  x := r1\n}\n%% allow (r0 = 1 && r1 = 1) []     // sMRD verdict; MRD forbids this outcome\n"
+      },
+      {
+        "name": "LB+UB+data",
+        "file": "LB+UB+data.litmus",
+        "lang": "smrd",
+        "code": "C LB+UB+data\n\"sMRD Example 1.1a: load buffering with a FALSE dependency masked by undefined\n behaviour. P0 reads x into r1, then stores to y the value 1/!r1 -- which is\n only DEFINED when r1==0 (otherwise it is a division by zero, i.e. UB). A\n compiler may therefore assume r1==0, constant-fold the store to a plain y=1,\n and break the read(x)->write(y) dependency. P1 reads y into r2 and stores r2 to\n x. The outcome r1=1 /\\ r2=1 then becomes reachable.\n\n sMRD (Symbolic MRD) ALLOWS it: its symbolic dependency calculus reasons about\n undefined behaviour, sees the dependency is semantically false, removes it, and\n with no dp edge there is no (dp union rf) cycle to discard. This matches GCC/\n Clang, which perform exactly this optimisation. MRD (Modular Relaxed\n Dependencies) FORBIDS it: MRD computes dependencies over CONCRETE locations and\n values from program syntax, is UB-unaware, keeps the read(x)->write(y) data\n dependency, and so retains a (dp union rf) cycle and rules the outcome out.\n Neither model is in herd7; verdicts are CITED. See README.\"\n{ int x=0; int y=0; }\nP0 (atomic_int* x, atomic_int* y) {\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n  atomic_store_explicit(y, 1/(1-r1), memory_order_relaxed);   /* the paper's 1/!r1: defined only when r1==0 */\n}\nP1 (atomic_int* x, atomic_int* y) {\n  int r2 = atomic_load_explicit(y,memory_order_relaxed);\n  atomic_store_explicit(x, r2, memory_order_relaxed);\n}\nexists (0:r1=1 /\\ 1:r2=1)\n"
+      }
+    ]
+  },
+  "POWER|Coherence": {
+    "relationship": "strictly-weaker",
+    "summary": "Distinguishing behaviour: ignoring an address dependency.",
+    "tests": [
+      {
+        "name": "MP+sync+addr",
+        "file": "MP+sync+addr.litmus",
+        "lang": "smrd",
+        "code": "PPC MP+sync+addr\n\"Reader has an address dependency between the two loads; writer is fenced.\n Forbidden by POWER (dependency preserved), allowed by bare Coherence (deps ignored).\"\n{ 0:r2=x; 0:r4=y; 1:r2=y; 1:r5=x; }\n P0           | P1              ;\n li r1,1      | lwz r3,0(r2)    ;\n stw r1,0(r2) | xor r6,r3,r3    ;\n sync         | lwzx r7,r6,r5   ;\n li r3,1      |                 ;\n stw r3,0(r4) |                 ;\nexists (1:r3=1 /\\ 1:r7=0)\n"
+      }
+    ]
+  },
+  "PSO|POWER": {
+    "relationship": "strictly-weaker",
+    "summary": "Distinguishing behaviour — POWER allows, PSO forbids: load→load reordering.",
+    "tests": [
+      {
+        "name": "MP+sync+po",
+        "file": "MP+sync+po.litmus",
+        "lang": "smrd",
+        "code": "PPC MP+sync+po\n\"Writer fenced, reader does two plain loads => isolates load->load reordering.\n Allowed by POWER (loads reorder freely), forbidden by PSO (loads stay ordered).\n This is the only direction that separates them: see README -- on the standard\n litmus families PSO turns out to be *included in* POWER (PSO has no behaviour\n POWER lacks), so the 'incomparable' label is generous.\"\n{ 0:r2=x; 0:r4=y; 1:r2=y; 1:r4=x; }\n P0           | P1            ;\n li r1,1      | lwz r1,0(r2)  ;\n stw r1,0(r2) | lwz r3,0(r4)  ;\n sync         |               ;\n li r3,1      |               ;\n stw r3,0(r4) |               ;\nexists (1:r1=1 /\\ 1:r3=0)\n"
+      }
+    ]
+  },
+  "PSO|RMO": {
+    "relationship": "strictly-weaker",
+    "summary": "Distinguishing behaviour: load→store (and load→load) reordering.",
+    "tests": [
+      {
+        "name": "LB",
+        "file": "LB.litmus",
+        "lang": "smrd",
+        "code": "AArch64 LB\n\"Load buffering: load->store reordering. Forbidden under PSO (loads stay in order), allowed under RMO.\"\n{ 0:X1=x; 0:X3=y; 1:X1=y; 1:X3=x; }\n P0           | P1           ;\n LDR W0,[X1]  | LDR W0,[X1]  ;\n MOV W2,#1    | MOV W2,#1    ;\n STR W2,[X3]  | STR W2,[X3]  ;\nexists (0:X0=1 /\\ 1:X0=1)\n"
+      }
+    ]
+  },
+  "RC11|C++20": {
+    "relationship": "strictly-weaker",
+    "summary": "Distinguishing behaviour: out-of-thin-air / plain load buffering.",
+    "tests": [
+      {
+        "name": "LB-relaxed",
+        "file": "LB-relaxed.litmus",
+        "lang": "smrd",
+        "code": "C LB-relaxed\n\"Plain relaxed load buffering (no dependencies, no thin-air value invention). RC11\n enforces the no-thin-air axiom acyclic(po | rf), which forbids ALL load-buffering\n shapes, so RC11 reports Never. C++20 did NOT adopt that axiom (P0668 fixed seq_cst\n but deliberately left thin-air unresolved), so C++20 -- exactly like C11/C++17 --\n permits this LB. The C++20 side is modelled with herd7's original C11 model\n (c11_orig.cat), whose relaxed/thin-air fragment C++20 leaves unchanged => Sometimes.\n   herd7 -model rc11.cat     => Never      (RC11 forbids)\n   herd7 -model c11_orig.cat => Sometimes  (C++20, via the unchanged C11 fragment)\"\n{ int x=0; int y=0; }\nP0 (atomic_int* x, atomic_int* y) {\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n  atomic_store_explicit(y,1,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* y) {\n  int r2 = atomic_load_explicit(y,memory_order_relaxed);\n  atomic_store_explicit(x,1,memory_order_relaxed);\n}\nexists (0:r1=1 /\\ 1:r2=1)\n"
+      }
+    ]
+  },
+  "RC11|C11": {
+    "relationship": "strictly-weaker",
+    "summary": "Distinguishing behaviour: the broken SC semantics that RC11 repairs.",
+    "tests": [
+      {
+        "name": "IRIW+scfences",
+        "file": "IRIW+scfences.litmus",
+        "lang": "smrd",
+        "code": "C IRIW+scfences\n{ int x=0; int y=0; }\nP0 (atomic_int* x) { atomic_store_explicit(x,1,memory_order_relaxed); }\nP1 (atomic_int* y) { atomic_store_explicit(y,1,memory_order_relaxed); }\nP2 (atomic_int* x, atomic_int* y) {\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n  atomic_thread_fence(memory_order_seq_cst);\n  int r2 = atomic_load_explicit(y,memory_order_relaxed);\n}\nP3 (atomic_int* x, atomic_int* y) {\n  int r3 = atomic_load_explicit(y,memory_order_relaxed);\n  atomic_thread_fence(memory_order_seq_cst);\n  int r4 = atomic_load_explicit(x,memory_order_relaxed);\n}\nexists (2:r1=1 /\\ 2:r2=0 /\\ 3:r3=1 /\\ 3:r4=0)\n"
+      }
+    ]
+  },
+  "RC11|JAM": {
+    "relationship": "strictly-weaker",
+    "summary": "Java Access Modes (JAM) (Bender & Palsberg, A Formalization of Java's Concurrent Access Modes, OOPSLA 2019) formalises the JDK 9 VarHandle access modes -- plain, opaque, release/acquire, volatile. It is explicitly modelled on RC11 and adopts RC11's out-of-thin-air fix -- the acyclic(po ∪ rf) requirement -- but, crucially, only for opaque-or-stronger accesses. For plain (non-atomic) accesses JAM deliberately does not tackle thin-air. RC11, by contrast, imposes acyclic(po ∪ rf) over all accesses. So at the plain level JAM permits thin-air cycles RC11 forbids: along this edge JAM is strictly weaker.",
+    "tests": [
+      {
+        "name": "LB-oota",
+        "file": "LB-oota.litmus",
+        "lang": "smrd",
+        "code": "C LB-oota\n\"Out-of-thin-air load buffering over the WEAKEST access mode (LB+datas /\n cyc_na). P0 reads x into r1 and stores r1 to y; P1 reads y into r2 and stores\n r2 to x. The outcome r1=r2=42 invents 42 from a cyclic justification in po|rf.\n\n RC11 FORBIDS it: RC11's no-thin-air fix is the BLANKET axiom acyclic(po|rf)\n applied to ALL accesses, plain ones included. JAM (Java Access Modes) ALLOWS\n it: JAM is inspired by RC11 and adopts the same acyclicity fix, but ONLY for\n opaque-or-stronger accesses; for plain (non-atomic) accesses it deliberately\n leaves the cycle unconstrained, so the plain-mode version of this program (JAM\n test cyc_na) keeps the po|rf cycle and the thin-air outcome is permitted. The\n all-relaxed companion maps to JAM opaque mode, where BOTH models forbid it --\n isolating the separation to the plain level. Verdicts are CITED: herd7 cannot\n construct an OOTA execution (it ties reads to written values), so it reports\n Never; that reflects the tool, while RC11's prohibition is its axiom and JAM's\n permission is a property of its plain-mode rules. See README.\"\n{ int x=0; int y=0; }\nP0 (atomic_int* x, atomic_int* y) {\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n  atomic_store_explicit(y,r1,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* y) {\n  int r2 = atomic_load_explicit(y,memory_order_relaxed);\n  atomic_store_explicit(x,r2,memory_order_relaxed);\n}\nexists (0:r1=42 /\\ 1:r2=42)\n"
+      }
+    ]
+  },
+  "RC11|RC17": {
+    "relationship": "strictly-weaker",
+    "summary": "RC17 is RC11 updated to the C++17 release-sequence definition: identical to RC11 (repaired seqcst, no out-of-thin-air via acyclic(po | rf)) except that a release sequence is continued only by read-modify-writes, no longer by later same-thread relaxed stores. Exactly as in the C11 → C++17 case, that narrowing only removes happens-before edges, so RC17 admits a non-synchronising outcome RC11 forbids and forbids nothing RC11 allows — a strict order by construction.",
+    "tests": [
+      {
+        "name": "mp-rs-add-est-atomic",
+        "file": "mp-rs-add-est-atomic.litmus",
+        "lang": "smrd",
+        "code": "C mp-rs-add-est\n{ [x] = 0; [y] = 0;  }\n\nP0 (int* x, int* y) {\n  atomic_store_explicit(y, 1, memory_order_relaxed);\n  atomic_store_explicit(x, 1, memory_order_release);\n  atomic_fetch_add_explicit(x, 1, memory_order_relaxed);  \n}\n\nP1 (int* x, int* y) {\n  int a = atomic_load_explicit(x, memory_order_acquire);\n  if (a == 3) {\n    int b = atomic_load_explicit(y, memory_order_relaxed);\n  }\n}\n\nP2 (int* x) {\n  atomic_store_explicit(x, 2, memory_order_relaxed);\n}\n\nexists([x]=3 /\\ 1:a=3 /\\ 1:b=0)"
+      }
+    ]
+  },
+  "RC11|sMRD": {
+    "relationship": "strictly-weaker",
+    "summary": "Repaired C11 (RC11, Lahav et al. PLDI 2017) kills out-of-thin-air the blunt way: it adds the axiom acyclic(po ∪ rf) over all accesses. That forbids every load->store reordering, thin-air or not -- which is sound but too strong, as the RC11 authors themselves note: it makes constant-folding a relaxed store unsound. Symbolic MRD (sMRD, Richards et al. OOPSLA 2025) forbids thin-air more surgically: it bans only dp ∪ rf cycles, where dp is a semantic dependency. Where a dependency is semantically false (so a real compiler removes it), sMRD removes it too and permits the resulting load->store reordering. So sMRD allows LB outcomes RC11 forbids: RC11 is strictly stronger.",
+    "tests": [
+      {
+        "name": "LB",
+        "file": "LB.litmus",
+        "lang": "smrd",
+        "code": "C LB\n\"Load buffering after a sound compiler optimisation. The source program is the\n false-dependency LB of sMRD Example 1.2: P0 reads x into r1 and stores to y a\n value that a compiler may constant-fold to 1 (the dependency is semantically\n false), shown here already folded to a plain y=1. P1 reads y into r2 and stores\n r2 to x. The outcome r1=1 /\\ r2=1 is a genuine coherent execution -- no value is\n invented, y=1 is really written -- reachable only by reordering P0's load ahead\n of its store.\n\n RC11 FORBIDS it: its no-thin-air axiom is the blanket acyclic(po union rf) over\n ALL accesses, which rejects this load->store cycle regardless of whether the\n dependency is real. (This is RC11 being deliberately too strong on LB, which is\n also why constant-folding the store is unsound under RC11.) sMRD ALLOWS it: it\n bans only dp-union-rf cycles, the false dp edge is gone, so the outcome stands\n -- matching C11 and what GCC/Clang actually do. The RC11 verdict is machine-run\n (rc11.cat); the permissive side is shown via c11_orig.cat (C11), which sMRD\n matches on this outcome. See README.\"\n{ int x=0; int y=0; }\nP0 (atomic_int* x, atomic_int* y) {\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n  atomic_store_explicit(y,1,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* y) {\n  int r2 = atomic_load_explicit(y,memory_order_relaxed);\n  atomic_store_explicit(x,r2,memory_order_relaxed);\n}\nexists (0:r1=1 /\\ 1:r2=1)\n"
+      }
+    ]
+  },
+  "RC17|C++17": {
+    "relationship": "strictly-weaker",
+    "summary": "RC17 and C++17 share the same (C++17) release-sequence definition; they differ in one axiom. RC17 inherits RC11's no-thin-air axiom acyclic(po | rf), which C++17 does not have. So C++17 permits plain relaxed load-buffering / out-of-thin-air reads that RC17 forbids, and forbids nothing RC17 allows (RC17 is literally C++17 plus that one axiom). A strict order by construction — the same relationship the zoo already records between RC11 and C11.",
+    "tests": [
+      {
+        "name": "LB-relaxed",
+        "file": "LB-relaxed.litmus",
+        "lang": "smrd",
+        "code": "C LB-relaxed\n\"Plain relaxed load buffering (no dependencies, no thin-air value invention). RC11\n enforces the no-thin-air axiom acyclic(po | rf), which forbids ALL load-buffering\n shapes, so RC11 reports Never. C++20 did NOT adopt that axiom (P0668 fixed seq_cst\n but deliberately left thin-air unresolved), so C++20 -- exactly like C11/C++17 --\n permits this LB. The C++20 side is modelled with herd7's original C11 model\n (c11_orig.cat), whose relaxed/thin-air fragment C++20 leaves unchanged => Sometimes.\n   herd7 -model rc11.cat     => Never      (RC11 forbids)\n   herd7 -model c11_orig.cat => Sometimes  (C++20, via the unchanged C11 fragment)\"\n{ int x=0; int y=0; }\nP0 (atomic_int* x, atomic_int* y) {\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n  atomic_store_explicit(y,1,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* y) {\n  int r2 = atomic_load_explicit(y,memory_order_relaxed);\n  atomic_store_explicit(x,1,memory_order_relaxed);\n}\nexists (0:r1=1 /\\ 1:r2=1)\n"
+      }
+    ]
+  },
+  "RMO|Alpha": {
+    "relationship": "strictly-weaker",
+    "summary": "Distinguishing behaviour: relaxing an address dependency between two loads.",
+    "tests": [
+      {
+        "name": "MP+dmb+addr",
+        "file": "MP+dmb+addr.litmus",
+        "lang": "smrd",
+        "code": "AArch64 MP+dmb.sy+addr\n\"Reader has an address dependency between the two loads; writer is fenced.\n Forbidden by RMO (address dependency preserved), allowed by Alpha (dependent\n loads are NOT ordered -- Alpha's defining relaxation).\"\n{ 0:X1=x; 0:X3=y; 1:X1=y; 1:X3=x; }\n P0           | P1                    ;\n MOV W0,#1    | LDR W0,[X1]           ;\n STR W0,[X1]  | EOR W4,W0,W0          ;\n DMB SY       | LDR W2,[X3,W4,SXTW]   ;\n MOV W2,#1    |                       ;\n STR W2,[X3]  |                       ;\nexists (1:X0=1 /\\ 1:X2=0)\n"
+      }
+    ]
+  },
+  "RMO|Coherence": {
+    "relationship": "strictly-weaker",
+    "summary": "Distinguishing behaviour: ignoring an address dependency (while still respecting per-location coherence).",
+    "tests": [
+      {
+        "name": "MP+addr",
+        "file": "MP+addr.litmus",
+        "lang": "smrd",
+        "code": "AArch64 MP+dmb.sy+addr\n\"Reader has an address dependency between the two loads; writer is fenced.\n Forbidden by RMO (dependency preserved), allowed by bare Coherence (deps ignored).\"\n{ 0:X1=x; 0:X3=y; 1:X1=y; 1:X3=x; }\n P0           | P1                    ;\n MOV W0,#1    | LDR W0,[X1]           ;\n STR W0,[X1]  | EOR W4,W0,W0          ;\n DMB SY       | LDR W2,[X3,W4,SXTW]   ;\n MOV W2,#1    |                       ;\n STR W2,[X3]  |                       ;\nexists (1:X0=1 /\\ 1:X2=0)\n"
+      }
+    ]
+  },
+  "SC|BMM": {
+    "relationship": "strictly-weaker",
+    "summary": "The Buffered Memory Model (BMM) is a pragmatic, TSO-style buffered model proposed as a candidate semantics for Java (Demange et al., Plan B: A Buffered Memory Model for Java, POPL 2013). Each thread owns a FIFO store buffer, so the only relaxation over Sequential Consistency is store->load reordering: a load may be satisfied from memory before a program-order-earlier store of the same thread has drained out of the buffer. The authors prove the external DRF theorem and the soundness of several transformations, and modify an open-source JVM to preserve BMM at ~1% overhead on x86. Because the single relaxation is precisely the x86/TSO store buffer, BMM coincides with TSO on this behaviour -- the TSO -> BMM edge in models.json is equivalent -- while SC forbids all reordering. So SC is strictly stronger: SC forbids the store-buffering outcome that BMM permits.",
+    "tests": [
+      {
+        "name": "SB",
+        "file": "SB.litmus",
+        "lang": "smrd",
+        "code": "C SB\n\"Store buffering: store->load reordering. The principal relaxation of the\n Buffered Memory Model (BMM) over SC is exactly the per-thread store buffer, so\n BMM exhibits the classic SB outcome r0=r0=0 (each load overtakes the program-\n order-earlier store still sitting in the buffer). SC forbids it: a single\n global total order consistent with program order cannot place both loads before\n both stores. BMM is TSO-style and proved TSO-equivalent for this relaxation, so\n it is modelled here by the portable abstract-tso.cat; SC by abstract-sc.cat.\"\n{ int x=0; int y=0; }\nP0 (atomic_int* x, atomic_int* y) {\n  atomic_store_explicit(x,1,memory_order_relaxed);\n  int r0 = atomic_load_explicit(y,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* y) {\n  atomic_store_explicit(y,1,memory_order_relaxed);\n  int r0 = atomic_load_explicit(x,memory_order_relaxed);\n}\nexists (0:r0=0 /\\ 1:r0=0)\n"
+      }
+    ]
+  },
+  "SC|C11": {
+    "relationship": "strictly-weaker",
+    "summary": "Distinguishing behaviour: store→load reordering of memoryorderrelaxed atomics.",
+    "tests": [
+      {
+        "name": "SB-relaxed",
+        "file": "SB-relaxed.litmus",
+        "lang": "smrd",
+        "code": "C SB-relaxed\n{ int x=0; int y=0; }\nP0 (atomic_int* x, atomic_int* y) {\n  atomic_store_explicit(x,1,memory_order_relaxed);\n  int r0 = atomic_load_explicit(y,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* y) {\n  atomic_store_explicit(y,1,memory_order_relaxed);\n  int r0 = atomic_load_explicit(x,memory_order_relaxed);\n}\nexists (0:r0=0 /\\ 1:r0=0)\n"
+      }
+    ]
+  },
+  "SC|Java": {
+    "relationship": "strictly-weaker",
+    "summary": "Distinguishing behaviour: store→load reordering across a data race.",
+    "tests": [
+      {
+        "name": "SB",
+        "file": "SB.java",
+        "lang": "java",
+        "code": "// Store Buffering on the Java Memory Model.\n//\n// SC forbids the outcome r0 == 0 && r1 == 0: in any sequentially consistent\n// interleaving at least one thread must run its load after the other's store.\n// The JMM only guarantees SC for data-race-free programs.  Here x and y are\n// *plain* (non-volatile) fields written and read concurrently -- a data race --\n// so the JMM lets each thread's store be reordered past its load.  On any\n// TSO-or-weaker machine (incl. x86) you will observe the SC-forbidden (0, 0).\n//\n// Build & run:\n//   javac SB.java\n//   java SB\n//\n// Uses a jcstress-style harness: two long-lived worker threads synchronised by\n// a CyclicBarrier each round, so the racy accesses actually overlap.  Declaring\n// x and y `volatile` removes the race and makes (0,0) vanish -- the DRF-SC\n// guarantee.\n\nimport java.util.concurrent.CyclicBarrier;\n\npublic class SB {\n    static int x, y;     // plain (racy) shared state\n    static int r0, r1;   // observed reads\n\n    public static void main(String[] args) throws Exception {\n        final int ROUNDS = 2_000_000;\n        final CyclicBarrier start = new CyclicBarrier(3);\n        final CyclicBarrier end   = new CyclicBarrier(3);\n        long both0 = 0, count00 = 0;\n\n        Thread t0 = new Thread(() -> {\n            for (int i = 0; i < ROUNDS; i++) {\n                await(start);\n                x = 1;\n                r0 = y;\n                await(end);\n            }\n        });\n        Thread t1 = new Thread(() -> {\n            for (int i = 0; i < ROUNDS; i++) {\n                await(start);\n                y = 1;\n                r1 = x;\n                await(end);\n            }\n        });\n        t0.setDaemon(true); t1.setDaemon(true);\n        t0.start(); t1.start();\n\n        for (int i = 0; i < ROUNDS; i++) {\n            x = 0; y = 0;            // reset before the round\n            await(start);            // release both workers\n            await(end);             // wait for both to finish\n            if (r0 == 0 && r1 == 0) {\n                count00++;\n                if (both0++ == 0)\n                    System.out.printf(\n                        \"First SC-forbidden (r0=0, r1=0) at round %d%n\", i);\n            }\n        }\n\n        System.out.printf(\"rounds=%d  (0,0) seen %d times%n\", ROUNDS, count00);\n        System.out.println(count00 > 0\n            ? \"=> JMM allows a behaviour SC forbids (store/load reordered across the race).\"\n            : \"=> No (0,0) this run; it is hardware-dependent -- re-run or try another machine.\");\n    }\n\n    static void await(CyclicBarrier b) {\n        try { b.await(); } catch (Exception e) { throw new RuntimeException(e); }\n    }\n}\n"
+      }
+    ]
+  },
+  "SC|LKMM": {
+    "relationship": "strictly-weaker",
+    "summary": "The Linux Kernel Memory Model is a deliberately weak virtual architecture: it must allow at least everything the underlying CPUs (x86, ARM, POWER, RISC-V) allow, so that kernel code proven correct under LKMM is correct everywhere. Consequently it permits reorderings that Sequential Consistency forbids.",
+    "tests": [
+      {
+        "name": "SB",
+        "file": "SB.litmus",
+        "lang": "smrd",
+        "code": "C SB\n(*\n * Store buffering with plain *_ONCE accesses and no barrier between each\n * thread's store and its load. Allowed under LKMM, forbidden under SC.\n * Witnesses SC -> LKMM (LKMM is strictly weaker).\n *\n * Check with herd7 and the kernel model:\n *   herd7 -model linux-kernel.cat SB.litmus   # Sometimes 0:r0=0 1:r1=0\n *)\n{}\n\nP0(int *x, int *y)\n{\n\tWRITE_ONCE(*x, 1);\n\tint r0 = READ_ONCE(*y);\n}\n\nP1(int *x, int *y)\n{\n\tWRITE_ONCE(*y, 1);\n\tint r1 = READ_ONCE(*x);\n}\n\nexists (0:r0=0 /\\ 1:r1=0)\n"
+      }
+    ]
+  },
+  "SC|TSO": {
+    "relationship": "strictly-weaker",
+    "summary": "Distinguishing behaviour: store→load reordering (the store buffer).",
+    "tests": [
+      {
+        "name": "SB",
+        "file": "SB.litmus",
+        "lang": "smrd",
+        "code": "X86 SB\n\"Store buffering: store->load reordering. Forbidden under SC, allowed under TSO.\"\n{ x=0; y=0; }\n P0          | P1          ;\n MOV [x],$1  | MOV [y],$1  ;\n MOV EAX,[y] | MOV EAX,[x] ;\nexists (0:EAX=0 /\\ 1:EAX=0)\n"
+      }
+    ]
+  },
+  "SC|x86-TSO": {
+    "relationship": "strictly-weaker",
+    "summary": "Distinguishing behaviour: store→load reordering (the store buffer).",
+    "tests": [
+      {
+        "name": "SB",
+        "file": "SB.litmus",
+        "lang": "smrd",
+        "code": "X86 SB\n\"Store buffering: store->load reordering. Forbidden under SC, allowed under TSO.\"\n{ x=0; y=0; }\n P0          | P1          ;\n MOV [x],$1  | MOV [y],$1  ;\n MOV EAX,[y] | MOV EAX,[x] ;\nexists (0:EAX=0 /\\ 1:EAX=0)\n"
+      }
+    ]
+  },
+  "TSO|ARMv8": {
+    "relationship": "strictly-weaker",
+    "summary": "Distinguishing behaviour: load→store reordering (load buffering).",
+    "tests": [
+      {
+        "name": "LB",
+        "file": "LB.litmus",
+        "lang": "smrd",
+        "code": "AArch64 LB\n\"Load buffering: load->store reordering. Forbidden under TSO, allowed under ARMv8.\"\n{ 0:X1=x; 0:X3=y; 1:X1=y; 1:X3=x; }\n P0           | P1           ;\n LDR W0,[X1]  | LDR W0,[X1]  ;\n MOV W2,#1    | MOV W2,#1    ;\n STR W2,[X3]  | STR W2,[X3]  ;\nexists (0:X0=1 /\\ 1:X0=1)\n"
+      }
+    ]
+  },
+  "TSO|PSO": {
+    "relationship": "strictly-weaker",
+    "summary": "Distinguishing behaviour: store→store reordering to different addresses.",
+    "tests": [
+      {
+        "name": "MP",
+        "file": "MP.litmus",
+        "lang": "smrd",
+        "code": "AArch64 MP\n\"Message passing with two plain stores. Store->store reordering. Forbidden under TSO, allowed under PSO.\"\n{ 0:X1=x; 0:X3=y; 1:X1=y; 1:X3=x; }\n P0           | P1           ;\n MOV W0,#1    | LDR W0,[X1]  ;\n STR W0,[X1]  | LDR W2,[X3]  ;\n MOV W2,#1    |              ;\n STR W2,[X3]  |              ;\nexists (1:X0=1 /\\ 1:X2=0)\n"
+      }
+    ]
+  },
+  "TSO|RMMOA": {
+    "relationship": "strictly-weaker",
+    "summary": "RMMOA -- Relaxed Memory Models: an Operational Approach (Boudol & Petri, POPL 2009) -- gives an operational semantics for relaxed memory built on an abstract machine with a main memory and a hierarchy of store buffers in which writes to different locations may propagate to memory out of order. That is exactly the SPARC PSO store->store relaxation, and the authors prove the external DRF theorem. The PSO -> RMMOA edge in models.json is equivalent: RMMOA and PSO coincide on this relaxation. TSO, by contrast, keeps W->W in program order, so TSO is strictly stronger -- it forbids the store-store reordering RMMOA permits.",
+    "tests": [
+      {
+        "name": "MP",
+        "file": "MP.litmus",
+        "lang": "smrd",
+        "code": "C MP\n\"Message passing with two plain stores on the writer and two plain loads on the\n reader: store->store reordering. RMMOA (Relaxed Memory Models: an Operational\n Approach, Boudol & Petri 2009) builds its abstract machine on a HIERARCHY of\n per-location store buffers from which writes to DIFFERENT locations may\n propagate to main memory OUT OF ORDER -- exactly the PSO store->store\n relaxation -- so the store to y can reach memory before the store to x and the\n reader sees y=1 /\\ x=0. TSO keeps W->W in program order and forbids it. PSO and\n RMMOA were shown to coincide on this relaxation (PSO -> RMMOA is the\n equivalent edge in models.json), so RMMOA is modelled here by the portable\n abstract-pso.cat; TSO by abstract-tso.cat.\"\n{ int x=0; int y=0; }\nP0 (atomic_int* x, atomic_int* y) {\n  atomic_store_explicit(x,1,memory_order_relaxed);\n  atomic_store_explicit(y,1,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* y) {\n  int r0 = atomic_load_explicit(y,memory_order_relaxed);\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n}\nexists (1:r0=1 /\\ 1:r1=0)\n"
+      }
+    ]
+  },
+  "TSO|RVWMO": {
+    "relationship": "strictly-weaker",
+    "summary": "Distinguishing behaviour: store→store reordering.",
+    "tests": [
+      {
+        "name": "MP",
+        "file": "MP.litmus",
+        "lang": "smrd",
+        "code": "RISCV MP\n\"Message passing with two plain stores. Store->store reordering. Forbidden under TSO, allowed under RVWMO.\"\n{ 0:x10=x; 0:x12=y; 1:x10=y; 1:x12=x; }\n P0              | P1              ;\n ori x11,x0,1   | lw x11,0(x10)   ;\n sw x11,0(x10)  | lw x13,0(x12)   ;\n ori x13,x0,1   |                 ;\n sw x13,0(x12)  |                 ;\nexists (1:x11=1 /\\ 1:x13=0)\n"
+      }
+    ]
+  },
+  "Weakestmo|C11": {
+    "relationship": "strictly-weaker",
+    "summary": "Weakestmo (Chakraborty & Vafeiadis, Grounding Thin-Air Reads with Event Structures, POPL 2019) grounds thin-air reads using event structures that encode multiple conflicting executions. The authors place it precisely: it is \"stronger than C11 (which allows OOTA) and weaker than RC11,\" and the identity mapping from weakRC11 to Weakestmo is correct (Theorem 5). Every behaviour Weakestmo admits is a C11 behaviour, while C11 admits thin-air outcomes Weakestmo forbids -- so C11 is strictly weaker, exactly like the sibling MRD-vs-C11 and sMRD-vs-C11 edges.",
+    "tests": [
+      {
+        "name": "LB-oota",
+        "file": "LB-oota.litmus",
+        "lang": "smrd",
+        "code": "C LB-oota\n\"Out-of-thin-air load buffering (LB+datas). P0 reads x into r1 and stores r1 to\n y; P1 reads y into r2 and stores r2 to x. The outcome r1=r2=42 invents 42 from a\n cyclic justification. C11 PERMITS it (the thin-air problem: its relaxed-atomics\n axioms place no acyclicity on rf union dependency). Weakestmo FORBIDS it: it\n grounds reads in event structures and the cyclic OOTA configuration is never\n ew-justified / is filtered out. The Weakestmo authors state the model is\n 'stronger than C11 (which allows OOTA) and weaker than RC11', so C11 is strictly\n weaker -- every separating outcome is C11-allows / Weakestmo-forbids; there is no\n reverse witness. Verdicts CITED: herd7 cannot construct an OOTA execution, so it\n reports Never. See README.\"\n{ int x=0; int y=0; }\nP0 (atomic_int* x, atomic_int* y) {\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n  atomic_store_explicit(y,r1,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* y) {\n  int r2 = atomic_load_explicit(y,memory_order_relaxed);\n  atomic_store_explicit(x,r2,memory_order_relaxed);\n}\nexists (0:r1=42 /\\ 1:r2=42)\n"
+      }
+    ]
+  },
+  "sMRD|C11": {
+    "relationship": "strictly-weaker",
+    "summary": "Symbolic MRD (sMRD) is an event-structures memory model for C/C++ relaxed atomics, the symbolic successor to Modular Relaxed Dependencies (MRD): it is the first thin-air-free semantics that still admits aggressive compiler optimisations (alias analysis, freedom from undefined behaviour, extrinsic choices such as over-alignment), exports a semantic-dependency relation into the C/C++ model, allows the standard atomics compilation mappings, and matches the ISO C/C++ desiderata. C11 is the axiomatic ISO/IEC 14882:2011 (and C 2011) concurrency model. sMRD is strictly stronger than C11: the two agree everywhere except on out-of-thin-air (OOTA) reads, which C11's axioms fail to forbid and sMRD rules out, so C11 permits a strict superset of behaviours.",
+    "tests": [
+      {
+        "name": "LB-oota",
+        "file": "LB-oota.lit",
+        "lang": "smrd",
+        "code": "// Out-of-thin-air via value invention (cf. SMRD paper, \"invent-in-the-load\").\n// The value 42 can only appear by speculating it into existence. C11's relaxed\n// atomics permit (r0 = 42 && r1 = 42); Symbolic MRD forbids it (semantic\n// dependency from each read to its dependent write closes a cycle in rf u sd).\n// Cited from the OOPSLA 2025 paper; no sMRD/mordor checker is bundled here.\nx := 0; y := 0;\n{\n  r0 := y;\n  if (r0 != 42) {\n    r0 := y;\n    if (r0 != 42) {\n      r0 := y;\n      if (r0 != 42) { x := r0 }\n      else { x := 42 }\n    }\n    else { x := 42 }\n  }\n  else { x := 42 }\n}|||{\n  r1 := x;\n  if (r1 = 42) { y := 42 }\n  else { y := r1 }\n}\n%% forbid (r0 = 42 && r1 = 42) []\n"
+      },
+      {
+        "name": "LB-oota",
+        "file": "LB-oota.litmus",
+        "lang": "smrd",
+        "code": "C LB-oota\n\"Out-of-thin-air load buffering (the canonical C/C++ thin-air example, LB+datas).\n C11 relaxed atomics PERMIT r1=r2=42: the standard's text fails to forbid the\n value 42 being conjured from a cyclic justification. Symbolic MRD (sMRD)\n FORBIDS it: it detects a semantic dependency from each read to the dependent\n write, yielding a cycle in (rf union sd), and rules the outcome out. Verdicts\n are CITED, not machine-run here: herd7 cannot construct an OOTA execution (it\n ties every read to a value actually written, so it reports Never), and there is\n no sMRD/mordor checker bundled in this repo. See README and the .lit companion.\"\n{ int x=0; int y=0; }\nP0 (atomic_int* x, atomic_int* y) {\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n  atomic_store_explicit(y,r1,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* y) {\n  int r2 = atomic_load_explicit(y,memory_order_relaxed);\n  atomic_store_explicit(x,r2,memory_order_relaxed);\n}\nexists (0:r1=42 /\\ 1:r2=42)\n"
+      }
+    ]
+  },
+  "ARM|POWER": {
+    "relationship": "incomparable",
+    "summary": "ARM (here ARMv7, herd7's arm.cat) and POWER (ppc.cat) are both non-multi-copy-atomic and very weak. Their incomparability is not visible on plain accesses with dependencies.",
+    "tests": [
+      {
+        "name": "SB+lwsync",
+        "file": "SB+lwsync.litmus",
+        "lang": "smrd",
+        "code": "PPC SB+lwsyncs\n\"POWER's lightweight barrier lwsync does NOT order store->load, so SB+lwsync is\n allowed on POWER. ARMv7 has no lwsync: its only general barrier (dmb) is a full\n barrier that forbids SB. This instruction-level asymmetry is the practical\n source of ARM/POWER incomparability -- on the common instruction set herd's\n arm.cat and ppc.cat coincide on every test we swept (see README).\"\n{ 0:r2=x; 0:r4=y; 1:r2=y; 1:r4=x; }\n P0           | P1            ;\n li r1,1      | li r1,1       ;\n stw r1,0(r2) | stw r1,0(r2)  ;\n lwsync       | lwsync        ;\n lwz r3,0(r4) | lwz r3,0(r4)  ;\nexists (0:r3=0 /\\ 1:r3=0)\n"
+      }
+    ]
+  },
+  "ARMv8|RVWMO": {
+    "relationship": "incomparable",
+    "summary": "ARMv8 (aarch64.cat) and RISC-V RVWMO (riscv.cat) are both multi-copy atomic and were designed to be close — RVWMO's preserved-program-order was modelled on ARMv8's. Their incomparability does not show up on plain accesses.",
+    "tests": [
+      {
+        "name": "SB+fence.tso",
+        "file": "SB+fence.tso.litmus",
+        "lang": "smrd",
+        "code": "RISCV SB+fence.tso\n\"RISC-V's fence.tso orders R->R, R->W and W->W but NOT store->load, so SB+fence.tso\n is allowed on RVWMO. ARMv8 has no single instruction with exactly TSO-fence\n semantics. On the common instruction set herd's aarch64.cat and riscv.cat\n coincide on every test we swept (see README); the separation is instruction-level.\"\n{ 0:x10=x; 0:x12=y; 1:x10=y; 1:x12=x; }\n P0              | P1              ;\n ori x11,x0,1   | ori x11,x0,1    ;\n sw x11,0(x10)  | sw x11,0(x10)   ;\n fence.tso      | fence.tso       ;\n lw x13,0(x12)  | lw x13,0(x12)   ;\nexists (0:x13=0 /\\ 1:x13=0)\n"
+      }
+    ]
+  },
+  "C++20|C11": {
+    "relationship": "incomparable",
+    "summary": "C++20 reworked the C/C++ memory model in two normative ways that pull in opposite directions, so it neither contains nor is contained in the original C11/C++11/14/17 model.",
+    "tests": [
+      {
+        "name": "IRIW+scfences",
+        "file": "IRIW+scfences.litmus",
+        "lang": "smrd",
+        "code": "C IRIW+scfences\n\"Direction 1 (C++20 forbids, C11 allows). Independent-reads-of-independent-writes\n with an SC fence between each reader's two relaxed loads. C++11/14/17 seq_cst\n FENCES are too weak to forbid this (a known defect); C++20 adopted the repaired\n seq_cst of Lahav et al. (P0668), which forbids it. The C++20 side is modelled with\n herd7's RC11 model (rc11.cat), whose repaired-SC fragment is exactly the P0668\n semantics C++20 adopted; the C11 side is herd7's original C11 model.\n   herd7 -model rc11.cat     => Never      (C++20's repaired SC forbids)\n   herd7 -model c11_orig.cat => Sometimes  (C11/C++17 allow)\"\n{ int x=0; int y=0; }\nP0 (atomic_int* x) { atomic_store_explicit(x,1,memory_order_relaxed); }\nP1 (atomic_int* y) { atomic_store_explicit(y,1,memory_order_relaxed); }\nP2 (atomic_int* x, atomic_int* y) {\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n  atomic_thread_fence(memory_order_seq_cst);\n  int r2 = atomic_load_explicit(y,memory_order_relaxed);\n}\nP3 (atomic_int* x, atomic_int* y) {\n  int r3 = atomic_load_explicit(y,memory_order_relaxed);\n  atomic_thread_fence(memory_order_seq_cst);\n  int r4 = atomic_load_explicit(x,memory_order_relaxed);\n}\nexists (2:r1=1 /\\ 2:r2=0 /\\ 3:r3=1 /\\ 3:r4=0)\n"
+      },
+      {
+        "name": "RS+cpp20",
+        "file": "RS+cpp20.litmus",
+        "lang": "smrd",
+        "code": "C RS+cpp20\n\"Direction 2 (C11 forbids, C++20 allows) -- the C++20 model. Same shape as\n RS.litmus, but under C++20's weakened release sequences (P0982) the later\n same-thread relaxed store of 2 is NOT part of the release sequence headed by the\n release store, so an acquire that reads 2 receives no release: there is no\n happens-before to the data write. We model that absence of synchronisation by\n making the heading store non-releasing (relaxed) -- the relaxed store of 2 is\n exactly what the C++20 acquire sees, with no release attached -- so the stale read\n is observable.\n   herd7 -model c11_orig.cat => Sometimes  (the C++20 outcome)\n Keeping the release AND counting it into the release sequence (the C++11 rule) is\n RS.litmus, which is Never. The two files bracket the P0982 change.\"\n{ int data=0; int f=0; }\nP0 (int* data, atomic_int* f) {\n  *data = 1;\n  atomic_store_explicit(f,1,memory_order_relaxed);\n  atomic_store_explicit(f,2,memory_order_relaxed);\n}\nP1 (int* data, atomic_int* f) {\n  int r0 = atomic_load_explicit(f,memory_order_acquire);\n  int r1 = *data;\n}\nexists (1:r0=2 /\\ 1:r1=0)\n"
+      },
+      {
+        "name": "RS-atomic",
+        "file": "RS-atomic.litmus",
+        "lang": "smrd",
+        "code": "C mp-rs-add-est\n\"Release-sequence axis (P0982), all-atomic so no data race. ALLOWED under C++11/14/17, FORBIDDEN under C++20: cpp11.cat/cpp17.cat Sometimes, cpp2w.cat Never (herd7). Together with RS.litmus (which flips the other way) this witnesses C++20 <> C11 incomparability on the release-sequence axis alone. Vendored from gonzalobg/cpp_memory_model; model in ../../models/cpp/.\"\n{ [x] = 0; [y] = 0;  }\n\nP0 (int* x, int* y) {\n  atomic_store_explicit(y, 1, memory_order_relaxed);\n  atomic_store_explicit(x, 1, memory_order_release);\n  atomic_fetch_add_explicit(x, 1, memory_order_relaxed);  \n}\n\nP1 (int* x, int* y) {\n  int a = atomic_load_explicit(x, memory_order_acquire);\n  if (a == 3) {\n    int b = atomic_load_explicit(y, memory_order_relaxed);\n  }\n}\n\nP2 (int* x) {\n  atomic_store_explicit(x, 2, memory_order_relaxed);\n}\n\nexists([x]=3 /\\ 1:a=3 /\\ 1:b=0)\n"
+      },
+      {
+        "name": "RS",
+        "file": "RS.litmus",
+        "lang": "smrd",
+        "code": "C RS\n\"Direction 2 (C11 forbids, C++20 allows) -- the genuine test. A release store on f\n is followed by a RELAXED store of 2 to f by the SAME thread; the reader acquires f\n and observes 2. Under C++11/14/17 that relaxed store is part of the RELEASE\n SEQUENCE headed by the release store, so an acquire that reads it synchronises with\n the release and the data write happens-before the data read: (1:r0=2, 1:r1=0) is\n FORBIDDEN. herd7 -model c11_orig.cat => Never (verified). C++20 weakened release\n sequences (P0982): only RMWs -- not later same-thread relaxed stores -- continue\n them, so reading 2 carries no release and the stale read is ALLOWED. The C++20\n side is shown by the companion RS+cpp20.litmus.\"\n{ int data=0; int f=0; }\nP0 (int* data, atomic_int* f) {\n  *data = 1;\n  atomic_store_explicit(f,1,memory_order_release);\n  atomic_store_explicit(f,2,memory_order_relaxed);\n}\nP1 (int* data, atomic_int* f) {\n  int r0 = atomic_load_explicit(f,memory_order_acquire);\n  int r1 = *data;\n}\nexists (1:r0=2 /\\ 1:r1=0)\n"
+      }
+    ]
+  },
+  "C11|GOS": {
+    "relationship": "incomparable",
+    "summary": "Generative Operational Semantics (GOS) (Jagadeesan, Pitcher, Riely, Generative Operational Semantics for Relaxed Memory Models, ESOP 2010) fixes the JMM by constraining speculative execution with stratification conditions that rule out thin-air values. It forbids out-of-thin-air (which C11 allows) and proves the external DRF theorem (which C11 does not), so the two are incomparable.",
+    "tests": [
+      {
+        "name": "LB-oota",
+        "file": "LB-oota.litmus",
+        "lang": "smrd",
+        "code": "C LB-oota\n\"Out-of-thin-air load buffering (LB+datas), the paper's s[x=f;g=x] | t[y=g;f=y]\n shape, outcome r1=r2=1. C11 PERMITS it: no acyclicity on rf union dependency.\n GOS (Generative Operational Semantics) FORBIDS it: its speculation must be\n non-self-justifying and initial (a stratification / acyclic-causality condition),\n and in the LB+data cycle the un-speculated branch can only ever write 0, so the\n speculation can never be finalised. This is the C11-allows / GOS-forbids\n direction; the reverse (GOS proves external DRF, which C11 does not) is a\n reasoning-guarantee difference, not a litmus outcome -- see README. Verdicts\n CITED: herd7 cannot construct an OOTA execution, so it reports Never.\"\n{ int x=0; int y=0; }\nP0 (atomic_int* x, atomic_int* y) {\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n  atomic_store_explicit(y,r1,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* y) {\n  int r2 = atomic_load_explicit(y,memory_order_relaxed);\n  atomic_store_explicit(x,r2,memory_order_relaxed);\n}\nexists (0:r1=1 /\\ 1:r2=1)\n"
+      }
+    ]
+  },
+  "C11|JSMM": {
+    "relationship": "incomparable",
+    "summary": "The JavaScript Memory Model (JSMM) (mechanised and repaired by Watt et al., PLDI 2020) is built on the C11 model and, like C11, suffers the thin-air problem -- so out-of-thin-air does not separate them. They are incomparable for two other reasons: JavaScript has no undefined behaviour (racy non-atomic accesses get a defined semantics, where C11 makes them catch-fire UB), and JavaScript's shared memory is a SharedArrayBuffer -- a linear byte buffer -- so JSMM supports mixed-size accesses that C11 cannot express.",
+    "tests": [
+      {
+        "name": "MP+race",
+        "file": "MP+race.litmus",
+        "lang": "smrd",
+        "code": "C MP+race\n\"JavaScript MM (JSMM) vs C11 -- the separation is NOT thin-air (JSMM, being\n C11-based, ALSO admits OOTA). It is about data races. This is the paper's Fig. 6\n shape: a program that races a non-atomic (JS 'Unordered') access against\n SeqCst atomics on the same location. C11 treats the non-atomic race as\n UNDEFINED BEHAVIOUR (catch-fire: any outcome 'allowed' vacuously). JSMM gives\n the racy access a DEFINED, byte-justified semantics and its SC-atomics validity\n rule pins the access in the total order, FORBIDDING the witness. So C11\n 'allows' (via catch-fire) an outcome JSMM rules out. herd7's -c11 does not\n implement catch-fire (it models the access as a plain write), so it CANNOT\n adjudicate this distinction -- both verdicts are CITED. See README; the reverse\n direction (mixed-size tearing) is described there too.\"\n{ int b=0; }\nP0 (atomic_int* b) {\n  atomic_store_explicit(b,1,memory_order_seq_cst);\n  int r1 = atomic_load_explicit(b,memory_order_seq_cst);\n  *((int*) b) = 2;                                   /* non-atomic (JS Unordered) racy write */\n  int r2 = atomic_load_explicit(b,memory_order_seq_cst);\n}\nP1 (atomic_int* b) {\n  atomic_store_explicit(b,1,memory_order_seq_cst);\n  atomic_store_explicit(b,2,memory_order_seq_cst);\n}\nexists (0:r1=1 /\\ 0:r2=1)\n"
+      }
+    ]
+  },
+  "C11|LKMM": {
+    "relationship": "incomparable",
+    "summary": "C11 and the Linux Kernel Memory Model both sit at the language level above the hardware, but neither one contains the other. The incomparability is not a reordering difference on a shared instruction set (as with ARM ↔ POWER); it is that each model has synchronisation primitives the other cannot express.",
+    "tests": [
+      {
+        "name": "RCU",
+        "file": "RCU.litmus",
+        "lang": "smrd",
+        "code": "C RCU\n(*\n * RCU grace-period ordering. P0 publishes, waits for a grace period with\n * synchronize_rcu(), then writes again; P1 reads both inside an RCU read-side\n * critical section. LKMM forbids the \"see the second write but not the first\"\n * outcome — the grace period guarantees the critical section sees a consistent\n * snapshot. C11 has no RCU primitive, so it cannot even express this test.\n * Witnesses the LKMM side of C11 <-> LKMM incomparability.\n *\n *   herd7 -model linux-kernel.cat RCU.litmus   # Never 1:r0=1 1:r1=0\n *)\n{}\n\nP0(int *x, int *y)\n{\n\tWRITE_ONCE(*x, 1);\n\tsynchronize_rcu();\n\tWRITE_ONCE(*y, 1);\n}\n\nP1(int *x, int *y)\n{\n\trcu_read_lock();\n\tint r0 = READ_ONCE(*y);\n\tint r1 = READ_ONCE(*x);\n\trcu_read_unlock();\n}\n\nexists (1:r0=1 /\\ 1:r1=0)\n"
+      }
+    ]
+  },
+  "C11|Promising": {
+    "relationship": "incomparable",
+    "summary": "Promising Semantics is an operational relaxed-memory model (threads may make a \"promise\" to write a value in the future and must later certify it). It is not a herd7 cat model, so neither side is exhibited in herd7 here; results are cited.",
+    "tests": [
+      {
+        "name": "LB-oota",
+        "file": "LB-oota.litmus",
+        "lang": "smrd",
+        "code": "C LB-oota\n\"Out-of-thin-air load buffering (the C11 thin-air example). C11 permits r1=r2=42;\n Promising Semantics forbids it (its certified-promise mechanism cannot fabricate\n thin-air values). Neither side is exhibited here: herd7 cannot construct OOTA\n (reports Never), and Promising is not a herd7 model. See README.\"\n{ int x=0; int y=0; }\nP0 (atomic_int* x, atomic_int* y) {\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n  atomic_store_explicit(y,r1,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* y) {\n  int r2 = atomic_load_explicit(y,memory_order_relaxed);\n  atomic_store_explicit(x,r2,memory_order_relaxed);\n}\nexists (0:r1=42 /\\ 1:r2=42)\n"
+      }
+    ]
+  },
+  "C11|RAO": {
+    "relationship": "incomparable",
+    "summary": "RAO -- the survey's name for the Relaxed Atomic + Ordering model of Saraswat, Jagadeesan, Michael & von Praun, A Theory of Memory Models (PPoPP 2007) -- explains relaxed behaviour by applying reorderings/transformations over a sequentially consistent execution. It permits thin-air, yet claims the external DRF guarantee -- a combination later shown incompatible in general (Batty et al., ESOP 2015); the survey attributes the claim to a restricted input language (notably, no general conditional statements). C11 and RAO are incomparable, but -- unusually for this tree -- neither direction has a crisp runnable separating program.",
+    "tests": [
+      {
+        "name": "LB",
+        "file": "LB.litmus",
+        "lang": "smrd",
+        "code": "C LB\n\"Load buffering r1=x; y=1; || r2=y; x=1;  outcome r1=r2=1. RAO ('Relaxed Atomic +\n Ordering', Saraswat et al. 2007) explains relaxed behaviour by applying\n reorderings/transformations OVER a sequentially consistent execution, so it\n admits each independent read/write being reordered and ALLOWS this LB outcome.\n C11 with all-relaxed atomics also allows plain LB, so this exact program does\n NOT separate them: the separation appears only where C11 uses stronger\n (non-atomic / SC) modes that forbid the reorder while RAO -- which has no mode\n system, only uniform transformations -- still admits it. RAO also CLAIMS the\n external DRF guarantee while permitting thin-air, two properties shown\n incompatible in general (Batty et al., ESOP 2015); the survey attributes the\n claim to a restricted input language (no general conditionals). Both verdicts\n are model-level / CITED -- RAO has no herd7 model and no published litmus\n isolates a single C11-separating outcome. See README.\"\n{ int x=0; int y=0; }\nP0 (atomic_int* x, atomic_int* y) {\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n  atomic_store_explicit(y,1,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* y) {\n  int r2 = atomic_load_explicit(y,memory_order_relaxed);\n  atomic_store_explicit(x,1,memory_order_relaxed);\n}\nexists (0:r1=1 /\\ 1:r2=1)\n"
+      }
+    ]
+  },
+  "C11|RMC": {
+    "relationship": "incomparable",
+    "summary": "The Relaxed Memory Calculus (RMC) (Crary & Sullivan, A Calculus for Relaxed Memory, POPL 2015) takes a different approach to ordering: instead of per-access memory-order annotations, the programmer writes explicit visibility (VEDGE / vo) and execution (XEDGE / xo) constraints in the source. The approach is highly generic and subsumes C11's annotation lattice, but the underlying model is very weak and permits thin-air (it proves only internal/SC-DRF). C11 and RMC are incomparable: each constrains and relaxes things the other does not.",
+    "tests": [
+      {
+        "name": "MP+relaxed",
+        "file": "MP+relaxed.litmus",
+        "lang": "smrd",
+        "code": "C MP+relaxed\n\"Relaxed message passing, outcome r0=1 /\\ r1=0 (flag seen set, data stale). The\n Relaxed Memory Calculus (RMC) specifies ordering DIRECTLY in the source with\n explicit visibility (VEDGE / vo) and execution (XEDGE / xo) edges rather than\n per-access memory-order annotations. The RMC author would place a VEDGE from the\n data write to the flag write and an XEDGE on the reader, which together FORBID\n this stale-data outcome. Plain C11 with all-RELAXED atomics (no such edges)\n ALLOWS it: relaxed accesses carry no happens-before. herd7 -c11 => Sometimes.\n RMC has no herd7 model (it is a source-level calculus), so its forbidding\n verdict is cited; the C11 verdict is machine-run. OOTA does NOT separate the two\n (RMC also permits thin-air). The reverse direction -- RMC is 'strictly more\n relaxed than any existing architecture' and admits leapfrogging/forwarding\n speculation C11 has no mode to express -- is a model-level claim with no single\n canonical litmus. See README.\"\n{ int x=0; int f=0; }\nP0 (atomic_int* x, atomic_int* f) {\n  atomic_store_explicit(x,1,memory_order_relaxed);\n  atomic_store_explicit(f,1,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* f) {\n  int r0 = atomic_load_explicit(f,memory_order_relaxed);\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n}\nexists (1:r0=1 /\\ 1:r1=0)\n"
+      }
+    ]
+  },
+  "C11|TSC": {
+    "relationship": "incomparable",
+    "summary": "The Theory of Speculative Computation (TSC) (Boudol & Petri, A Theory of Speculative Computation, ESOP 2010) is a general framework for studying the effect of speculation in a shared-memory setting, defined as a lambda/imperative calculus whose only synchronisation primitive is an explicit with ℓ do lock. It analyses speculation abstractly rather than proposing a concrete language model. C11 and TSC are incomparable, but the separation is subtle and entirely documented -- there is no herd7-runnable C11-vs-TSC litmus, because TSC has no relaxed/release/acquire access modes to align with C11.",
+    "tests": [
+      {
+        "name": "LB+ctrl",
+        "file": "LB+ctrl.litmus",
+        "lang": "smrd",
+        "code": "C LB+ctrl\n\"Self-fulfilling speculation: P0 reads x, and if it sees 0 writes 1 to y; P1\n reads y, and if it sees 0 writes 1 to x. The Theory of Speculative Computation\n (TSC, Boudol & Petri, ESOP 2010) places NO restriction on speculation, so it\n PERMITS the self-fulfilling outcome (it explicitly admits this thin-air shape,\n citing the Java spec). C11 also permits this relaxed control-dependent LB, so\n OOTA does NOT separate them -- correcting the naive assumption that TSC forbids\n thin-air. The real asymmetry is about DRF (see README): under unrestricted\n speculation TSC's EXTERNAL DRF theorem FAILS (a race-free-under-interleaving\n program can show a non-SC outcome), whereas C11 forces DRF programs to behave\n SC; internal DRF holds for both. TSC is a lambda/imperative calculus with locks\n and no relaxed/release/acquire modes, so there is no herd7-runnable C11-vs-TSC\n litmus -- both verdicts are CITED / model-level. This file documents the\n speculative shape only.\"\n{ int x=0; int y=0; }\nP0 (atomic_int* x, atomic_int* y) {\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n  if (r1 == 0) atomic_store_explicit(y,1,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* y) {\n  int r2 = atomic_load_explicit(y,memory_order_relaxed);\n  if (r2 == 0) atomic_store_explicit(x,1,memory_order_relaxed);\n}\nexists (0:r1=0 /\\ 1:r2=0 /\\ x=1 /\\ y=1)\n"
+      }
+    ]
+  },
+  "C11|WJES": {
+    "relationship": "incomparable",
+    "summary": "Well-Justified Event Structures (WJES) (Jeffrey & Riely, On Thin Air Reads, LICS 2016; extended LMCS 2019) grounds thin-air reads in event structures with a notion of well-justification inspired by game semantics: a read may only take a value the environment cannot avoid providing. This forbids out-of-thin-air, which C11 allows -- but it also forbids a legal hardware behaviour C11 allows, so the two are incomparable.",
+    "tests": [
+      {
+        "name": "LB-oota",
+        "file": "LB-oota.litmus",
+        "lang": "smrd",
+        "code": "C LB-oota\n\"Out-of-thin-air load buffering (LB+datas). P0 reads x into r1 and stores r1 to\n y; P1 reads y into r2 and stores r2 to x. The outcome r1=r2=1 (the papers'\n self-justifying value; 1 here, the suite elsewhere uses 42) invents a value from\n a cyclic justification in rf union dep. C11 PERMITS it: its relaxed-atomics\n axioms have no acyclicity requirement on rf union dependency. WJES (Well-\n Justified Event Structures) FORBIDS it: well-justification requires each read to\n be justified by a write the environment cannot avoid providing, and the cyclic\n OOTA configuration has no such justifying write. This is the C11-allows /\n WJES-forbids direction; see TC7.litmus for the reverse. Verdicts CITED: herd7\n cannot construct an OOTA execution, so it reports Never. See README.\"\n{ int x=0; int y=0; }\nP0 (atomic_int* x, atomic_int* y) {\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n  atomic_store_explicit(y,r1,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* y) {\n  int r2 = atomic_load_explicit(y,memory_order_relaxed);\n  atomic_store_explicit(x,r2,memory_order_relaxed);\n}\nexists (0:r1=1 /\\ 1:r2=1)\n"
+      },
+      {
+        "name": "TC7",
+        "file": "TC7.litmus",
+        "lang": "smrd",
+        "code": "C TC7\n\"Pugh causality test case TC7 -- the load->load reordering counterexample that\n WJES's authors exhibit. P0 reads z, then reads x and writes y=x; P1 reads y,\n writes z=y, then writes x=1. The outcome r0=r1=r2=1 (every read sees 1) requires\n P0's two INDEPENDENT reads (z then x) to be reordered: the value 1 originates at\n the genuine store x=1 and propagates x->y->z, so P0 can only read z=1 if its\n read of z floats past its read of x. No value is invented -- this is a real\n coherent execution.\n\n C11 ALLOWS it (and so do ARMv7/ARMv8/POWER hardware): relaxed reads are\n unordered, so the load->load reorder is permitted. herd7 -c11 => Sometimes.\n WJES FORBIDS it: no well-justified configuration contains all three reads-of-1,\n so WJES is too strong here -- which is exactly why the naive compilation of WJES\n to ARM/POWER is non-optimal (it would need extra fences). This is the\n WJES-forbids / C11-allows direction. WJES has no herd7 model, so its verdict is\n cited; the C11 verdict is machine-run. See README.\"\n{ int x=0; int y=0; int z=0; }\nP0 (atomic_int* x, atomic_int* y, atomic_int* z) {\n  int r0 = atomic_load_explicit(z,memory_order_relaxed);\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n  atomic_store_explicit(y,r1,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* y, atomic_int* z) {\n  int r2 = atomic_load_explicit(y,memory_order_relaxed);\n  atomic_store_explicit(z,r2,memory_order_relaxed);\n  atomic_store_explicit(x,1,memory_order_relaxed);\n}\nexists (0:r0=1 /\\ 0:r1=1 /\\ 1:r2=1)\n"
+      }
+    ]
+  },
+  "Java|JAM": {
+    "relationship": "incomparable",
+    "summary": "Java Access Modes (JAM) (Bender & Palsberg, A Formalization of Java's Concurrent Access Modes, OOPSLA 2019) is a proposed revision of the Java Memory Model built on the JDK 9 VarHandle access modes -- plain, opaque, release/acquire, volatile. It is explicitly modelled on RC11 and adopts RC11's out-of-thin-air fix, the acyclic(po ∪ rf) requirement, but only for opaque-or-stronger accesses. The original JMM (Manson, Pugh & Adve, POPL 2005; JSR-133) instead has just two tiers -- ordinary and volatile -- and pins down racy behaviour with a happens-before relation plus a commitment causality semantics.",
+    "tests": [
+      {
+        "name": "LB+opaque",
+        "file": "LB+opaque.litmus",
+        "lang": "smrd",
+        "code": "C LB+opaque\n\"Plain load buffering with REAL values (no thin-air). P0 reads x into r1 and\n stores 1 to y; P1 reads y into r2 and stores 1 to x. The outcome r1=r2=1 needs\n each load to see the partner's store -- a load/store REORDERING, but every value\n read (1) is genuinely written, so this is NOT out-of-thin-air.\n\n This is the JMM-allows / JAM-forbids direction. The relaxed atomics here stand\n in for JAM's OPAQUE access mode (JDK 9 VarHandle.getOpaque/setOpaque), a tier\n the original JMM does not have.\n\n JAM FORBIDS it at opaque. JAM imposes acyclic(po|rf) for opaque-or-stronger\n accesses, and r1=r2=1 closes a po|rf cycle (load x ->po store y ->rf load y ->po\n store x ->rf load x), so opaque mode rules it out -- exactly the ordering\n guarantee that JDK 9 introduced opaque to provide.\n\n The original JMM ALLOWS it. The JMM has only ordinary and volatile accesses; it\n maps these fields to ORDINARY, whose semantics is its happens-before +\n commitment causality. That machinery permits the LB reordering -- r1=r2=1 is a\n well-behaved, fully committed JMM execution (the 1s are real, so there is no\n thin-air to reject). With no opaque tier, the JMM cannot express the stronger\n ordering JAM enforces, so it admits an outcome JAM forbids.\n\n Together with cyc_na.litmus (JAM allows, JMM forbids) this makes the two models\n incomparable: neither's permitted behaviours contain the other's.\n\n Verdicts are CITED, not machine-run: no shared checker hosts both the JMM and\n JAM. See README.\"\n{ int x=0; int y=0; }\nP0 (atomic_int* x, atomic_int* y) {                  /* JAM opaque mode */\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n  atomic_store_explicit(y,1,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* y) {                  /* JAM opaque mode */\n  int r2 = atomic_load_explicit(y,memory_order_relaxed);\n  atomic_store_explicit(x,1,memory_order_relaxed);\n}\nexists (0:r1=1 /\\ 1:r2=1)\n"
+      },
+      {
+        "name": "cyc_na",
+        "file": "cyc_na.litmus",
+        "lang": "smrd",
+        "code": "C cyc_na\n\"Out-of-thin-air load buffering over the WEAKEST mode (LB+datas). P0 reads x\n into r1 and stores r1 to y; P1 reads y into r2 and stores r2 to x. The outcome\n r1=r2=42 invents 42 from a cyclic justification in po|rf -- no execution ever\n writes 42 except by reading it back round the cycle.\n\n This is the JAM-allows / JMM-forbids direction (here the relaxed atomics stand\n in for JAM's PLAIN access mode; this is JAM's own cyc_na program).\n\n JAM (Java Access Modes) ALLOWS it. JAM is modelled on RC11 and adopts RC11's\n no-thin-air fix -- acyclic(po|rf) -- but ONLY for opaque-or-stronger accesses;\n for plain (non-atomic) accesses it deliberately leaves the cycle unconstrained,\n so the plain-mode program keeps the po|rf cycle and the thin-air outcome is\n permitted.\n\n The original JMM FORBIDS it. The canonical OOTA r=r=42 is the motivating target\n of the JMM's commitment semantics: a value may only be committed if some\n well-behaved execution produces it, and 42 has no such justification, so the\n causality rules reject it. (The JMM's causality machinery is famously flawed in\n OTHER cases -- see LB+opaque.litmus for the reverse direction -- but it does\n forbid this textbook thin-air load-buffering.)\n\n Verdicts are CITED, not machine-run: there is no shared checker -- the JMM is\n not a herd7 model and JAM's mechanisation is the Coq development accompanying\n the paper. herd7 cannot construct an OOTA execution in any case (it ties reads\n to written values). See README.\"\n{ int x=0; int y=0; }\nP0 (atomic_int* x, atomic_int* y) {                  /* JAM plain mode */\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n  atomic_store_explicit(y,r1,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* y) {                  /* JAM plain mode */\n  int r2 = atomic_load_explicit(y,memory_order_relaxed);\n  atomic_store_explicit(x,r2,memory_order_relaxed);\n}\nexists (0:r1=42 /\\ 1:r2=42)\n"
+      }
+    ]
+  },
+  "Java|OCaml": {
+    "relationship": "incomparable",
+    "summary": "Both the Java Memory Model and the OCaml 5 memory model are DRF-SC: a data-race-free program behaves sequentially consistently. They differ in how they treat racy programs, and neither's racy semantics contains the other's.",
+    "tests": [
+      {
+        "name": "sb",
+        "file": "sb.ml",
+        "lang": "ocaml",
+        "code": "(* Store Buffering on the OCaml 5 (multicore) memory model.\n\n   OCaml's model (Dolan, Sivaramakrishnan, Madhavapeddy, PLDI 2018) gives a\n   \"local data-race-freedom\" guarantee: race-free code is SC, and even racy code\n   has well-defined, bounded semantics (no out-of-thin-air, no crashes).  Like\n   the JMM it is DRF-SC, but the two are *incomparable* on racy programs (see the\n   README in this directory):\n\n     - OCaml forbids value forgery: a racy read always returns a value actually\n       written to that location -- a memory-safety property stronger than what\n       the JMM gives for general object references.\n     - The JMM pins down causality / happens-before in ways OCaml's operational\n       model does not, and Java `volatile` vs OCaml `Atomic` differ in fencing.\n\n   This program is the OCaml analogue of\n   ../../strictly-weaker/SC-vs-Java/SB.java.  Two long-lived domains race on\n   plain non-atomic [int array] cells, synchronised each round by a spin barrier\n   built from [Atomic].  On x86/ARM you will observe the SC-forbidden (0, 0).\n   Replacing the plain cells with [Atomic.t] removes the race and (0,0) vanishes\n   -- the DRF-SC guarantee.\n\n   Build & run (OCaml >= 5.0):\n     ocaml sb.ml\n     # or: ocamlfind ocamlopt sb.ml -o sb && ./sb              *)\n\nlet rounds = 2_000_000\n\n(* shared, racy, non-atomic state in a mutable array *)\nlet m = Array.make 4 0\nlet x = 0 and y = 1 and r0 = 2 and r1 = 3\n\n(* a tiny two-party sense-reversing barrier *)\nlet gate = Atomic.make 0          (* round number the workers may enter *)\nlet done0 = Atomic.make 0\nlet done1 = Atomic.make 0\n\nlet worker which =\n  for i = 1 to rounds do\n    while Atomic.get gate < i do Domain.cpu_relax () done;\n    (if which = 0 then begin m.(x) <- 1; m.(r0) <- m.(y) end\n                  else begin m.(y) <- 1; m.(r1) <- m.(x) end);\n    Atomic.set (if which = 0 then done0 else done1) i\n  done\n\nlet () =\n  let d0 = Domain.spawn (fun () -> worker 0) in\n  let d1 = Domain.spawn (fun () -> worker 1) in\n  let both0 = ref 0 in\n  for i = 1 to rounds do\n    m.(x) <- 0; m.(y) <- 0;                 (* reset before releasing workers *)\n    Atomic.set gate i;                       (* release this round *)\n    while Atomic.get done0 < i || Atomic.get done1 < i do Domain.cpu_relax () done;\n    if m.(r0) = 0 && m.(r1) = 0 then incr both0\n  done;\n  Domain.join d0; Domain.join d1;\n  Printf.printf \"rounds=%d  (0,0) seen %d times\\n\" rounds !both0;\n  print_endline\n    (if !both0 > 0\n     then \"=> OCaml's model allows the SC-forbidden (0,0) for racy non-atomic accesses.\"\n     else \"=> No (0,0) this run (hardware dependent); re-run or try another machine.\")\n"
+      }
+    ]
+  },
+  "Java|OHMM": {
+    "relationship": "incomparable",
+    "summary": "The Java Memory Model (JMM) (Manson, Pugh, Adve, POPL 2005) and the Operational Happens-Before Model (OHMM) (Zhang & Feng, 2016) are both syntactic-dependency-preserving repairs of the out-of-thin-air problem: both track syntactic dependencies and forbid the canonical thin-air outcome. But OHMM was proposed precisely to repair the JMM, and the two end up incomparable -- each permits behaviour the other forbids.",
+    "tests": [
+      {
+        "name": "MP-reorder",
+        "file": "MP-reorder.litmus",
+        "lang": "smrd",
+        "code": "C MP-reorder\n\"Message passing with two INDEPENDENT writes on the writer (x then y) and two\n independent reads on the reader (y then x), no syntactic dependency linking the\n pairs. OHMM (Operational Happens-Before Model) permits the non-message-passing\n outcome r1=1 /\\ r2=0: its abstract machine holds events in a GLOBAL EVENT BUFFER\n where independent (non-dependent) events may be reordered before they propagate\n into the global history-based memory, so the store to y can surface before the\n store to x. The OHMM paper states it 'is weaker than JMM for lockless programs\n ... such as the reordering of independent memory accesses that is not valid in\n JMM.' The Java Memory Model (JMM) FORBIDS this reordering: its commit-sequence\n causality rules do not justify it. Conversely JMM is famously over-permissive on\n causality and validates a different transformation set (Table 2 of the survey:\n JMM Elim = + + + -, OHMM Elim = + + + +), so each permits behaviour the other\n forbids -- they are incomparable. Neither verdict is machine-run: OHMM has no\n herd7/cat model and this reordering is OHMM-specific, not a JMM execution.\n Verdicts are CITED. See README.\"\n{ int x=0; int y=0; }\nP0 (atomic_int* x, atomic_int* y) {\n  atomic_store_explicit(x,1,memory_order_relaxed);\n  atomic_store_explicit(y,1,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* y) {\n  int r1 = atomic_load_explicit(y,memory_order_relaxed);\n  int r2 = atomic_load_explicit(x,memory_order_relaxed);\n}\nexists (1:r1=1 /\\ 1:r2=0)\n"
+      }
+    ]
+  },
+  "LKMM|OHMM": {
+    "relationship": "incomparable",
+    "summary": "The Linux Kernel Memory Model (LKMM) and the Operational Happens-Before Model (OHMM) are both syntactic-dependency-preserving models: each tackles the out-of-thin-air problem by tracking the syntactic dependencies between memory events and forbidding the reordering of dependent events, so both FORBID the canonical thin-air load-buffering outcome (r1=r2=42 fabricated from nothing). But they are built over completely different primitives and machines. LKMM is an axiomatic cat model over the Linux kernel's own primitives — READONCE/WRITEONCE, smpmb/smpwmb/smprmb barriers, release/acquire, and RCU (rcureadlock/synchronizercu) — whose ordering is assembled from explicit barriers chosen to be sound on x86/Armv7/Armv8/POWER. OHMM is an operational, JMM-repair model: a Java-style abstract machine with a global event buffer (in which independent, non-dependent events may be reordered before they propagate into a global history-based memory) plus a replay mechanism used to simulate speculative execution. Because OHMM admits reorderings of independent accesses that LKMM's barrier-based ordering forbids, while LKMM expresses barrier and RCU orderings OHMM has no primitive for, neither model's behaviours are a subset of the other's — they are incomparable.",
+    "tests": [
+      {
+        "name": "MP-reorder",
+        "file": "MP-reorder.litmus",
+        "lang": "smrd",
+        "code": "C MP-reorder\n\"Message passing with two INDEPENDENT writes on the writer and two independent\n reads on the reader (no syntactic dependency between the pairs). This is the\n 'reordering of independent memory accesses' shape. OHMM permits the\n non-message-passing outcome r1=1 /\\ r2=0: its abstract machine has a global\n event buffer in which independent (non-dependent) events may be reordered\n before they propagate, so the store to y can surface before the store to x.\n LKMM, whose ordering is assembled from explicit Linux barriers, has NO such\n reordering for these plain READ_ONCE/WRITE_ONCE accesses across smp_wmb()/\n smp_rmb(): with the barriers present it FORBIDS the outcome, and the two models\n also disagree on which trace-preserving transformations are sound (Table 3 of\n the survey: LKMM and OHMM have different transformation profiles). Conversely\n LKMM expresses RCU and smp_* barriers OHMM cannot, so neither subsumes the\n other. Neither verdict is machine-run here: OHMM has no herd7/cat model, and\n the plain-access reordering is OHMM-specific, not an LKMM execution. Verdicts\n are CITED from the literature. See README.\"\n{ int x=0; int y=0; }\nP0 (atomic_int* x, atomic_int* y) {\n  atomic_store_explicit(x,1,memory_order_relaxed);\n  atomic_store_explicit(y,1,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* y) {\n  int r1 = atomic_load_explicit(y,memory_order_relaxed);\n  int r2 = atomic_load_explicit(x,memory_order_relaxed);\n}\nexists (1:r1=1 /\\ 1:r2=0)\n"
+      }
+    ]
+  },
+  "OpenCL|Vulkan": {
+    "relationship": "incomparable",
+    "summary": "OpenCL 2.0 and the Vulkan memory model are both scoped GPU-API models, but they factor ordering differently, and neither contains the other.",
+    "tests": [
+      {
+        "name": "MP+hb-no-visibility",
+        "file": "MP+hb-no-visibility.litmus",
+        "lang": "smrd",
+        "code": "C MP+hb-no-visibility\n\"Message passing with a scoped release/acquire but NO availability/visibility\n operations. Genuine Vulkan (SPIR-V) source sketch:\n\n   // producer\n   x = 1;\n   OpAtomicStore f, Device, Release, 1          // release, but write not 'made available'\n   // consumer\n   r0 = OpAtomicLoad f, Device, Acquire         // acquire, but x not 'made visible'\n   r1 = x\n\n Vulkan splits ordering into THREE steps: happens-before, then AVAILABILITY (push\n the write out to a memory domain) and VISIBILITY (pull it into the reader). A bare\n release/acquire gives happens-before but, across a memory domain, NOT availability\n or visibility, so Vulkan still ALLOWS the stale read (1:r0=1, 1:r1=0) unless the\n program issues availability+visibility (e.g. memory_semantics with\n MakeAvailable/MakeVisible and the right storage-class/memory scope). OpenCL has no\n such split: a scoped acquire that synchronises also makes the released writes\n visible, so OpenCL FORBIDS this outcome. => Vulkan allows / OpenCL forbids.\n\n The reverse direction (OpenCL allows / Vulkan forbids) is feature-level too:\n OpenCL's scope set and all_svm_devices / fine-grained SVM atomics have no exact\n Vulkan counterpart. herd7 ships neither model; see README.\"\n{ int x=0; int f=0; }\nP0 (int* x, atomic_int* f) {\n  *x = 1;\n  atomic_store_explicit(f,1,memory_order_release);\n}\nP1 (int* x, atomic_int* f) {\n  int r0 = atomic_load_explicit(f,memory_order_acquire);\n  int r1 = *x;\n}\nexists (1:r0=1 /\\ 1:r1=0)\n"
+      }
+    ]
+  },
+  "PTX|AMDGPU": {
+    "relationship": "incomparable",
+    "summary": "NVIDIA's PTX model and AMD's HSA-based GPU model are both scoped release-consistency ISA models, and on their common feature set — plain scoped release/acquire synchronisation — they coincide. Their incomparability is feature-level, exactly like incomparable/ARM-vs-POWER: each ISA exposes ordering machinery the other has no counterpart for.",
+    "tests": [
+      {
+        "name": "MP+scoped",
+        "file": "MP+scoped.litmus",
+        "lang": "smrd",
+        "code": "C MP+scoped\n\"PTX and AMD-GPU (HSA) are both scoped release-consistency ISA models. On their\n COMMON feature set -- a scoped release/acquire message pass -- they agree, exactly\n as herd's arm.cat and ppc.cat agree on the common instruction set (see\n ../ARM-vs-POWER). This file is that shared shape: a release/acquire MP at a scope\n the producer and consumer share is FORBIDDEN in both; narrowed below the shared\n scope it is ALLOWED in both. The incomparability is at the FEATURE level, not in\n this reordering -- see README for the two feature-specific witnesses:\n\n   PTX allows, AMD has no counterpart:\n     ld/st with the PTX .cta / .cluster scope and the proxy/membar.proxy fences\n     (alias ordering between the generic and surface/texture proxies).\n   AMD allows, PTX has no counterpart:\n     loads/stores carrying HSA cache-control qualifiers (.glc global-coherent,\n     .slc system-level-coherent / .dlc) and the work-group vs agent scope split,\n     which order cache traffic in ways PTX's scope-only model does not express.\n\n herd7 ships neither model; this shared-feature shape is shown with relaxed atomics\n (=> Sometimes is the sub-scope behaviour both allow). See README.\"\n{ int x=0; int f=0; }\nP0 (atomic_int* x, atomic_int* f) {\n  atomic_store_explicit(x,1,memory_order_relaxed);\n  atomic_store_explicit(f,1,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* f) {\n  int r0 = atomic_load_explicit(f,memory_order_relaxed);\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n}\nexists (1:r0=1 /\\ 1:r1=0)\n"
+      }
+    ]
+  },
+  "Promising|CSRA": {
+    "relationship": "incomparable",
+    "summary": "The Promising Semantics (Kang et al., POPL 2017) and CSRA -- A Concurrency Semantics for Relaxed Atomics that Permits Optimisation and Avoids Thin-Air Executions (Pichon-Pharabod & Sewell, POPL 2016) -- are both thin-air-free C/C++ relaxed models on different machines: Promising uses timestamps/promises/ certification; CSRA pairs a POWER-like (non-multi-copy-atomic) memory subsystem with per-thread event structures. Neither supports SC accesses, so an SC litmus cannot separate them. The survey classes both as semantic-dependency preserving and the two are incomparable -- though only one direction has a concrete published program.",
+    "tests": [
+      {
+        "name": "LB+FADD",
+        "file": "LB+FADD.litmus",
+        "lang": "smrd",
+        "code": "C LB+FADD\n\"CSRA allows, Promising (1.0) forbids -- the relaxed-RMW load buffering of\n 'Bridging the Gap' Example 3.10. P0 reads y into a and writes z=a; P1 reads z\n into b, does c=fetch_add(x,1), and writes y=c+1. Target a=1 /\\ b=1 /\\ c=0.\n CSRA ALLOWS it: its POWER-like, non-multi-copy-atomic storage subsystem admits\n the whole load-buffering family (CSRA supports RMWs; see CSRA section 8).\n Promising 1.0 FORBIDS it: realising y=1 needs a promise of y=1 that fails\n certification under future-memory quantification -- the same uncertifiable-RMW\n mechanism documented as the PS-1.0 -> ARMv8 compilation unsoundness. (Promising\n 2.0 repairs the RMW case, narrowing this separation.) Neither model is in\n herd7; verdicts CITED. This file documents the shape. See README.\"\n{ int x=0; int y=0; int z=0; }\nP0 (atomic_int* x, atomic_int* y, atomic_int* z) {\n  int a = atomic_load_explicit(y,memory_order_relaxed);\n  atomic_store_explicit(z,a,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* y, atomic_int* z) {\n  int b = atomic_load_explicit(z,memory_order_relaxed);\n  int c = atomic_fetch_add_explicit(x,1,memory_order_relaxed);\n  atomic_store_explicit(y,c+1,memory_order_relaxed);\n}\nexists (0:a=1 /\\ 1:b=1 /\\ 1:c=0)\n"
+      }
+    ]
+  },
+  "Promising|Weakestmo": {
+    "relationship": "incomparable",
+    "summary": "The Promising Semantics (Kang et al., POPL 2017) and Weakestmo (Chakraborty & Vafeiadis, POPL 2019) are both thin-air-free relaxed-memory models, but built on very different machines: Promising uses per-message timestamps with future promises and certification; Weakestmo uses event structures that encode multiple conflicting executions. The Weakestmo paper states the relationship directly -- \"weakestmo and PS are incomparable\" (§4.3) -- and gives a concrete witness in each direction.",
+    "tests": [
+      {
+        "name": "Coh-CYC",
+        "file": "Coh-CYC.litmus",
+        "lang": "smrd",
+        "code": "C Coh-CYC\n\"Promising allows, Weakestmo forbids (Weakestmo paper Fig. 3). A three-thread\n program whose target outcome a=3 /\\ b=2 /\\ c=1 forms a coherence cycle. Promising\n ALLOWS it: its per-message TIMESTAMPS let the certification of the write X=1 pick\n a smaller timestamp than a later use, producing the incoherent cycle (the paper's\n Example 2, Fig. 5a) -- a 'dubious behaviour not observable on any machine'.\n Weakestmo FORBIDS it: it records a modification order in the event structure and\n rejects the incoherent structure (whichever way the X-writes are mo-ordered, a\n load violates coherence). Neither model is in herd7; verdicts CITED. This file\n documents the program shape. See README.\"\n{ int x=0; int y=0; int z=0; }\nP0 (atomic_int* x, atomic_int* y, atomic_int* z) {\n  int a = atomic_load_explicit(x,memory_order_relaxed);\n  atomic_store_explicit(y,1,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* y, atomic_int* z) {\n  int b = atomic_load_explicit(y,memory_order_relaxed);\n  atomic_store_explicit(z,1,memory_order_relaxed);\n  atomic_store_explicit(x,3,memory_order_relaxed);\n}\nP2 (atomic_int* x, atomic_int* y, atomic_int* z) {\n  int c = atomic_load_explicit(z,memory_order_relaxed);\n  atomic_store_explicit(x,2,memory_order_relaxed);\n}\nexists (0:a=3 /\\ 1:b=1 /\\ 2:c=1)\n"
+      },
+      {
+        "name": "FADD",
+        "file": "FADD.litmus",
+        "lang": "smrd",
+        "code": "C FADD\n\"Weakestmo allows, Promising forbids (Weakestmo paper Fig. 6): a load-buffering\n variant through a relaxed fetch-and-add. P0 reads X into a, does b=fetch_add(Z,a),\n and writes Y=b+1; P1 reads Y into c and writes X=c. Target a=1 /\\ c=1.\n Weakestmo (and ARMv8) ALLOW it: Y=b+1 depends on Z's prior value but not on the\n fetch-and-add's return in a way that blocks the LB shape, so the event structure\n admits it. Promising (1.0) FORBIDS it: to get Y=1 a thread must PROMISE Y=1, but\n the promise cannot be certified in EVERY future memory (e.g. one in which Z holds\n 42 forces Y=43). This is exactly why PS->ARMv8 compilation needed a fence after\n every RMW (Podkopaev et al. 2019). Neither model is in herd7; verdicts CITED.\n This file documents the shape. See README.\"\n{ int x=0; int y=0; int z=0; }\nP0 (atomic_int* x, atomic_int* y, atomic_int* z) {\n  int a = atomic_load_explicit(x,memory_order_relaxed);\n  int b = atomic_fetch_add_explicit(z,a,memory_order_relaxed);\n  atomic_store_explicit(y,b+1,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* y, atomic_int* z) {\n  int c = atomic_load_explicit(y,memory_order_relaxed);\n  atomic_store_explicit(x,c,memory_order_relaxed);\n}\nexists (0:a=1 /\\ 1:c=1)\n"
+      }
+    ]
+  },
+  "RC11|IMM": {
+    "relationship": "incomparable",
+    "summary": "IMM (the Intermediate Memory Model) is a compilation target between language models and hardware. herd7 does not ship IMM — it lives as a Coq development — so only the RC11 side is machine-checked here; the IMM side is cited.",
+    "tests": [
+      {
+        "name": "LB-relaxed",
+        "file": "LB-relaxed.litmus",
+        "lang": "smrd",
+        "code": "C LB-relaxed\n\"Plain load buffering, all relaxed. RC11's no-thin-air axiom acyclic(po | rf)\n forbids ALL of LB; IMM (hardware-oriented) allows it, forbidding only genuine\n dependency cycles. Verifiable RC11 side: herd7 -model rc11.cat (=> Never).\n IMM side is from Podkopaev et al. (=> allowed); IMM is not shipped with herd7.\"\n{ int x=0; int y=0; }\nP0 (atomic_int* x, atomic_int* y) {\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n  atomic_store_explicit(y,1,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* y) {\n  int r2 = atomic_load_explicit(y,memory_order_relaxed);\n  atomic_store_explicit(x,1,memory_order_relaxed);\n}\nexists (0:r1=1 /\\ 1:r2=1)\n"
+      }
+    ]
+  }
+}

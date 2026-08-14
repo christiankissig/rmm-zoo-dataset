@@ -1,0 +1,36 @@
+C cyc_na
+"Out-of-thin-air load buffering over the WEAKEST mode (LB+datas). P0 reads x
+ into r1 and stores r1 to y; P1 reads y into r2 and stores r2 to x. The outcome
+ r1=r2=42 invents 42 from a cyclic justification in po|rf -- no execution ever
+ writes 42 except by reading it back round the cycle.
+
+ This is the JAM-allows / JMM-forbids direction (here the relaxed atomics stand
+ in for JAM's PLAIN access mode; this is JAM's own cyc_na program).
+
+ JAM (Java Access Modes) ALLOWS it. JAM is modelled on RC11 and adopts RC11's
+ no-thin-air fix -- acyclic(po|rf) -- but ONLY for opaque-or-stronger accesses;
+ for plain (non-atomic) accesses it deliberately leaves the cycle unconstrained,
+ so the plain-mode program keeps the po|rf cycle and the thin-air outcome is
+ permitted.
+
+ The original JMM FORBIDS it. The canonical OOTA r=r=42 is the motivating target
+ of the JMM's commitment semantics: a value may only be committed if some
+ well-behaved execution produces it, and 42 has no such justification, so the
+ causality rules reject it. (The JMM's causality machinery is famously flawed in
+ OTHER cases -- see LB+opaque.litmus for the reverse direction -- but it does
+ forbid this textbook thin-air load-buffering.)
+
+ Verdicts are CITED, not machine-run: there is no shared checker -- the JMM is
+ not a herd7 model and JAM's mechanisation is the Coq development accompanying
+ the paper. herd7 cannot construct an OOTA execution in any case (it ties reads
+ to written values). See README."
+{ int x=0; int y=0; }
+P0 (atomic_int* x, atomic_int* y) {                  /* JAM plain mode */
+  int r1 = atomic_load_explicit(x,memory_order_relaxed);
+  atomic_store_explicit(y,r1,memory_order_relaxed);
+}
+P1 (atomic_int* x, atomic_int* y) {                  /* JAM plain mode */
+  int r2 = atomic_load_explicit(y,memory_order_relaxed);
+  atomic_store_explicit(x,r2,memory_order_relaxed);
+}
+exists (0:r1=42 /\ 1:r2=42)

@@ -1,0 +1,9 @@
+Coherence
+(* The bare minimum: per-location cache coherence only.  Writes to a single
+   address are seen in one total order by everyone (SC-per-location), but
+   nothing constrains ordering across different addresses -- not even
+   dependencies.  Everything above this is strictly stronger. *)
+
+include "cos.cat"
+
+acyclic po-loc | rf | co | fr as coherence

@@ -1,0 +1,22 @@
+C FADD
+"Weakestmo allows, Promising forbids (Weakestmo paper Fig. 6): a load-buffering
+ variant through a relaxed fetch-and-add. P0 reads X into a, does b=fetch_add(Z,a),
+ and writes Y=b+1; P1 reads Y into c and writes X=c. Target a=1 /\ c=1.
+ Weakestmo (and ARMv8) ALLOW it: Y=b+1 depends on Z's prior value but not on the
+ fetch-and-add's return in a way that blocks the LB shape, so the event structure
+ admits it. Promising (1.0) FORBIDS it: to get Y=1 a thread must PROMISE Y=1, but
+ the promise cannot be certified in EVERY future memory (e.g. one in which Z holds
+ 42 forces Y=43). This is exactly why PS->ARMv8 compilation needed a fence after
+ every RMW (Podkopaev et al. 2019). Neither model is in herd7; verdicts CITED.
+ This file documents the shape. See README."
+{ int x=0; int y=0; int z=0; }
+P0 (atomic_int* x, atomic_int* y, atomic_int* z) {
+  int a = atomic_load_explicit(x,memory_order_relaxed);
+  int b = atomic_fetch_add_explicit(z,a,memory_order_relaxed);
+  atomic_store_explicit(y,b+1,memory_order_relaxed);
+}
+P1 (atomic_int* x, atomic_int* y, atomic_int* z) {
+  int c = atomic_load_explicit(y,memory_order_relaxed);
+  atomic_store_explicit(x,c,memory_order_relaxed);
+}
+exists (0:a=1 /\ 1:c=1)

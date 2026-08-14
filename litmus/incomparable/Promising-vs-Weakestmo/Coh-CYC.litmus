@@ -1,0 +1,25 @@
+C Coh-CYC
+"Promising allows, Weakestmo forbids (Weakestmo paper Fig. 3). A three-thread
+ program whose target outcome a=3 /\ b=2 /\ c=1 forms a coherence cycle. Promising
+ ALLOWS it: its per-message TIMESTAMPS let the certification of the write X=1 pick
+ a smaller timestamp than a later use, producing the incoherent cycle (the paper's
+ Example 2, Fig. 5a) -- a 'dubious behaviour not observable on any machine'.
+ Weakestmo FORBIDS it: it records a modification order in the event structure and
+ rejects the incoherent structure (whichever way the X-writes are mo-ordered, a
+ load violates coherence). Neither model is in herd7; verdicts CITED. This file
+ documents the program shape. See README."
+{ int x=0; int y=0; int z=0; }
+P0 (atomic_int* x, atomic_int* y, atomic_int* z) {
+  int a = atomic_load_explicit(x,memory_order_relaxed);
+  atomic_store_explicit(y,1,memory_order_relaxed);
+}
+P1 (atomic_int* x, atomic_int* y, atomic_int* z) {
+  int b = atomic_load_explicit(y,memory_order_relaxed);
+  atomic_store_explicit(z,1,memory_order_relaxed);
+  atomic_store_explicit(x,3,memory_order_relaxed);
+}
+P2 (atomic_int* x, atomic_int* y, atomic_int* z) {
+  int c = atomic_load_explicit(z,memory_order_relaxed);
+  atomic_store_explicit(x,2,memory_order_relaxed);
+}
+exists (0:a=3 /\ 1:b=1 /\ 2:c=1)

@@ -1,0 +1,24 @@
+C MP+relaxed
+"Relaxed message passing, outcome r0=1 /\ r1=0 (flag seen set, data stale). The
+ Relaxed Memory Calculus (RMC) specifies ordering DIRECTLY in the source with
+ explicit visibility (VEDGE / vo) and execution (XEDGE / xo) edges rather than
+ per-access memory-order annotations. The RMC author would place a VEDGE from the
+ data write to the flag write and an XEDGE on the reader, which together FORBID
+ this stale-data outcome. Plain C11 with all-RELAXED atomics (no such edges)
+ ALLOWS it: relaxed accesses carry no happens-before. herd7 -c11 => Sometimes.
+ RMC has no herd7 model (it is a source-level calculus), so its forbidding
+ verdict is cited; the C11 verdict is machine-run. OOTA does NOT separate the two
+ (RMC also permits thin-air). The reverse direction -- RMC is 'strictly more
+ relaxed than any existing architecture' and admits leapfrogging/forwarding
+ speculation C11 has no mode to express -- is a model-level claim with no single
+ canonical litmus. See README."
+{ int x=0; int f=0; }
+P0 (atomic_int* x, atomic_int* f) {
+  atomic_store_explicit(x,1,memory_order_relaxed);
+  atomic_store_explicit(f,1,memory_order_relaxed);
+}
+P1 (atomic_int* x, atomic_int* f) {
+  int r0 = atomic_load_explicit(f,memory_order_relaxed);
+  int r1 = atomic_load_explicit(x,memory_order_relaxed);
+}
+exists (1:r0=1 /\ 1:r1=0)

@@ -1,0 +1,14 @@
+Test mp-rs-cpp17-racy Allowed
+States 4
+1:a=0; 1:b=0;
+1:a=1; 1:b=0;
+1:a=2; 1:b=0;
+1:a=2; 1:b=1;
+Undef
+Witnesses
+Positive: 1 Negative: 3
+Flag *undef*
+Condition exists (1:a=2 /\ 1:b=0)
+Observation mp-rs-cpp17-racy Sometimes 1 3
+Hash=95f7439d358f3771a1a41fbfce208bc3
+

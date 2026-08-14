@@ -1,0 +1,19 @@
+Test mp-rs-st-est-atomics-cpp11 Allowed
+States 10
+1:a=0; 1:b=0; [x]=2;
+1:a=0; 1:b=0; [x]=3;
+1:a=1; 1:b=0; [x]=2;
+1:a=1; 1:b=0; [x]=3;
+1:a=2; 1:b=0; [x]=2;
+1:a=2; 1:b=0; [x]=3;
+1:a=3; 1:b=0; [x]=2;
+1:a=3; 1:b=0; [x]=3;
+1:a=3; 1:b=1; [x]=2;
+1:a=3; 1:b=1; [x]=3;
+Ok
+Witnesses
+Positive: 2 Negative: 13
+Condition exists ([x]=3 /\ 1:a=3 /\ 1:b=0)
+Observation mp-rs-st-est-atomics-cpp11 Sometimes 2 13
+Hash=983f457abc7f45248268738be602ed44
+

@@ -1,0 +1,22 @@
+C LB-oota
+"Out-of-thin-air load buffering, CSRA's 'Example 2' shape: each thread stores 42
+ ONLY in the branch taken when it has already read 42. P0 reads x; if it is 42 it
+ writes y=42. P1 reads y; if it is 42 it writes x=42. The outcome r1=r2=42
+ conjures 42 from a self-justifying cycle. C11 PERMITS it (its relaxed atomics do
+ not forbid thin-air). CSRA FORBIDS it: because the write x=42 occurs in only one
+ branch, CSRA's deordering cannot hoist it ahead of the read that guards it, so
+ both reads can only see 0. CSRA's authors state it is a subset of C/C++11 by
+ design ('the converse is not to be expected ... the point of our model is to
+ exclude the thin-air executions that C/C++11 allows'), so C11 is strictly weaker
+ and the only separating outcomes are OOTA ones. Verdicts CITED: herd7 cannot
+ construct an OOTA execution, so it reports Never. See README."
+{ int x=0; int y=0; }
+P0 (atomic_int* x, atomic_int* y) {
+  int r1 = atomic_load_explicit(x,memory_order_relaxed);
+  if (r1 == 42) atomic_store_explicit(y,42,memory_order_relaxed);
+}
+P1 (atomic_int* x, atomic_int* y) {
+  int r2 = atomic_load_explicit(y,memory_order_relaxed);
+  if (r2 == 42) atomic_store_explicit(x,42,memory_order_relaxed);
+}
+exists (0:r1=42 /\ 1:r2=42)

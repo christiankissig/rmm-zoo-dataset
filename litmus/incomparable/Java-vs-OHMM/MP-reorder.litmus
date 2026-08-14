@@ -1,0 +1,26 @@
+C MP-reorder
+"Message passing with two INDEPENDENT writes on the writer (x then y) and two
+ independent reads on the reader (y then x), no syntactic dependency linking the
+ pairs. OHMM (Operational Happens-Before Model) permits the non-message-passing
+ outcome r1=1 /\ r2=0: its abstract machine holds events in a GLOBAL EVENT BUFFER
+ where independent (non-dependent) events may be reordered before they propagate
+ into the global history-based memory, so the store to y can surface before the
+ store to x. The OHMM paper states it 'is weaker than JMM for lockless programs
+ ... such as the reordering of independent memory accesses that is not valid in
+ JMM.' The Java Memory Model (JMM) FORBIDS this reordering: its commit-sequence
+ causality rules do not justify it. Conversely JMM is famously over-permissive on
+ causality and validates a different transformation set (Table 2 of the survey:
+ JMM Elim = + + + -, OHMM Elim = + + + +), so each permits behaviour the other
+ forbids -- they are incomparable. Neither verdict is machine-run: OHMM has no
+ herd7/cat model and this reordering is OHMM-specific, not a JMM execution.
+ Verdicts are CITED. See README."
+{ int x=0; int y=0; }
+P0 (atomic_int* x, atomic_int* y) {
+  atomic_store_explicit(x,1,memory_order_relaxed);
+  atomic_store_explicit(y,1,memory_order_relaxed);
+}
+P1 (atomic_int* x, atomic_int* y) {
+  int r1 = atomic_load_explicit(y,memory_order_relaxed);
+  int r2 = atomic_load_explicit(x,memory_order_relaxed);
+}
+exists (1:r1=1 /\ 1:r2=0)

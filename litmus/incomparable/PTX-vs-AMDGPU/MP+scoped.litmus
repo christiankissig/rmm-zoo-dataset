@@ -1,0 +1,29 @@
+C MP+scoped
+"PTX and AMD-GPU (HSA) are both scoped release-consistency ISA models. On their
+ COMMON feature set -- a scoped release/acquire message pass -- they agree, exactly
+ as herd's arm.cat and ppc.cat agree on the common instruction set (see
+ ../ARM-vs-POWER). This file is that shared shape: a release/acquire MP at a scope
+ the producer and consumer share is FORBIDDEN in both; narrowed below the shared
+ scope it is ALLOWED in both. The incomparability is at the FEATURE level, not in
+ this reordering -- see README for the two feature-specific witnesses:
+
+   PTX allows, AMD has no counterpart:
+     ld/st with the PTX .cta / .cluster scope and the proxy/membar.proxy fences
+     (alias ordering between the generic and surface/texture proxies).
+   AMD allows, PTX has no counterpart:
+     loads/stores carrying HSA cache-control qualifiers (.glc global-coherent,
+     .slc system-level-coherent / .dlc) and the work-group vs agent scope split,
+     which order cache traffic in ways PTX's scope-only model does not express.
+
+ herd7 ships neither model; this shared-feature shape is shown with relaxed atomics
+ (=> Sometimes is the sub-scope behaviour both allow). See README."
+{ int x=0; int f=0; }
+P0 (atomic_int* x, atomic_int* f) {
+  atomic_store_explicit(x,1,memory_order_relaxed);
+  atomic_store_explicit(f,1,memory_order_relaxed);
+}
+P1 (atomic_int* x, atomic_int* f) {
+  int r0 = atomic_load_explicit(f,memory_order_relaxed);
+  int r1 = atomic_load_explicit(x,memory_order_relaxed);
+}
+exists (1:r0=1 /\ 1:r1=0)

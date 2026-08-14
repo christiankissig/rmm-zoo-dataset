@@ -1,0 +1,22 @@
+C LB+FADD
+"CSRA allows, Promising (1.0) forbids -- the relaxed-RMW load buffering of
+ 'Bridging the Gap' Example 3.10. P0 reads y into a and writes z=a; P1 reads z
+ into b, does c=fetch_add(x,1), and writes y=c+1. Target a=1 /\ b=1 /\ c=0.
+ CSRA ALLOWS it: its POWER-like, non-multi-copy-atomic storage subsystem admits
+ the whole load-buffering family (CSRA supports RMWs; see CSRA section 8).
+ Promising 1.0 FORBIDS it: realising y=1 needs a promise of y=1 that fails
+ certification under future-memory quantification -- the same uncertifiable-RMW
+ mechanism documented as the PS-1.0 -> ARMv8 compilation unsoundness. (Promising
+ 2.0 repairs the RMW case, narrowing this separation.) Neither model is in
+ herd7; verdicts CITED. This file documents the shape. See README."
+{ int x=0; int y=0; int z=0; }
+P0 (atomic_int* x, atomic_int* y, atomic_int* z) {
+  int a = atomic_load_explicit(y,memory_order_relaxed);
+  atomic_store_explicit(z,a,memory_order_relaxed);
+}
+P1 (atomic_int* x, atomic_int* y, atomic_int* z) {
+  int b = atomic_load_explicit(z,memory_order_relaxed);
+  int c = atomic_fetch_add_explicit(x,1,memory_order_relaxed);
+  atomic_store_explicit(y,c+1,memory_order_relaxed);
+}
+exists (0:a=1 /\ 1:b=1 /\ 1:c=0)
