@@ -26,14 +26,17 @@ the resolver entirely, for CI or a build outside a git checkout.
 
 1. **Land the data changes** and make sure the tree is clean — a dirty tree is a
    dev build by construction.
-2. **Verify.** `make check && make build`.
-3. **Tag** the release commit (MAJOR for breaking schema changes, MINOR for added
+2. **Write the entry.** Move `[Unreleased]` in [`CHANGELOG.md`](CHANGELOG.md) to
+   the new version + date, and update the compare links at the bottom. The tag
+   should contain its own changelog entry.
+3. **Verify.** `make check && make build`.
+4. **Tag** the release commit (MAJOR for breaking schema changes, MINOR for added
    models/edges/fields, PATCH for corrections):
    ```sh
    git tag -a v1.3.0 -m "RMM Zoo dataset v1.3.0"
    git push origin v1.3.0
    ```
-4. **Deploy** from the tagged commit: `make deploy`. This stamps `v1.3.0` into
+5. **Deploy** from the tagged commit: `make deploy`. This stamps `v1.3.0` into
    `models.json` and `CITATION.cff` and publishes both.
 
 The published citation file is served beside the data it describes:
