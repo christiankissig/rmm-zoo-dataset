@@ -44,10 +44,5 @@ so a reader who fetches the dataset always gets citation metadata naming that
 exact version. It is deliberately *not* committed — a checked-in copy could name
 a version other than the deployed one.
 
-> **Note:** the only tag currently in this repository, `v1.0.0`, predates the
-> standalone-repository history and is unreachable from `master`, so
-> `git describe` cannot see it. The next release needs a fresh tag on this
-> history; pick a version above the last published one (1.2.0).
-
 The dataset is cited by **version + tag + commit**, an immutable, reproducible
 reference.
