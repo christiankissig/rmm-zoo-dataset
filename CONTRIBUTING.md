@@ -21,7 +21,8 @@ machine-verified.
   (`PSO-vs-POWER`, `Weakestmo-vs-C11`, `CSRA-vs-C11` were all reclassified after
   a sweep failed to find the witness their `incomparable` classification implied).
 - **Witnesses** — litmus tests that machine-check an edge currently resting on a
-  citation.
+  citation, and kater queries that machine-check the containment half a litmus
+  test cannot reach.
 - **Properties** — new columns in the property table, with provenance per cell.
 
 ## Quick start
@@ -46,6 +47,18 @@ bash litmus/run.sh               # per-test PASS/FAIL vs the expected verdicts
 Without herd7 everything still works — `make check` skips the dynamic suite and
 tells you it did.
 
+To re-prove the containments recorded as `provenance: kater` you need docker and
+kater's image:
+
+```sh
+docker pull genmc/kater          # ~700MB; run.sh pins it by digest
+make kater                       # per-claim PASS/FAIL
+```
+
+Same deal: `make check` folds the suite in once the image is local, and says so
+when it skips. [`litmus/kater/README.md`](litmus/kater/README.md) is the runbook —
+read it before adding a query.
+
 ## Layout
 
 ```
@@ -55,6 +68,8 @@ CITATION.cff.in    citation metadata template, rendered and published by the
                    build; the rendered CITATION.cff is not committed
 litmus.json        the witness tree baked into one JSON (generated, committed)
 litmus/            witnesses: one directory per edge, plus run.sh
+litmus/kater/      machine-checked containments: one query per kater-provenance
+                   edge, plus run.sh and the runbook
 tools/             the consistency gate, the litmus generator, and the version
                    resolver + template renderer used by the build
 ```
@@ -84,12 +99,21 @@ implies a change to another:
 | `modelPropertyProvenance` | per model: `survey` or `extrapolated` |
 | `modelPropertyCitations` | per cell: `ref` + `note`, where one is owed |
 | `catSupport` | per model: `status`, `basis`, `ref`, `note` |
+| `katSupport` | the same axis for kater's narrower fragment — partial by design: absence means *not assessed* |
 
 **Edge vocabularies.** `type` is `strictly_weaker` (`from` = stronger, `to` =
 weaker), `incomparable`, `equivalent` or `compilation`. `provenance` is
-`litmus`, `memalloy` or `literature`. `evidence` is `machine_run`,
-`by_construction` or `cited` — and it must be honest: `machine_run` means a tool
-in this repo actually produces the verdict.
+`literature`, `litmus`, `completion`, `memalloy` or `kater`. `evidence` is
+`machine_run`, `by_construction`, `cited` or `deduced` — and it must be honest:
+`machine_run` means a tool in this repo actually produces the verdict.
+
+**`kater` provenance** is the strongest mechanical one, and the narrowest: kater
+decides *containment* by language inclusion, unbounded, where memalloy searches
+only up to an event bound. It says nothing about strictness, so a
+`strictly_weaker` edge marked `kater` still owes its separating witness — check 4
+enforces both halves. Adding one means adding
+`litmus/kater/queries/<type>-<from>-vs-<to>.kat`, and both endpoints must be
+`specified` in `katSupport`.
 
 This matters more than it looks. herd7 ties read values to actual stores, so it
 **cannot** exhibit out-of-thin-air executions; models it does not ship (IMM,
@@ -104,12 +128,13 @@ CI on every push and PR. It enforces:
 
 | # | Check |
 |---|---|
-| 1 | Every edge endpoint is a real node; every node has a property vector and a complete `catSupport` entry with a resolvable citation |
+| 1 | Every edge endpoint is a real node; every edge has a declared `provenance` and `evidence`; every node has a property vector and a complete `catSupport` entry with a resolvable citation; `katSupport` is well formed where populated |
 | 2 | `strictly_weaker` is a DAG |
 | 3 | No pair is both ordered and incomparable — including via the transitive closure, so a *deduced* order must not contradict a drawn `incomparable` edge |
-| 4 | Every `litmus/{strictly-weaker,incomparable}/<A>-vs-<B>/` directory matches an edge of that type and direction, and every litmus- or memalloy-provenance edge has one |
+| 4 | Every `litmus/{strictly-weaker,incomparable}/<A>-vs-<B>/` directory matches an edge of that type and direction, and every litmus-, memalloy- or kater-provenance ordering edge has one; every kater-provenance edge also has its query file, over kat-specified endpoints |
 | 5 | A pair exercised on both sides in `run.sh` shows a real `Never` + `Sometimes` split |
 | 6 | `litmus/run.sh` passes with zero failures (skipped if herd7 is absent) |
+| 7 | `litmus/kater/run.sh` passes with zero failures (skipped if the kater image is not pulled) |
 
 Check 3 is the one that surprises people: an edge you add may contradict an
 `incomparable` edge drawn somewhere else entirely, through a chain of orderings
@@ -131,7 +156,7 @@ run those, and they are not committed here.
 1. Branch off `master`.
 2. Make the change, including the data files the invariants tie to it.
 3. Regenerate and run `make check` (and `bash litmus/run.sh` if you touched
-   `litmus/`).
+   `litmus/`, `make kater` if you touched `litmus/kater/`).
 4. Open a PR using the template for that kind of change. GitHub applies the
    default template automatically; pick a specific one by appending
    `&template=<file>` to the PR-creation URL or with `gh pr create --template <file>`:

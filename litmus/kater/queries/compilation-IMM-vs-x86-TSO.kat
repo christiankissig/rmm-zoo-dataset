@@ -1,0 +1,7 @@
+// Zoo edge: IMM -> x86-TSO (compilation).
+// Soundness of the IMM-to-x86 mapping: IMM's global ordering constraint is
+// implied by TSO's, so no compiled execution breaks the source semantics.
+include "../../kat/imm.kat"
+include "../../kat/tso.kat"
+
+assert imm::psc <= tso::tso*

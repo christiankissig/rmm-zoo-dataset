@@ -12,12 +12,14 @@ published artifacts — nothing here knows how the graph is drawn.
 
 ```
 models.json        the dataset: models, edges, references, property table,
-                   per-cell provenance, cat-specifiability, version + date
+                   per-cell provenance, cat- and kat-specifiability, version + date
                    (the build fills version/date in from the git tag)
 CITATION.cff.in    citation metadata template; the build renders it to
                    CITATION.cff and publishes it with the data
 litmus.json        the witness tree baked into one JSON (generated, committed)
 litmus/            witnesses: one directory per edge, plus run.sh
+litmus/kater/      the machine-checked containments: one query per kater edge,
+                   plus run.sh and the runbook
 tools/             the consistency gate, the litmus generator, the version
                    resolver (version.py) and the template renderer (render.py)
 ```
@@ -39,9 +41,10 @@ Checks:
 1. every edge endpoint is a real model with a property vector and a sourced cat-support entry
 2. `strictly_weaker` is a DAG
 3. every edge has a unique type
-4. every edge type and direction matches the witness by folder name
+4. every edge type and direction matches the witness by folder name, and every `kater` edge has the query that proves it
 5. every `strictly_weaker` or `incomparable` edge is supported by distinguishing behaviour(s)
 6. if herd7 is on `PATH`, the litmus suite itself passes
+7. if the kater image is pulled, the containment suite itself passes
 
 Running the dynamic suite needs herd7:
 
@@ -51,8 +54,19 @@ eval $(opam env)
 bash litmus/run.sh               # per-test PASS/FAIL vs the expected verdicts
 ```
 
-Without it `make check` skips that check and says so. Every push and pull request
-runs the full suite in GitHub Actions — see
+Without it `make check` skips that check and says so.
+
+The containment half of the evidence — the ordering claims machine-checked with
+[kater](https://plv.mpi-sws.org/kater/paper.pdf), which decides model inclusion
+*unbounded*, where a litmus test only ever witnesses one direction — needs docker:
+
+```sh
+docker pull genmc/kater          # ~700MB, pinned by digest in the runner
+make kater                       # per-claim PASS/FAIL
+```
+
+[`litmus/kater/README.md`](litmus/kater/README.md) is the runbook. Every push and
+pull request runs both suites in GitHub Actions — see
 [`.github/workflows/litmus.yml`](.github/workflows/litmus.yml).
 
 ## Build and publish

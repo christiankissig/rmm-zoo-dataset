@@ -7,24 +7,32 @@ dependency of `make build`/`make deploy`). Exits non-zero on any violation.
 What it guarantees, so the dataset cannot silently drift from its claims:
 
   STRUCTURE (models.json)
-    1. every edge endpoint is a real node; every node has a property vector and a
-       cat-specifiability entry (status + basis + note + a resolvable citation)
+    1. every edge endpoint is a real node; every edge carries a declared
+       provenance and evidence; every node has a property vector and a
+       cat-specifiability entry (status + basis + note + a resolvable citation);
+       the kat-specifiability map is well formed where it is populated
     2. strictly_weaker is a DAG (no cycles)
     3. no pair is both ordered and incomparable -- neither directly nor via the
        transitive closure of strictly_weaker (a deduced order must not contradict
        a drawn incomparable edge)
 
   DATA <-> WITNESSES (litmus/ tree, run.sh)
-    4. direction loop: every litmus/{strictly-weaker,incomparable}/<A>-vs-<B>
-       directory matches an edge of the right TYPE and DIRECTION in models.json,
-       and every litmus/memalloy-provenance ordering edge has such a directory
+    4. evidence loop: every litmus/{strictly-weaker,incomparable}/<A>-vs-<B>
+       directory matches an edge of the right TYPE and DIRECTION in models.json;
+       every litmus/memalloy/kater-provenance ordering edge has such a directory
+       (kater proves containment, never strictness -- the witness is still owed);
+       and every kater-provenance edge, of any type, has the query file that
+       backs it, over endpoints katSupport marks kat-specified
     5. separation loop: every pair that run.sh exercises on both sides exhibits a
        genuine Never+Sometimes split (a witness that actually distinguishes the
        models, not two identical verdicts)
 
-  OPTIONAL (only if herd7 is on PATH)
-    6. run litmus/run.sh and require 0 failures -- the dynamic closed loop that
-       the hardcoded Never/Sometimes expectations still hold under the checker
+  OPTIONAL (only if the tool is available)
+    6. herd7 on PATH: run litmus/run.sh and require 0 failures -- the dynamic
+       closed loop that the hardcoded Never/Sometimes expectations still hold
+       under the checker
+    7. the kater image pulled locally: run litmus/kater/run.sh and require 0
+       failures -- the same closed loop for the machine-checked containments
 
 NOT checked here: how the graph is DRAWN. The tier layout (tierMap / tierOrder /
 tierLabels) lives in the site repository, which owns presentation, and its
@@ -57,10 +65,15 @@ inc_pairs = {frozenset((e["from"], e["to"])) for e in edges if e["type"] == "inc
 # ---- 1. endpoints + property vectors + edge evidence ---------------------
 mp = MODELS.get("modelProperties", {})
 EVIDENCE_OK = {"machine_run", "cited", "by_construction", "deduced"}
+PROVENANCE_OK = {"literature", "litmus", "completion", "memalloy", "kater"}
 for e in edges:
     for ep in (e["from"], e["to"]):
         if ep not in ids:
             err(1, f"edge endpoint '{ep}' is not a model id ({e['from']}->{e['to']})")
+    pv = e.get("provenance")
+    if pv not in PROVENANCE_OK:
+        err(1, f"edge {e['from']}->{e['to']} has invalid/missing provenance {pv!r} "
+               f"(expected one of {sorted(PROVENANCE_OK)})")
     ev = e.get("evidence")
     if ev not in EVIDENCE_OK:
         err(1, f"edge {e['from']}->{e['to']} has invalid/missing evidence {ev!r} "
@@ -134,6 +147,39 @@ for nid in sorted(ids):
 for nid in sorted(set(cs) - ids):
     err(1, f"catSupport names unknown model '{nid}'")
 
+# kat specifiability: the same axis for kater's (narrower) input language. Unlike
+# catSupport this map is PARTIAL by design -- absence means "not assessed", not
+# "no" -- so it is validated where present rather than required to be total. The
+# one hard requirement is check 4's: a kater-provenance edge needs both endpoints
+# marked kat-specified, since the check is only as meaningful as the .kat files.
+KAT_STATUS_OK = CAT_STATUS_OK
+KAT_BASIS_OK = {"kat-model", "cited", "extrapolated"}
+ks = MODELS.get("katSupport", {})
+for nid in sorted(ks):
+    if nid not in ids:
+        err(1, f"katSupport names unknown model '{nid}'")
+        continue
+    e = ks[nid]
+    if not isinstance(e, dict):
+        err(1, f"katSupport[{nid}] is not an object")
+        continue
+    if e.get("status") not in KAT_STATUS_OK:
+        err(1, f"katSupport[{nid}] has invalid/missing status {e.get('status')!r} "
+               f"(expected one of {sorted(KAT_STATUS_OK)})")
+    if e.get("basis") not in KAT_BASIS_OK:
+        err(1, f"katSupport[{nid}] has invalid/missing basis {e.get('basis')!r} "
+               f"(expected one of {sorted(KAT_BASIS_OK)})")
+    if not (e.get("note") or "").strip():
+        err(1, f"katSupport[{nid}] has no note justifying its status")
+    if e.get("ref") not in MODELS.get("references", {}):
+        err(1, f"katSupport[{nid}] cites unknown reference {e.get('ref')!r}")
+    # a per-execution predicate is a precondition for both languages, so the
+    # narrower one cannot claim more than the wider one.
+    if e.get("status") in ("specified", "expressible") and \
+            (cs.get(nid) or {}).get("status") == "not-expressible":
+        err(1, f"katSupport[{nid}] is {e['status']!r} while catSupport says "
+               f"'not-expressible' -- kater's fragment is narrower than cat's")
+
 # dataset versioning (RELEASING.md): models.json is a TEMPLATE — the version and
 # date are stamped in at build time by tools/render.py from the git tag, the one
 # source of truth, so nothing here may hard-code a literal version. A version
@@ -204,11 +250,15 @@ for rel in ("strictly-weaker", "incomparable"):
             if frozenset((a, b)) not in inc_pairs:
                 err(4, f"litmus/incomparable/{child.name}: pair is not an incomparable edge")
 
-# every litmus/memalloy-provenance ordering edge must have a witness directory
+# every litmus/memalloy/kater-provenance ordering edge must have a witness
+# directory. kater is included deliberately: it decides the CONTAINMENT half of a
+# strictly_weaker claim and can never establish strictness, so such an edge still
+# owes the separating witness -- dropping the directory would quietly turn a
+# proved order into a proved inclusion.
 for e in edges:
     if e["type"] not in ("strictly_weaker", "incomparable"):
         continue
-    if e.get("provenance") not in ("litmus", "memalloy"):
+    if e.get("provenance") not in ("litmus", "memalloy", "kater"):
         continue
     a, b = e["from"], e["to"]
     if e["type"] == "strictly_weaker":
@@ -217,6 +267,24 @@ for e in edges:
         ok = (a, b) in dir_pairs["incomparable"] or (b, a) in dir_pairs["incomparable"]
     if not ok:
         err(4, f"edge {a} {e['type']} {b} (provenance={e['provenance']}) has no litmus directory")
+
+# every kater-provenance edge -- of any type, ordering or not -- must name the
+# query that backs it, and both endpoints must be kat-specified. The file name is
+# derived from the edge, so a renamed model or a retyped edge orphans its proof
+# here rather than on the site.
+KATER_Q = LITMUS / "kater" / "queries"
+for e in edges:
+    if e.get("provenance") != "kater":
+        continue
+    a, b = e["from"], e["to"]
+    q = KATER_Q / f"{e['type'].replace('_', '-')}-{a}-vs-{b}.kat"
+    if not q.is_file():
+        err(4, f"edge {a} {e['type']} {b} (provenance=kater) has no query at "
+               f"{q.relative_to(ROOT)}")
+    for ep in (a, b):
+        if (ks.get(ep) or {}).get("status") != "specified":
+            err(4, f"edge {a} {e['type']} {b} is provenance=kater but katSupport[{ep}] "
+                   f"is not 'specified' -- the check needs a .kat for both endpoints")
 
 
 # ---- 5. run.sh separation loop -------------------------------------------
@@ -248,13 +316,37 @@ if shutil.which("herd7"):
         err(6, f"litmus/run.sh did not pass cleanly: {tail or proc.stderr[-200:]}")
 
 
+# ---- 7. optional dynamic check: run the kater suite ----------------------
+# Gated on the image already being local: pulling ~700MB inside `make check`
+# would be rude, and CI pulls it in its own step before calling us.
+KATER_RUN = LITMUS / "kater" / "run.sh"
+# The pin lives in run.sh (one place), so read the image reference back out of it
+# rather than repeating the digest here where the two could drift apart.
+m = re.search(r"KATER_IMAGE:-([^}\s]+)", KATER_RUN.read_text())
+KATER_IMAGE = m.group(1) if m else "genmc/kater"
+ran_kater = False
+if shutil.which("docker") and subprocess.run(
+        ["docker", "image", "inspect", KATER_IMAGE],
+        capture_output=True).returncode == 0:
+    proc = subprocess.run(["bash", str(KATER_RUN)], capture_output=True, text=True)
+    ran_kater = True
+    tail = proc.stdout.strip().splitlines()[-1] if proc.stdout.strip() else ""
+    if proc.returncode != 0 or "0 failed" not in proc.stdout:
+        err(7, f"litmus/kater/run.sh did not pass cleanly: {tail or proc.stderr[-200:]}")
+
+
 # ---- report --------------------------------------------------------------
-NCHECKS = 6
+NCHECKS = 7
 if fail:
     print(f"check-consistency: FAILED ({len(fail)} violation(s))\n")
     for c, msg in fail:
         print(f"  [check {c}] {msg}")
     sys.exit(1)
+skipped = []
+if not ran_suite:
+    skipped.append("6: herd7 not on PATH")
+if not ran_kater:
+    skipped.append(f"7: {KATER_IMAGE.split('@')[0]} image not pulled")
 print(f"check-consistency: OK -- {len(ids)} nodes, {len(edges)} edges, "
       f"all {NCHECKS} checks pass"
-      + ("" if ran_suite else " (check 6 skipped: herd7 not on PATH)"))
+      + ("" if not skipped else " (skipped check " + "; check ".join(skipped) + ")"))

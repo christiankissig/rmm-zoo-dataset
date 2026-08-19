@@ -38,17 +38,22 @@ edges floats unattached, so a new model needs at least one relation.
 - [ ] `catSupport["<id>"]` — `status` (`specified` / `expressible` /
       `not-expressible`), `basis` (`cat-model` / `cited` / `extrapolated`),
       `ref`, and a `note` saying why (check 1 requires all four)
+- [ ] `katSupport["<id>"]` if the model has, or could have, a kater `.kat` —
+      optional (the map is partial by design), but required for either endpoint
+      of a `provenance: kater` edge
 - [ ] At least one edge in `edges` relating the model to an existing one
 
 You do **not** need to place the model in the map's tier layout — that lives in
 the site repo, and an unplaced model renders in a fallback tier until it is
 positioned there.
 
-Witnesses, if any new edge has `provenance: litmus` or `memalloy`:
+Witnesses, if any new edge has `provenance: litmus`, `memalloy` or `kater`:
 
 - [ ] `litmus/<strictly-weaker|incomparable>/<A>-vs-<B>/` directory exists, named
       in edge direction (`from` = stronger), with the test and a `README.md`
-      (check 6) — see the *Add litmus tests* template
+      (check 4) — see the *Add litmus tests* template
+- [ ] for `kater`, also `litmus/kater/queries/<type>-<from>-vs-<to>.kat`, and the
+      claim passes `make kater` — see `litmus/kater/README.md`
 
 ## Verification
 

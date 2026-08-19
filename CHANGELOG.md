@@ -12,6 +12,53 @@ Each released version is published at
 
 ## [Unreleased]
 
+## [1.3.0] — 2026-08-19
+
+Adds a second mechanical provenance, and with it the first **proofs** in the
+dataset: kater decides model containment by language inclusion, so the claims it
+backs hold for executions of every size rather than up to an event bound.
+
+### Added
+
+- **`kater` provenance**, with the runbook, queries and runner in
+  [`litmus/kater/`](litmus/kater/). kater (Kokologiannakis, Lahav & Vafeiadis,
+  POPL 2023) reduces "is M weaker than N?" to language inclusion between regular
+  languages — decidable and **unbounded**, unlike memalloy's search up to an
+  event bound. It settles the **containment** half of an ordering claim, the half
+  a litmus test can never reach; the strictness half stays with the separating
+  witness, and check 4 requires both.
+- **`katSupport`** — cat-specifiability's axis narrowed to kater's fragment
+  (conjunctions of irreflexivity/emptiness constraints over regular expressions).
+  Deliberately a separate map from `catSupport`, since the fragment is narrower,
+  and deliberately **partial**: absence means *not assessed*, not *no*. Nine
+  models are kat-specified today.
+- **`litmus/kater/run.sh`** — one PASS/FAIL line per claim, the image pinned by
+  digest the way `litmus/run.sh` pins herd7 to 7.58. It fails on a refutation, on
+  a kater error, **and** on `Ignoring unsupported assumption`: kater drops a
+  premise it cannot use, says so, and still exits 0, so an unguarded check could
+  rest on something the tool silently ignored.
+- **`make kater`**, and a **kater job in CI** running the suite on every push and
+  pull request.
+- **Check 7** (run the kater suite, skipped unless the image is local) and two
+  extensions to the gate: every edge's `provenance` must be one of the five
+  declared values (check 1), and every `kater` edge must have the query file that
+  proves it, over endpoints `katSupport` marks specified (check 4).
+- **`litmus/kater/open/`** — the three queries that do *not* pass, kept runnable
+  so the obstacle is reproducible rather than folklore: the cross-ISA
+  `TSO → ARMv8` comparison (no mapping between the instruction sets), `SC → LKMM`
+  (kater rejects `lkmm2.kat` as an include), and `IMM → POWER` (Power needs the
+  manual rewriting the paper describes).
+
+### Changed
+
+- **Five edges re-evidenced against kater**, none of them re-classified — the
+  relations are as they were, but now decided rather than cited:
+  `SC → TSO`, `SC → C11` and `RC11 → C11` (containment proved; strictness still
+  the litmus witness), and the compilation edges `IMM → ARMv8` and
+  `IMM → x86-TSO`, which move from `cited` to `machine_run`.
+- Evidence counts are now 42 `machine_run` / 84 `cited` / 19 `by_construction`;
+  provenance counts 125 `literature`, 11 `litmus`, 5 `kater`, 4 `memalloy`.
+
 ## [1.2.0] — 2026-08-14
 
 First release of the dataset as a standalone repository, split out of the
@@ -67,5 +114,6 @@ once carried live in `rmm-zoo-tool-paper` and `rmm-zoo.kissig.org`, and the
 history was squashed at the split. Releases before 1.2.0 were made from the
 combined repository and are not itemised here.
 
-[Unreleased]: https://github.com/christiankissig/rmm-zoo-dataset/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/christiankissig/rmm-zoo-dataset/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/christiankissig/rmm-zoo-dataset/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/christiankissig/rmm-zoo-dataset/releases/tag/v1.2.0

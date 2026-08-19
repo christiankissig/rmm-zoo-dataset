@@ -1,0 +1,10 @@
+// Zoo edge: SC -> C11 (strictly_weaker) — containment half.
+//
+// Every SC-consistent execution is C11-consistent: C11's two global axioms —
+// acyclic(psc) and coherence (irreflexive hb;eco) — must both follow from
+// acyclic(sc).
+include "../../kat/sc.kat"
+include "../../kat/c11-old.kat"
+
+assert c11-old::psc <= sc::sc+
+assert c11-old::hb ; c11-old::eco <= sc::sc+

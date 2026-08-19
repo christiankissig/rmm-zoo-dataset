@@ -1,0 +1,9 @@
+// Zoo edge: IMM -> ARMv8 (compilation).
+// The assume records the mapping premise that an RMW's read and write are
+// ordered in mo (atomicity), which holds of any well-formed target execution.
+include "../../kat/imm.kat"
+include "../../kat/arm8.kat"
+
+assume rf;rmw <= mo
+
+assert imm::psc <= arm8::ob*
