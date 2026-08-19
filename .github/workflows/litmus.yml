@@ -1,8 +1,11 @@
-# Run the litmus suite (and the graph-data consistency gate) on every push and PR.
+# Run the evidence suites (and the graph-data consistency gate) on every push
+# and PR.
 #
 # litmus/run.sh checks each herd7-runnable witness against its recorded verdict
 # (Never / Sometimes), so a data edit that invalidates a witness — or a herd7
 # upgrade that changes a verdict — fails here rather than on the live site.
+# litmus/kater/run.sh does the same for the machine-checked containments: every
+# edge with provenance "kater" is re-proved from its query file.
 name: litmus
 
 # Feature branches are covered by pull_request; restricting push to master keeps
@@ -60,3 +63,34 @@ jobs:
       # (Its optional check 6 re-runs the suite above; both take ~1s.)
       - name: Check graph consistency
         run: opam exec -- make check
+
+  kater:
+    name: kater containment suite
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      # Pinned by digest, matching litmus/kater/run.sh's default. run.sh would
+      # pull nothing itself: it fails loudly if the image is absent, so that a
+      # missing image can never look like a passing suite.
+      - name: Pull kater
+        run: docker pull genmc/kater@sha256:0542cb49effeb47129fd09a93cb96794ac91382c451479dc963e584a01edbe07
+
+      - name: kater version
+        run: |
+          docker run --rm --entrypoint head \
+            genmc/kater@sha256:0542cb49effeb47129fd09a93cb96794ac91382c451479dc963e584a01edbe07 \
+            -12 /root/kater/CHANGELOG.md
+
+      # Every claim behind a "kater"-provenance edge, re-decided from its query.
+      # Fails on a refutation, on a kater error, and on a silently dropped
+      # assumption.
+      - name: Run kater suite
+        run: bash litmus/kater/run.sh
+
+      # The static half: query files present for every kater edge, katSupport
+      # well formed, witness directories still owed where kater proves only
+      # containment. (Its check 7 re-runs the suite above; check 6 skips here,
+      # herd7 being the other job's business.)
+      - name: Check graph consistency
+        run: make check

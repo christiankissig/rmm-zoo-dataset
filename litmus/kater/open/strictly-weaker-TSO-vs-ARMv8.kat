@@ -1,0 +1,11 @@
+// PARKED — see ../README.md, "What is parked, and why".
+//
+// Zoo edge: TSO -> ARMv8 (strictly_weaker, provenance: litmus). The naive
+// model-level query, with no mapping between the two instruction sets: it is
+// refuted on `[DEP] data`, because ARM's dependency and ISB/DMB.ST vocabulary
+// has no TSO counterpart. Settling the edge needs `assume`s encoding the
+// mapping, as the compilation queries do.
+include "../../kat/tso.kat"
+include "../../kat/arm8.kat"
+
+assert arm8::ob <= tso::tso+

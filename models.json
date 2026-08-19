@@ -1,5 +1,5 @@
 {
-  "_comment": "Relaxed Memory Model Zoo — models ordered by strength (inclusion of dependency/observable behaviours). An edge A -> B means B is strictly weaker than A (B allows strictly more behaviours). References use short-key format expanded in 'references'. Every edge carries a 'provenance' recording the strength of its evidence: 'literature' = the defining relationship (containment for strictly_weaker; both separating directions for incomparable; behavioural identity for equivalent; mapping soundness for compilation) is established or claimed in the primary literature or holds by construction — strong; 'litmus' = the relationship rests on litmus evidence rather than a cited theorem or by-construction definition: for a strictly_weaker edge, a one-sided witness PLUS an explicit model-level containment argument (e.g. cross-ISA monotonicity) corroborated by the sweep — a genuine strict order, argued not mechanised, drawn lighter; for an incomparable edge, a concrete separating program in each direction; 'completion' = derived by deduction over other edges (transitivity / equivalence transport); 'memalloy' = the verdict comes from a mechanical model comparison with the memalloy tool (Wickerson et al., POPL 2017), which generates the simplest distinguishing execution or finds none up to an event bound — used for the scoped-GPU edges memalloy can express. See litmus/memalloy/README.md for the reproduction runbook.",
+  "_comment": "Relaxed Memory Model Zoo — models ordered by strength (inclusion of dependency/observable behaviours). An edge A -> B means B is strictly weaker than A (B allows strictly more behaviours). References use short-key format expanded in 'references'. Every edge carries a 'provenance' recording the strength of its evidence: 'literature' = the defining relationship (containment for strictly_weaker; both separating directions for incomparable; behavioural identity for equivalent; mapping soundness for compilation) is established or claimed in the primary literature or holds by construction — strong; 'litmus' = the relationship rests on litmus evidence rather than a cited theorem or by-construction definition: for a strictly_weaker edge, a one-sided witness PLUS an explicit model-level containment argument (e.g. cross-ISA monotonicity) corroborated by the sweep — a genuine strict order, argued not mechanised, drawn lighter; for an incomparable edge, a concrete separating program in each direction; 'completion' = derived by deduction over other edges (transitivity / equivalence transport); 'memalloy' = the verdict comes from a mechanical model comparison with the memalloy tool (Wickerson et al., POPL 2017), which generates the simplest distinguishing execution or finds none up to an event bound — used for the scoped-GPU edges memalloy can express. 'kater' = the containment direction is machine-checked by kater (Kokologiannakis, Lahav & Vafeiadis, POPL 2023), which decides inclusion between two models' constraint relations as a language-inclusion problem — decidable and unbounded, unlike memalloy's search up to an event bound, so a passing check is a proof about the .kat renderings the note names, not a no-counterexample-yet result. kater settles containment only: for a strictly_weaker edge the strictness half still rests on the separating witness in litmus/strictly-weaker/, and a kater refutation is a counterexample path that need not be realisable, so it is a lead for a litmus test rather than a proof of separation. See litmus/kater/README.md for that runbook and litmus/memalloy/README.md for memalloy's.",
   "version": "@VERSION@",
   "date": "@DATE@",
   "models": [
@@ -1435,9 +1435,9 @@
       "from": "SC",
       "to": "TSO",
       "type": "strictly_weaker",
-      "provenance": "literature",
+      "provenance": "kater",
       "evidence": "machine_run",
-      "note": "TSO allows store-load reordering; SC does not."
+      "note": "TSO allows store-load reordering; SC does not. Containment is machine-checked: kater decides tso ⊆ sc⁺ over kater's sc.kat and tso.kat, so every SC-consistent execution is TSO-consistent — unbounded, not up to a bound (litmus/kater/queries/strictly-weaker-SC-vs-TSO.kat). Strictness is the SB witness in litmus/strictly-weaker/SC-vs-TSO/."
     },
     {
       "from": "x86-TSO",
@@ -1538,9 +1538,9 @@
       "from": "SC",
       "to": "C11",
       "type": "strictly_weaker",
-      "provenance": "literature",
+      "provenance": "kater",
       "evidence": "machine_run",
-      "note": "DRF-SC: SC-annotated programs behave as SC, but C11 allows weaker behaviours for non-SC atomics."
+      "note": "DRF-SC: SC-annotated programs behave as SC, but C11 allows weaker behaviours for non-SC atomics. Containment is machine-checked: kater derives both of C11's global axioms — acyclic(psc) and coherence — from acyclic(sc) over kater's sc.kat and c11-old.kat (litmus/kater/queries/strictly-weaker-SC-vs-C11.kat). Strictness is the relaxed-SB witness in litmus/strictly-weaker/SC-vs-C11/."
     },
     {
       "from": "SC",
@@ -1668,9 +1668,9 @@
       "from": "RC11",
       "to": "C11",
       "type": "strictly_weaker",
-      "provenance": "literature",
+      "provenance": "kater",
       "evidence": "machine_run",
-      "note": "RC11 is strictly stronger than C11: it fixes SC axioms and eliminates thin-air. All RC11 behaviours are C11 behaviours but not vice versa."
+      "note": "RC11 is strictly stronger than C11: it fixes SC axioms and eliminates thin-air. All RC11 behaviours are C11 behaviours but not vice versa. Containment is machine-checked: kater derives C11's psc-acyclicity and coherence from RC11's acyclic(ar) over kater's rc11.kat and c11-old.kat (litmus/kater/queries/strictly-weaker-RC11-vs-C11.kat). Strictness is the witness in litmus/strictly-weaker/RC11-vs-C11/."
     },
     {
       "from": "RC11",
@@ -1823,17 +1823,17 @@
       "from": "IMM",
       "to": "ARMv8",
       "type": "compilation",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "IMM compiles correctly to ARMv8."
+      "provenance": "kater",
+      "evidence": "machine_run",
+      "note": "IMM compiles correctly to ARMv8. Machine-checked with kater: imm::psc ⊆ arm8::ob*, the mapping's soundness condition, under the well-formedness premise rf;rmw ⊆ mo (litmus/kater/queries/compilation-IMM-vs-ARMv8.kat) — the paper's Table 1 query, reproduced here."
     },
     {
       "from": "IMM",
       "to": "x86-TSO",
       "type": "compilation",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "IMM compiles correctly to x86-TSO."
+      "provenance": "kater",
+      "evidence": "machine_run",
+      "note": "IMM compiles correctly to x86-TSO. Machine-checked with kater: imm::psc ⊆ tso::tso* over kater's imm.kat and tso.kat (litmus/kater/queries/compilation-IMM-vs-x86-TSO.kat). kater's tso.kat is the TSO rendering; it carries to the x86-TSO node along the by-construction TSO ≡ x86-TSO equivalence edge."
     },
     {
       "from": "IMM",
@@ -2492,6 +2492,7 @@
     }
   ],
   "references": {
+    "Kokologiannakis2023": {"title": "Kater: Automating Weak Memory Model Metatheory and Consistency Checking", "authors": ["Michalis Kokologiannakis", "Ori Lahav", "Viktor Vafeiadis"], "venue": "Proc. ACM Program. Lang. 7 (POPL), Article 19", "year": 2023, "doi": "10.1145/3571212"},
     "Chong2018": {
       "title": "The Semantics of Transactions and Weak Memory in x86, Power, ARM, and C++",
       "authors": ["Nathan Chong", "Tyler Sorensen", "John Wickerson"],
@@ -3615,5 +3616,17 @@
     "PArmv8view": {"status": "expressible", "basis": "cited", "ref": "Cho2021", "note": "Operational and view-based, but proved equivalent in Coq to the declarative PArmv8axiom, hence per-execution characterisable; no cat model covers persistency."},
     "PArmv8axiom": {"status": "expressible", "basis": "extrapolated", "ref": "Cho2021", "note": "Declarative persistency axioms over Armv8 executions (aarch64.cat plus a persist-order axiom in shape); no cat model exists for the persistency dimension."},
     "PromisingARM": {"status": "specified", "basis": "cited", "ref": "Pulte2019", "note": "Despite its promise-based operational presentation, it is proved equivalent in Coq (for finite executions) to the axiomatic Armv8 and RVWMO models — that is, its behaviours are exactly those of herd7's aarch64.cat and riscv.cat. Unlike C/C++ Promising, its certification needs no value speculation."}
+  },
+  "_katSupportComment": "Whether each model can be written in kater's input language (Kokologiannakis, Lahav & Vafeiadis, 'Kater', POPL 2023) — the fragment in which model comparison is decidable. Narrower than cat, and deliberately a separate axis from catSupport: kater requires consistency to be a conjunction of irreflexivity/emptiness constraints over regular expressions of base relations, so constructs cat states freely (notably intersections like po ∩ sameloc, which kater must first push into a regular form by an incomplete procedure) can put a cat-specified model outside it. 'specified' = a .kat definition exists (named in the note). 'expressible' = no .kat is published, but the model's axioms already have that shape. 'not-expressible' = they do not — the model quantifies over other executions, or needs constructs the fragment cannot state. 'basis': 'kat-model' = a concrete .kat file was identified, 'cited' = the primary literature states the claim, 'extrapolated' = author judgement from the model's definitional style. This map is partial by design: absence means not yet assessed, not 'no'. A model at either end of a 'kater'-provenance edge must appear here as 'specified' — check-consistency enforces it. Anything catSupport marks 'not-expressible' is outside this fragment too, since a per-execution predicate is a precondition for both.",
+  "katSupport": {
+    "SC": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "kater's kat/sc.kat: the single relation sc = po | rf | mo | fr, constrained acyclic."},
+    "TSO": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "kater's kat/tso.kat, with kat/tso-fm.kat as the Herding-cats-style flavour the two are proved equivalent to (paper Table 1, TSO ↔ TSOFM)."},
+    "x86-TSO": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "Covered by kater's kat/tso.kat, which is the same rendering the zoo's by-construction TSO ≡ x86-TSO edge identifies. kat/pex86.kat is the persistency-extended Px86, not this node."},
+    "ARMv8": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "kater's kat/arm8.kat: dob/aob/bob ordering and acyclic(ob), with ISB and DMB.ST introduced as extra fence predicates."},
+    "POWER": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "kater ships kat/power-fm.kat and the simplified kat/power-fm-simpl.kat, kat/power-weak.kat and kat/power-fm-orig.kat. The paper notes the full model needs manual rotations to check within reasonable time (§3.7)."},
+    "C11": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "kater's kat/c11-old.kat is the original C11 model of Batty et al. — the same node this row names."},
+    "RC11": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "kater's kat/rc11.kat (with kat/rc112.kat, an alternative formulation proved equivalent, and kat/rc11-genmc.kat for code export)."},
+    "IMM": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "kater's kat/imm.kat (kat/imm-genmc.kat is the code-export variant)."},
+    "LKMM": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "kater's kat/lkmm2.kat states LKMM's axioms in the fragment, but it uses internal (-imm) relations and so is rejected when included from another query file — usable as a checking target, not yet as a comparison operand. Tracked in the kater integration issue."}
   }
 }

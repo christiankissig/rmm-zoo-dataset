@@ -23,13 +23,14 @@ DISTRIBUTION ?= E3PXGEAO2HVOM3
 ALLOW_DEV ?=
 RELEASE_GATE :=
 
-.PHONY: help version litmus check build deploy clean
+.PHONY: help version litmus kater check build deploy clean
 
 help:
 	@echo "rmm-zoo-dataset targets:"
 	@echo "  make version          Print the version + date this build would stamp in"
 	@echo "  make litmus           Regenerate litmus.json from the litmus/ test tree"
-	@echo "  make check            Verify the dataset: DAG, no contradictions, witness direction, litmus suite"
+	@echo "  make kater            Re-prove the kater-provenance containments (needs docker + the image)"
+	@echo "  make check            Verify the dataset: DAG, no contradictions, witness direction, litmus + kater suites"
 	@echo "  make build            Stamp the version and assemble the artifacts into $(DIST)/$(PREFIX)/ (runs check first)"
 	@echo "  make deploy           Build, sync $(DIST)/$(PREFIX)/ to s3://$(BUCKET)/$(PREFIX)/, invalidate CloudFront"
 	@echo "  make clean            Remove $(DIST)/"
@@ -43,10 +44,17 @@ version:
 litmus:
 	@python3 tools/gen-litmus.py
 
+# Re-decide every containment recorded as provenance "kater" from its query file.
+# Separate target because it wants docker and a ~700MB image; `make check` folds
+# it in automatically once the image is local, and skips it otherwise.
+kater:
+	@bash litmus/kater/run.sh
+
 # Fail-fast gate over models.json + litmus/: acyclicity, no ordered/incomparable
-# contradiction, property and cat-support integrity, every witness directory
-# matching its edge's type and direction, and (if herd7 is installed) the litmus
-# suite itself. A build/deploy aborts rather than publish an inconsistent dataset.
+# contradiction, property, cat- and kat-support integrity, every witness directory
+# matching its edge's type and direction, every kater claim backed by its query,
+# and — where the tools are installed — the litmus and kater suites themselves.
+# A build/deploy aborts rather than publish an inconsistent dataset.
 check:
 	@python3 tools/check-consistency.py
 

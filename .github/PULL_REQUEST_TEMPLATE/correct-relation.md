@@ -33,13 +33,18 @@ Separating behaviour:
 
 ## Evidence
 
-- **`provenance`:** `litmus` (a test in this repo) / `memalloy` / `literature`
-- **`evidence`:** `machine_run` (herd7 actually runs it) / `by_construction` /
-  `cited`
+- **`provenance`:** `litmus` (a test in this repo) / `memalloy` / `kater` /
+  `completion` / `literature`
+- **`evidence`:** `machine_run` (a tool here actually runs it) /
+  `by_construction` / `cited` / `deduced`
 - **`note`:** one or two sentences naming the source or the witness
 
-If `provenance` is `litmus` or `memalloy`, check 6 requires a witness directory —
-see the *Add litmus tests* template.
+If `provenance` is `litmus`, `memalloy` or `kater`, check 4 requires a witness
+directory — see the *Add litmus tests* template. `kater` additionally requires
+the query file `litmus/kater/queries/<type>-<from>-vs-<to>.kat` and a
+`katSupport` entry for both endpoints: kater proves containment only, so a
+`strictly_weaker` edge still owes the separating witness that makes it strict.
+See `litmus/kater/README.md`.
 
 ## Invariants this has to respect
 

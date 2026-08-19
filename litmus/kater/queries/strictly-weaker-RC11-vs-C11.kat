@@ -1,0 +1,10 @@
+// Zoo edge: RC11 -> C11 (strictly_weaker) — containment half.
+//
+// Every RC11-consistent execution is C11-consistent. RC11 bundles its axioms
+// into acyclic(ar) (ar = psc+ | hb;eco | (po|rf)+), so C11's psc-acyclicity and
+// coherence must both follow from it.
+include "../../kat/rc11.kat"
+include "../../kat/c11-old.kat"
+
+assert c11-old::psc <= rc11::ar+
+assert c11-old::hb ; c11-old::eco <= rc11::ar+

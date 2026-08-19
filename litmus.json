@@ -231,6 +231,16 @@
         "lang": "smrd",
         "code": "C IRIW+scfences\n{ int x=0; int y=0; }\nP0 (atomic_int* x) { atomic_store_explicit(x,1,memory_order_relaxed); }\nP1 (atomic_int* y) { atomic_store_explicit(y,1,memory_order_relaxed); }\nP2 (atomic_int* x, atomic_int* y) {\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n  atomic_thread_fence(memory_order_seq_cst);\n  int r2 = atomic_load_explicit(y,memory_order_relaxed);\n}\nP3 (atomic_int* x, atomic_int* y) {\n  int r3 = atomic_load_explicit(y,memory_order_relaxed);\n  atomic_thread_fence(memory_order_seq_cst);\n  int r4 = atomic_load_explicit(x,memory_order_relaxed);\n}\nexists (2:r1=1 /\\ 2:r2=0 /\\ 3:r3=1 /\\ 3:r4=0)\n"
       }
+    ],
+    "kater": [
+      {
+        "name": "strictly-weaker-RC11-vs-C11",
+        "file": "strictly-weaker-RC11-vs-C11.kat",
+        "lang": "none",
+        "relationship": "strictly-weaker",
+        "summary": "Zoo edge: RC11 -> C11 (strictly_weaker) — containment half. Every RC11-consistent execution is C11-consistent. RC11 bundles its axioms into acyclic(ar) (ar = psc+ | hb;eco | (po|rf)+), so C11's psc-acyclicity and coherence must both follow from it.",
+        "code": "// Zoo edge: RC11 -> C11 (strictly_weaker) — containment half.\n//\n// Every RC11-consistent execution is C11-consistent. RC11 bundles its axioms\n// into acyclic(ar) (ar = psc+ | hb;eco | (po|rf)+), so C11's psc-acyclicity and\n// coherence must both follow from it.\ninclude \"../../kat/rc11.kat\"\ninclude \"../../kat/c11-old.kat\"\n\nassert c11-old::psc <= rc11::ar+\nassert c11-old::hb ; c11-old::eco <= rc11::ar+\n"
+      }
     ]
   },
   "RC11|JAM": {
@@ -327,6 +337,16 @@
         "lang": "smrd",
         "code": "C SB-relaxed\n{ int x=0; int y=0; }\nP0 (atomic_int* x, atomic_int* y) {\n  atomic_store_explicit(x,1,memory_order_relaxed);\n  int r0 = atomic_load_explicit(y,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* y) {\n  atomic_store_explicit(y,1,memory_order_relaxed);\n  int r0 = atomic_load_explicit(x,memory_order_relaxed);\n}\nexists (0:r0=0 /\\ 1:r0=0)\n"
       }
+    ],
+    "kater": [
+      {
+        "name": "strictly-weaker-SC-vs-C11",
+        "file": "strictly-weaker-SC-vs-C11.kat",
+        "lang": "none",
+        "relationship": "strictly-weaker",
+        "summary": "Zoo edge: SC -> C11 (strictly_weaker) — containment half. Every SC-consistent execution is C11-consistent: C11's two global axioms — acyclic(psc) and coherence (irreflexive hb;eco) — must both follow from acyclic(sc).",
+        "code": "// Zoo edge: SC -> C11 (strictly_weaker) — containment half.\n//\n// Every SC-consistent execution is C11-consistent: C11's two global axioms —\n// acyclic(psc) and coherence (irreflexive hb;eco) — must both follow from\n// acyclic(sc).\ninclude \"../../kat/sc.kat\"\ninclude \"../../kat/c11-old.kat\"\n\nassert c11-old::psc <= sc::sc+\nassert c11-old::hb ; c11-old::eco <= sc::sc+\n"
+      }
     ]
   },
   "SC|Java": {
@@ -362,6 +382,16 @@
         "file": "SB.litmus",
         "lang": "smrd",
         "code": "X86 SB\n\"Store buffering: store->load reordering. Forbidden under SC, allowed under TSO.\"\n{ x=0; y=0; }\n P0          | P1          ;\n MOV [x],$1  | MOV [y],$1  ;\n MOV EAX,[y] | MOV EAX,[x] ;\nexists (0:EAX=0 /\\ 1:EAX=0)\n"
+      }
+    ],
+    "kater": [
+      {
+        "name": "strictly-weaker-SC-vs-TSO",
+        "file": "strictly-weaker-SC-vs-TSO.kat",
+        "lang": "none",
+        "relationship": "strictly-weaker",
+        "summary": "Zoo edge: SC -> TSO (strictly_weaker) — containment half. \"TSO is weaker than SC\" means every SC-consistent execution is TSO-consistent. SC's axiom is acyclic(sc) and TSO's is acyclic(tso), so it suffices that every tso step is an sc path: tso <= sc+.",
+        "code": "// Zoo edge: SC -> TSO (strictly_weaker) — containment half.\n//\n// \"TSO is weaker than SC\" means every SC-consistent execution is TSO-consistent.\n// SC's axiom is acyclic(sc) and TSO's is acyclic(tso), so it suffices that every\n// tso step is an sc path: tso <= sc+.\ninclude \"../../kat/sc.kat\"\ninclude \"../../kat/tso.kat\"\n\nassert tso::tso <= sc::sc+\n"
       }
     ]
   },
@@ -728,6 +758,36 @@
         "file": "LB-relaxed.litmus",
         "lang": "smrd",
         "code": "C LB-relaxed\n\"Plain load buffering, all relaxed. RC11's no-thin-air axiom acyclic(po | rf)\n forbids ALL of LB; IMM (hardware-oriented) allows it, forbidding only genuine\n dependency cycles. Verifiable RC11 side: herd7 -model rc11.cat (=> Never).\n IMM side is from Podkopaev et al. (=> allowed); IMM is not shipped with herd7.\"\n{ int x=0; int y=0; }\nP0 (atomic_int* x, atomic_int* y) {\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n  atomic_store_explicit(y,1,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* y) {\n  int r2 = atomic_load_explicit(y,memory_order_relaxed);\n  atomic_store_explicit(x,1,memory_order_relaxed);\n}\nexists (0:r1=1 /\\ 1:r2=1)\n"
+      }
+    ]
+  },
+  "IMM|ARMv8": {
+    "relationship": "compilation",
+    "summary": "",
+    "tests": [],
+    "kater": [
+      {
+        "name": "compilation-IMM-vs-ARMv8",
+        "file": "compilation-IMM-vs-ARMv8.kat",
+        "lang": "none",
+        "relationship": "compilation",
+        "summary": "Zoo edge: IMM -> ARMv8 (compilation). The assume records the mapping premise that an RMW's read and write are ordered in mo (atomicity), which holds of any well-formed target execution.",
+        "code": "// Zoo edge: IMM -> ARMv8 (compilation).\n// The assume records the mapping premise that an RMW's read and write are\n// ordered in mo (atomicity), which holds of any well-formed target execution.\ninclude \"../../kat/imm.kat\"\ninclude \"../../kat/arm8.kat\"\n\nassume rf;rmw <= mo\n\nassert imm::psc <= arm8::ob*\n"
+      }
+    ]
+  },
+  "IMM|x86-TSO": {
+    "relationship": "compilation",
+    "summary": "",
+    "tests": [],
+    "kater": [
+      {
+        "name": "compilation-IMM-vs-x86-TSO",
+        "file": "compilation-IMM-vs-x86-TSO.kat",
+        "lang": "none",
+        "relationship": "compilation",
+        "summary": "Zoo edge: IMM -> x86-TSO (compilation). Soundness of the IMM-to-x86 mapping: IMM's global ordering constraint is implied by TSO's, so no compiled execution breaks the source semantics.",
+        "code": "// Zoo edge: IMM -> x86-TSO (compilation).\n// Soundness of the IMM-to-x86 mapping: IMM's global ordering constraint is\n// implied by TSO's, so no compiled execution breaks the source semantics.\ninclude \"../../kat/imm.kat\"\ninclude \"../../kat/tso.kat\"\n\nassert imm::psc <= tso::tso*\n"
       }
     ]
   }

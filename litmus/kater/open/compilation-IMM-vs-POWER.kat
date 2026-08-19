@@ -1,0 +1,12 @@
+// PARKED — see ../README.md, "What is parked, and why".
+//
+// Zoo edge: IMM -> POWER (compilation). Refuted against power-weak.kat. The
+// paper reports that Power needs manual rewriting (selective rotations) before
+// this class of query goes through (§3.7), so the counterexample is very likely
+// spurious: unfinished modelling, not a doubt about the edge.
+include "../../kat/imm.kat"
+include "../../kat/power-weak.kat"
+
+assume rf;rmw <= mo
+
+assert imm::psc <= power-weak::ar

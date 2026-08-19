@@ -1,0 +1,9 @@
+// Zoo edge: SC -> TSO (strictly_weaker) — containment half.
+//
+// "TSO is weaker than SC" means every SC-consistent execution is TSO-consistent.
+// SC's axiom is acyclic(sc) and TSO's is acyclic(tso), so it suffices that every
+// tso step is an sc path: tso <= sc+.
+include "../../kat/sc.kat"
+include "../../kat/tso.kat"
+
+assert tso::tso <= sc::sc+
