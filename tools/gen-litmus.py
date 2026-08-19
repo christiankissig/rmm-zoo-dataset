@@ -8,12 +8,20 @@ fetches alongside models.json. Run via `make litmus` (also a dependency of
 `make build`). The output is committed so a consumer of this repo has the
 built artifact without having to run the generator.
 
+The kater queries in litmus/kater/queries/ are baked in the same way, under a
+separate "kater" list: they are proofs, not witnesses, and the site labels them
+as such. A kater-only edge (a compilation edge, say, which has no witness
+directory) still gets an entry, with an empty "tests".
+
 Output shape, keyed by "<from>|<to>" (matching models.json edge endpoints):
 
     { "SC|TSO": {
         "relationship": "strictly-weaker",
         "summary": "<first prose paragraph of the pair's README.md>",
         "tests": [ { "name": "SB", "file": "SB.litmus", "lang": "smrd",
+                     "code": "<verbatim file contents>" } ],
+        "kater": [ { "name": "strictly-weaker-SC-vs-TSO", "file": "...kat",
+                     "lang": "none", "summary": "<the query's header comment>",
                      "code": "<verbatim file contents>" } ] } }
 """
 import json
@@ -28,6 +36,10 @@ OUT_JSON = ROOT / "litmus.json"
 
 # Relationship sub-trees that contain per-pair test directories.
 RELATIONSHIPS = ["strictly-weaker", "incomparable"]
+
+# The kater queries: one per edge with provenance "kater", named for it.
+KATER_DIR = LITMUS_DIR / "kater" / "queries"
+KATER_TYPES = ["strictly-weaker", "incomparable", "equivalent", "compilation"]
 
 # File extension -> Prism language. ".lit" is sMRD/MoRDor and ".litmus" is
 # herd7 assembly; both use the bundled `smrd` grammar (its own alias is
@@ -62,6 +74,23 @@ def test_name(filename):
     return filename
 
 
+def header_summary(kat_path):
+    """The prose of a query's leading `//` comment block, minus the filing line.
+
+    Every query opens with a comment naming the edge it backs and the claim it
+    states; that is exactly the one-line summary the viewer wants, and keeping it
+    in the file rather than in a sidecar means it cannot drift from the query.
+    """
+    lines = []
+    for line in kat_path.read_text().splitlines():
+        st = line.strip()
+        if not st.startswith("//"):
+            break
+        lines.append(st.lstrip("/").strip())
+    text = " ".join(l for l in lines if l)
+    return re.sub(r"\s+", " ", text).strip()
+
+
 def readme_summary(readme_path):
     """First prose paragraph: skip the H1 heading and fenced code blocks,
     collapse whitespace, and strip basic markdown emphasis markers."""
@@ -77,6 +106,41 @@ def readme_summary(readme_path):
         b = re.sub(r"[`*_]", "", b)           # drop emphasis / inline-code marks
         return b.strip()
     return ""
+
+
+def kater_queries(ids, warnings):
+    """litmus/kater/queries/<type>-<from>-vs-<to>.kat -> {"<from>|<to>": [entry]}.
+
+    The file name is the edge, so the mapping needs no separate index — and a
+    query that names a model or a relationship the data does not have shows up
+    here as a warning rather than as a silently unlinked file.
+    """
+    out = {}
+    if not KATER_DIR.is_dir():
+        return out
+    for f in sorted(KATER_DIR.glob("*.kat")):
+        stem = f.stem
+        rel = next((r for r in KATER_TYPES if stem.startswith(r + "-")), None)
+        if not rel:
+            warnings.append(f"kater query with no known edge type: {f.name}")
+            continue
+        pair = split_pair(stem[len(rel) + 1:])
+        if not pair:
+            warnings.append(f"kater query name has no '-vs-': {f.name}")
+            continue
+        frm, to = pair
+        for endpoint in (frm, to):
+            if endpoint not in ids:
+                warnings.append(f"unknown model id '{endpoint}' in kater/{f.name}")
+        out.setdefault(f"{frm}|{to}", []).append({
+            "name": stem,
+            "file": f.name,
+            "lang": "none",
+            "relationship": rel,
+            "summary": header_summary(f),
+            "code": f.read_text(),
+        })
+    return out
 
 
 def main():
@@ -125,9 +189,24 @@ def main():
                 "tests": tests,
             }
 
+    # kater queries: attached to the pair they prove, or standing on their own
+    # for an edge with no witness directory (every compilation edge, and any
+    # ordering edge whose witness is still owed).
+    for key, queries in kater_queries(ids, warnings).items():
+        if key in out:
+            out[key]["kater"] = queries
+        else:
+            out[key] = {
+                "relationship": queries[0]["relationship"],
+                "summary": "",
+                "tests": [],
+                "kater": queries,
+            }
+
     OUT_JSON.write_text(json.dumps(out, indent=2, ensure_ascii=False) + "\n")
     print(f"Wrote {OUT_JSON.relative_to(ROOT)}: {len(out)} pairs, "
-          f"{sum(len(v['tests']) for v in out.values())} tests")
+          f"{sum(len(v['tests']) for v in out.values())} tests, "
+          f"{sum(len(v.get('kater', [])) for v in out.values())} kater queries")
     for w in warnings:
         print(f"  warning: {w}", file=sys.stderr)
 
