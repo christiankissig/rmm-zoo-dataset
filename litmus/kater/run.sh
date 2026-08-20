@@ -41,12 +41,26 @@ if ! "$DOCKER" image inspect "$IMAGE" >/dev/null 2>&1; then
   exit 2
 fi
 
+# LKMM is not usable straight from the image: kat/lkmm2.kat is written over
+# internal (-imm) relations, which kater rejects in every mode, so it does not
+# load at all. derive-lkmm.sh restates it over kater's builtin theory into a
+# scratch directory mounted alongside the zoo -- generated per run rather than
+# vendored, because it is a derivative of a GPL-3.0 file and this dataset is
+# BSD-3. Queries reach it at ../../derived/.
+DERIVED=$(mktemp -d)
+trap 'rm -rf "$DERIVED"' EXIT
+if ! ./derive-lkmm.sh "$DERIVED/lkmm.kat" "$IMAGE"; then
+  echo "kater suite: could not derive the LKMM model" >&2
+  exit 2
+fi
+
 # check <name> <query file, relative to this directory>
 check() {
   local name="$1" query="$2"
   [ "$VERBOSE" = "-v" ] && echo "  kater zoo/$query"
   local out rc
-  out=$("$DOCKER" run --rm -v "$HERE":/root/kater/zoo:ro --workdir /root/kater \
+  out=$("$DOCKER" run --rm -v "$HERE":/root/kater/zoo:ro \
+        -v "$DERIVED":/root/kater/derived:ro --workdir /root/kater \
         --entrypoint /root/kater/Release/kater "$IMAGE" "zoo/$query" 2>&1)
   rc=$?
   [ "$VERBOSE" = "-v" ] && [ -n "$out" ] && echo "$out" | sed 's/^/    /'
@@ -63,14 +77,40 @@ check() {
   esac
 }
 
+# refute <name> <query file> -- the mirror of check(): a control that is only
+# doing its job while it FAILS. Used to keep the compilation targets honest: a
+# target whose ordering relation has grown to contain po makes every query
+# against it hold vacuously, and a suite of nothing but expected passes cannot
+# tell that apart from a proof.
+refute() {
+  local name="$1" query="$2"
+  [ "$VERBOSE" = "-v" ] && echo "  kater zoo/$query   (expected to be refuted)"
+  local out rc
+  out=$("$DOCKER" run --rm -v "$HERE":/root/kater/zoo:ro \
+        -v "$DERIVED":/root/kater/derived:ro --workdir /root/kater \
+        --entrypoint /root/kater/Release/kater "$IMAGE" "zoo/$query" 2>&1)
+  rc=$?
+  [ "$VERBOSE" = "-v" ] && [ -n "$out" ] && echo "$out" | sed 's/^/    /'
+  case $rc in
+    6) printf '  PASS  %-46s %s\n' "$name" "refuted, as it must be"; pass=$((pass+1)) ;;
+    0) printf '  FAIL  %-46s %s\n' "$name" "HOLDS -- target is degenerate, queries against it are vacuous"; fail=$((fail+1)) ;;
+    *) printf '  FAIL  %-46s %s\n' "$name" "kater error (exit $rc): $(echo "$out" | head -1)"; fail=$((fail+1)) ;;
+  esac
+}
+
 echo "=== strictly weaker: the CONTAINMENT half (strictness stays with the litmus witness) ==="
 check "SC -> TSO      (tso <= sc+)"           queries/strictly-weaker-SC-vs-TSO.kat
 check "SC -> C11      (psc, coherence)"       queries/strictly-weaker-SC-vs-C11.kat
 check "RC11 -> C11    (psc, coherence)"       queries/strictly-weaker-RC11-vs-C11.kat
+check "SC -> LKMM     (hb, prop;ppo*, coherence)" queries/strictly-weaker-SC-vs-LKMM.kat
 
 echo "=== compilation: the mapping's soundness condition ==="
 check "IMM -> x86-TSO (psc <= tso*)"          queries/compilation-IMM-vs-x86-TSO.kat
 check "IMM -> ARMv8   (psc <= ob*)"           queries/compilation-IMM-vs-ARMv8.kat
+
+echo "=== controls: the compilation targets must not contain po (else the above is vacuous) ==="
+refute "x86-TSO not degenerate (po <= tso+)"  controls/non-degenerate-x86-TSO.kat
+refute "ARMv8 not degenerate   (po <= ob+)"   controls/non-degenerate-ARMv8.kat
 
 echo
 echo "kater suite: $pass passed, $fail failed"

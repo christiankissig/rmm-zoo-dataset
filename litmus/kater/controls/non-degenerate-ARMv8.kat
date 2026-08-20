@@ -1,0 +1,13 @@
+// CONTROL, not a claim — run by ../run.sh, expected to be REFUTED.
+//
+// A compilation query has the shape `source::psc <= target::<ordering>*`, and
+// it is only worth anything if the target's ordering relation is not so coarse
+// that it contains everything. kat/power-weak.kat is: its ar carries
+// `eco*;po?;eco*`, eco* contains the identity, so ar contains po and every
+// query against it passes for free (see ../open/compilation-IMM-vs-POWER.kat).
+// This control makes sure the same never quietly happens to a target the suite
+// does treat as a proof. If it starts holding, every compilation query against
+// ARMv8 has become vacuous.
+include "../../kat/arm8.kat"
+
+assert po <= arm8::ob+

@@ -43,8 +43,9 @@ docker pull genmc/kater      # ~700MB
 ./run.sh -v                  # also echo each invocation and kater's output
 ```
 
-`make check` runs it too, but only if the image is already pulled — it says so
-when it skips. CI pulls the image and runs it on every push and pull request.
+`run.sh` derives the LKMM operand from the image before it starts (see below)
+and cleans it up afterwards. `make check` runs the suite too, but only if the
+image is already pulled — it says so when it skips. CI pulls the image and runs it on every push and pull request.
 
 `run.sh` pins the image **by digest**, the way `litmus/run.sh` pins herd7 to
 7.58: these verdicts are evidence recorded in `models.json`, so the tool that
@@ -93,6 +94,57 @@ Two constraints on what can be checked at all, both enforced by `make check`:
   in the abstract — so the edge's note names the file, exactly as `catSupport`
   notes name a concrete `.cat`.
 
+## LKMM: the operand kater does not ship
+
+`kat/lkmm2.kat` is written over kater's **internal** (`-imm`) relations, and
+kater rejects those outright:
+
+```
+$ kater kat/lkmm2.kat
+kat/lkmm2.kat:3.14-19: forbidden use of internal relation (mo-imm)
+```
+
+That is with the file handed to kater **directly**, and it fails the same way
+under `-e`. So the shipped model does not load in any mode: LKMM is not a
+comparison operand, and not a checking target either.
+
+Every relation it redefines from an `-imm` counterpart — `po`, `po-loc`, `mo`,
+`fr`, `rmw`, `ctrl`, `addr`, `data` — is already in kater's builtin theory, so
+the restatement is mechanical. [`derive-lkmm.sh`](derive-lkmm.sh) performs it,
+and [`run.sh`](run.sh) generates the result into a scratch directory mounted at
+`/root/kater/derived` for the duration of the run. Queries reach it as
+`../../derived/lkmm.kat`.
+
+It is generated rather than committed for the same reason the `kat/*.kat` models
+are not vendored: the derived file is a derivative of a GPL-3.0 one, and this
+dataset is BSD-3. The script documents the rewrite line by line, and refuses to
+emit a file in which any `-imm` survived.
+
+With that in place `SC → LKMM` is proved and lives in `queries/`. The remaining
+five LKMM edges are not — see the table below.
+
+## Controls: a passing query is not automatically a proof
+
+`controls/` holds queries that are only doing their job while they **fail**, and
+`run.sh` asserts the refutation. They exist because a compilation query has the
+shape `source::psc <= target::<ordering>*`, which holds trivially if the target's
+ordering relation has grown coarse enough to contain everything — and one of
+kater's own models has. `kat/power-weak.kat` defines `ar` with the term
+`eco*;po?;eco*`; `eco*` contains the identity, so `ar` contains `po`, and
+
+```
+assert po     <= power-weak::ar+     // HOLDS
+assert sc::sc <= power-weak::ar+     // HOLDS
+```
+
+Any query against that model passes for free. The controls check the targets the
+suite *does* treat as proofs — `po <= tso::tso+` and `po <= arm8::ob+` are both
+refuted, as they must be. If one ever starts holding, every compilation query
+against that target has silently become vacuous, and the suite says so.
+
+SC is exempt by construction: it is the top of the order, so `po <= sc::sc+`
+holding is the point, not a defect.
+
 ## What is parked, and why
 
 `open/` holds queries that do not pass and are not claims — each is a known
@@ -101,8 +153,9 @@ obstacle, kept runnable so the obstacle is reproducible:
 | Query | Status |
 |---|---|
 | `strictly-weaker-TSO-vs-ARMv8.kat` | Refuted on `[DEP] data` — a **cross-ISA** comparison with no mapping: ARM's dependency and `ISB`/`DMB.ST` vocabulary has no TSO counterpart. Needs `assume`s encoding the mapping, the way the compilation queries do. The zoo edge stays `provenance: litmus`. Same obstacle as memalloy in #2. |
-| `strictly-weaker-SC-vs-LKMM.kat` | kater error: `kat/lkmm2.kat` uses internal (`-imm`) relations, which are rejected when the file is `include`d from another. LKMM is a checking target, not yet a comparison operand — so `SC → LKMM`, `C11 ⋈ LKMM` and the four LKMM compilation edges are all out of reach for now. |
-| `compilation-IMM-vs-POWER.kat` | Refuted against `kat/power-weak.kat`. Expected: the paper reports that Power needs manual rewriting (selective rotations) before the check goes through in reasonable time (§3.7). The counterexample is almost certainly spurious; treat it as unfinished modelling, not as a doubt about the edge. |
+| `compilation-IMM-vs-POWER.kat` | Two obstacles, not one. The original refutation was a **shape** error: the assert was against a single `ar` step where the sibling TSO/ARMv8 queries take the closure. Fixing that makes it pass — **vacuously**, because `power-weak`'s `ar` contains `po` (above). The two renderings that are not degenerate, `power-fm` and `power-fm-orig`, refute it on a fence-vocabulary gap: IMM's `psc` relates two SC fences directly (`FSC ; po ; FSC`), Power's `sync` is stated between accesses. Settling it needs Power's fence ordering restated — the manual rewriting of §3.7 — not a closure. |
+| `compilation-LKMM-vs-x86-TSO.kat` | Runnable now, not settled. LKMM's derived relations leave their endpoints untyped (`acq-po` is `[ACQ];po`, where IMM writes `[R];(deps\|rfi)+;[W]`), so TSO's `[R];po` does not cover it and the query is refuted on `[Marked&ACQ] po [Marked]`. Supplying the typing as premises does not discharge it: kater's handling of generic `a <= b` assumptions is heuristic, and it reports `Ignoring unsupported assumption` for the natural forms. The fix belongs in the LKMM rendering, not the query. `LKMM → ARMv8` is refuted identically; `LKMM → POWER` runs into the vacuity above; `LKMM → RVWMO` has no kater model at all. |
+| `incomparable-C11-vs-LKMM.kat` | Not an obstacle so much as a limit: kater cannot establish incomparability at all, since that needs a refutation in each direction and its refutations prove nothing. Both directions do refute, which corroborates the recorded verdict without evidencing it. The edge stays `provenance: literature`. |
 
 ## Reference
 

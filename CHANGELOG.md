@@ -12,6 +12,55 @@ Each released version is published at
 
 ## [Unreleased]
 
+### Added
+
+- **LKMM as a kater comparison operand**, via
+  [`litmus/kater/derive-lkmm.sh`](litmus/kater/derive-lkmm.sh). kater's
+  `kat/lkmm2.kat` is written over internal (`-imm`) relations, which kater
+  rejects **in every mode** — including when that file is the one it was handed
+  — so as shipped it loads neither as an operand nor as a checking target. The
+  relations it redefines from their `-imm` counterparts are all in kater's
+  builtin theory, so the script restates it over those at run time. It is
+  generated rather than committed because it derives from a GPL-3.0 file and
+  this dataset is BSD-3, the same reason the `kat/*.kat` models are not
+  vendored.
+- **`litmus/kater/controls/`** and a `refute` case in `run.sh`: queries that are
+  only doing their job while they **fail**. A compilation query
+  `source::psc <= target::<ordering>*` holds trivially if the target's ordering
+  relation contains everything, and `kat/power-weak.kat`'s does — its `ar`
+  carries `eco*;po?;eco*`, `eco*` contains the identity, so `ar ⊇ po` and
+  `po <= power-weak::ar+` holds outright. The controls assert that the targets
+  the suite treats as proofs are not degenerate in that way.
+
+### Changed
+
+- **`SC → LKMM`** upgraded from `literature`/`cited` to `kater`/`machine_run`.
+  All three of LKMM's global ordering axioms — `acyclic(hb)`, the `prop;ppo*`
+  work-around, and coherence — are proved to follow from SC's `acyclic(sc)`,
+  unbounded. Query:
+  [`litmus/kater/queries/strictly-weaker-SC-vs-LKMM.kat`](litmus/kater/queries/strictly-weaker-SC-vs-LKMM.kat).
+  Strictness stays with the existing witness.
+- **`katSupport["LKMM"]`** corrected: the note said LKMM was usable as a
+  checking target but not as a comparison operand. It was neither; it is now the
+  latter, against the derived rendering the note names.
+- **`katSupport["POWER"]`** records which of kater's four Power renderings can
+  actually carry a comparison. Three (`power-weak`, `power-fm-simpl`,
+  `power-fm-simpl-full`) are degenerate as above; only `power-fm` and
+  `power-fm-orig` are not.
+
+### Fixed
+
+- **`litmus/kater/open/compilation-IMM-vs-POWER.kat`** was parked on a
+  misdiagnosis. The refutation was a query-shape error — the assert was against
+  a single `ar` step where the sibling TSO and ARMv8 queries take the closure —
+  and not the "manual rotations" obstacle it was attributed to. Fixing the shape
+  does not close the edge either, because it then holds vacuously; the query is
+  now stated against a non-degenerate rendering, where it is refuted on a real
+  fence-vocabulary gap. The edge stays `provenance: literature`.
+- **`litmus/kater/open/`** gains the LKMM edges that are now runnable but still
+  unsettled (`compilation-LKMM-vs-x86-TSO.kat`, `incomparable-C11-vs-LKMM.kat`),
+  each recording the verdict it produces.
+
 ## [1.3.0] — 2026-08-19
 
 Adds a second mechanical provenance, and with it the first **proofs** in the

@@ -1,0 +1,21 @@
+// PARKED — see ../README.md, "What is parked, and why".
+//
+// Zoo edge: C11 <> LKMM (incomparable). Runnable now that LKMM is an operand,
+// but kater cannot establish incomparability even in principle: incomparability
+// needs a refutation in each direction, and a kater refutation proves nothing —
+// the inclusion checks are sound but incomplete, so the counterexample path
+// need not be realisable.
+//
+// Both directions are in fact refuted, which is consistent with the recorded
+// verdict and is worth having on record, but it is corroboration, not evidence.
+// The edge stays provenance: literature, with the two witnesses in
+// litmus/incomparable/C11-vs-LKMM/ carrying it.
+//
+//   assert lkmm::hb <= c11-old::psc+
+//     => [lkmm::Marked&DEP] addr [lkmm::Marked]
+//   assert c11-old::psc <= lkmm::hb+     (the assert below)
+//     => [SC&R] po [SC&R]
+include "../../kat/c11-old.kat"
+include "../../derived/lkmm.kat"
+
+assert c11-old::psc <= lkmm::hb+

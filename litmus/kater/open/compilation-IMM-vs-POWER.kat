@@ -1,12 +1,42 @@
 // PARKED — see ../README.md, "What is parked, and why".
 //
-// Zoo edge: IMM -> POWER (compilation). Refuted against power-weak.kat. The
-// paper reports that Power needs manual rewriting (selective rotations) before
-// this class of query goes through (§3.7), so the counterexample is very likely
-// spurious: unfinished modelling, not a doubt about the edge.
+// Zoo edge: IMM -> POWER (compilation). Two separate obstacles, both found by
+// running the query rather than by reading it:
+//
+// 1. SHAPE. As originally parked the assert was `imm::psc <= power-weak::ar`,
+//    against a single ar step. Power's axiom is acyclic(ar), so what has to
+//    hold is that every psc edge is an ar *path* — the sibling TSO and ARMv8
+//    queries have the closure (tso*, ob*) and this one did not. That alone
+//    explains the parked counterexample; it was never a hole in the mapping.
+//
+// 2. VACUITY, which is why fixing the shape does not settle the edge. With the
+//    closure the query passes in under a second — but so does everything else,
+//    because kat/power-weak.kat's ar carries the term `eco*;po?;eco*`, and eco*
+//    contains the identity, so ar contains po outright. Confirmed directly:
+//
+//        assert po <= power-weak::ar+        // HOLDS
+//        assert sc::sc <= power-weak::ar+    // HOLDS
+//
+//    acyclic(ar) is therefore at least as strong as SC for this rendering, and
+//    any relation built over po/rf/mo/fr is contained in ar+ for free. The same
+//    term, and the same degeneracy, is in kat/power-fm-simpl.kat and
+//    kat/power-fm-simpl-full.kat. (The TSO and ARMv8 targets are clean: `po <=
+//    tso::tso+` and `po <= arm8::ob+` are both refuted.)
+//
+// The two renderings without that term — kat/power-fm.kat and
+// kat/power-fm-orig.kat — are non-degenerate, and against them the query is
+// refuted on a fence-vocabulary gap: IMM's psc relates two SC fences directly
+// (FSC ; po ; FSC), while Power's sync is stated between accesses
+// ([R|W]; po; [F;SC]; po; [R|W]), so a bare fence-to-fence po pair has no
+// counterpart. Counterexample against power-fm:
+//
+//     [SC&F] ===> po [SC&F]
+//
+// Settling the edge means restating Power's fence ordering so fence endpoints
+// are covered — the manual rewriting the paper reports for its own Power
+// queries (§3.7) — not adding a closure. Leaving the query in the shape that is
+// at least diagnostic: non-degenerate target, no vacuity.
 include "../../kat/imm.kat"
-include "../../kat/power-weak.kat"
+include "../../kat/power-fm.kat"
 
-assume rf;rmw <= mo
-
-assert imm::psc <= power-weak::ar
+assert imm::psc <= power-fm::ar+
