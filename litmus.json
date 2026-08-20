@@ -371,6 +371,16 @@
         "lang": "smrd",
         "code": "C SB\n(*\n * Store buffering with plain *_ONCE accesses and no barrier between each\n * thread's store and its load. Allowed under LKMM, forbidden under SC.\n * Witnesses SC -> LKMM (LKMM is strictly weaker).\n *\n * Check with herd7 and the kernel model:\n *   herd7 -model linux-kernel.cat SB.litmus   # Sometimes 0:r0=0 1:r1=0\n *)\n{}\n\nP0(int *x, int *y)\n{\n\tWRITE_ONCE(*x, 1);\n\tint r0 = READ_ONCE(*y);\n}\n\nP1(int *x, int *y)\n{\n\tWRITE_ONCE(*y, 1);\n\tint r1 = READ_ONCE(*x);\n}\n\nexists (0:r0=0 /\\ 1:r1=0)\n"
       }
+    ],
+    "kater": [
+      {
+        "name": "strictly-weaker-SC-vs-LKMM",
+        "file": "strictly-weaker-SC-vs-LKMM.kat",
+        "lang": "none",
+        "relationship": "strictly-weaker",
+        "summary": "Zoo edge: SC -> LKMM (strictly_weaker) — containment half. Every SC-consistent execution is LKMM-consistent, so LKMM is the weaker of the two. LKMM states three global ordering axioms — coherence, acyclic(hb), and the prop;ppo* work-around for prop&int — and each must follow from SC's single acyclic(sc). RMW atomicity is not asserted here: like C11's, it is a well-formedness condition on executions rather than an ordering axiom, and both models impose it alike. The LKMM operand is NOT kater's kat/lkmm2.kat: that file is written over internal (-imm) relations, which kater rejects outright, so it does not load in any mode. ../../derived/lkmm.kat is the mechanical restatement over the builtin theory that litmus/kater/derive-lkmm.sh generates from it at run time; the script documents the rewrite in full. As with every kater query, the proof is about that rendering, not about LKMM in the abstract.",
+        "code": "// Zoo edge: SC -> LKMM (strictly_weaker) — containment half.\n//\n// Every SC-consistent execution is LKMM-consistent, so LKMM is the weaker of\n// the two. LKMM states three global ordering axioms — coherence, acyclic(hb),\n// and the prop;ppo* work-around for prop&int — and each must follow from SC's\n// single acyclic(sc). RMW atomicity is not asserted here: like C11's, it is a\n// well-formedness condition on executions rather than an ordering axiom, and\n// both models impose it alike.\n//\n// The LKMM operand is NOT kater's kat/lkmm2.kat: that file is written over\n// internal (-imm) relations, which kater rejects outright, so it does not load\n// in any mode. ../../derived/lkmm.kat is the mechanical restatement over the\n// builtin theory that litmus/kater/derive-lkmm.sh generates from it at run\n// time; the script documents the rewrite in full. As with every kater query,\n// the proof is about that rendering, not about LKMM in the abstract.\ninclude \"../../kat/sc.kat\"\ninclude \"../../derived/lkmm.kat\"\n\nassert lkmm::hb <= sc::sc+\nassert lkmm::prop ; lkmm::ppo* <= sc::sc+\nassert po ; lkmm::eco <= sc::sc+\n"
+      }
     ]
   },
   "SC|TSO": {

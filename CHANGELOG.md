@@ -24,6 +24,25 @@ Each released version is published at
   generated rather than committed because it derives from a GPL-3.0 file and
   this dataset is BSD-3, the same reason the `kat/*.kat` models are not
   vendored.
+- **`litmus/memalloy/run.sh`** and **`make memalloy`** — the memalloy suite had a
+  runbook but no runner, so its verdicts could not be re-decided the way the
+  kater ones can. Every case states the solution count it expects, and the suite
+  ends with **controls that must find something** (the known-buggy OpenCL→PTX
+  mapping; ARMv8 not contained in RVWMO): a containment run that is clean
+  because the search was broken otherwise looks exactly like one that is clean
+  because the containment holds.
+- **`litmus/memalloy/derive-hw-fragment.sh`** — restricts memalloy's
+  arch-specific `x86tso.cat` and `aarch64.cat` to its generic `Basic_HW` arch,
+  which is the vocabulary the two ISAs share. The comparator takes one `-arch`
+  for both operands, so cross-ISA pairs were not runnable at all; on the
+  fragment they are. Every term the script drops is *empty* there rather than
+  weakened away, so the derived models are exact restrictions — and the script,
+  not prose, is the record of what the common fragment is.
+- **`litmus/memalloy/models/zoo_hw_rvwmo.cat`** — a RISC-V RVWMO model authored
+  for this dataset, from the thirteen `ppo` rules of the RVWMO chapter of the
+  RISC-V unprivileged spec, annotating each rule it renders and each that is
+  empty on the fragment. memalloy ships no RISC-V model, which is why `TSO →
+  RVWMO` could not be checked at all.
 - **`litmus/kater/controls/`** and a `refute` case in `run.sh`: queries that are
   only doing their job while they **fail**. A compilation query
   `source::psc <= target::<ordering>*` holds trivially if the target's ordering
@@ -40,6 +59,12 @@ Each released version is published at
   unbounded. Query:
   [`litmus/kater/queries/strictly-weaker-SC-vs-LKMM.kat`](litmus/kater/queries/strictly-weaker-SC-vs-LKMM.kat).
   Strictness stays with the existing witness.
+- **`TSO → ARMv8`** and **`TSO → RVWMO`** upgraded from `litmus` to `memalloy`.
+  Both were provisional on a one-sided witness plus a cross-ISA monotonicity
+  argument; both halves are now decided by memalloy over the common `Basic_HW`
+  fragment — witness at 4 events, containment clean exhaustively to 7. Bounded
+  evidence, not a theorem, and scoped to the fragment: it decides the edges over
+  the vocabulary the ISAs share, not over the full instruction sets.
 - **`katSupport["LKMM"]`** corrected: the note said LKMM was usable as a
   checking target but not as a comparison operand. It was neither; it is now the
   latter, against the derived rendering the note names.
@@ -57,6 +82,13 @@ Each released version is published at
   does not close the edge either, because it then holds vacuously; the query is
   now stated against a non-degenerate rendering, where it is refuted on a real
   fence-vocabulary gap. The edge stays `provenance: literature`.
+- **`litmus/memalloy/README.md`** said the base repo had no model to compare TSO
+  and ARMv8 "at the right level of abstraction". It has one — the generic
+  `Basic_HW` arch — and the obstacle was the single `-arch` flag, not a missing
+  model. It also listed obtaining a Vulkan Alloy model as the blocker for the
+  GPU edges; Khronos publishes one, and it is not comparator input (its own
+  `sig Exec`, ~40 fields, no `co`), so the work there is a port to memalloy's
+  execution signature, not an acquisition.
 - **`litmus/kater/open/`** gains the LKMM edges that are now runnable but still
   unsettled (`compilation-LKMM-vs-x86-TSO.kat`, `incomparable-C11-vs-LKMM.kat`),
   each recording the verdict it produces.

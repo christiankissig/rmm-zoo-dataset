@@ -1580,9 +1580,9 @@
       "from": "TSO",
       "to": "ARMv8",
       "type": "strictly_weaker",
-      "provenance": "litmus",
+      "provenance": "memalloy",
       "evidence": "machine_run",
-      "note": "ARMv8 allows more reorderings than TSO though it is multi-copy-atomic. The TSO ⊆ ARMv8 containment is a model-level monotonicity argument over different instruction sets, not a cited theorem, so the edge is recorded as litmus-grade: the strict order is argued (monotonicity) and corroborated by the sweep, not independently proven — a genuine strict order, drawn lighter than a literature-backed one, not an edge that might be incomparable."
+      "note": "Both halves decided by memalloy over the common Basic_HW fragment — the vocabulary the two ISAs share, with no fences and no acquire/release annotations, where every arch-specific term of the shipped models is empty rather than dropped (litmus/memalloy/derive-hw-fragment.sh derives the operands and records the restriction exactly). Witness: a 4-event MP, ARMv8-allowed and TSO-forbidden. Containment: no execution ARMv8 forbids and TSO allows, exhaustively to 7 events; the search does find witnesses at those bounds, so it is not vacuously clean. Bounded evidence, not a theorem: the Mador-Haim small-model result would need arguing for this pair rather than assuming it. The earlier reading — a one-sided witness plus a cross-ISA monotonicity argument — is superseded, but the fragment is the scope: this decides the edge over the common vocabulary, not over the full ISAs."
     },
     {
       "from": "PSO",
@@ -1815,9 +1815,9 @@
       "from": "TSO",
       "to": "RVWMO",
       "type": "strictly_weaker",
-      "provenance": "litmus",
+      "provenance": "memalloy",
       "evidence": "machine_run",
-      "note": "RVWMO is weaker than TSO: it allows store-store and load-load reorderings TSO forbids. The containment rests on the same model-level monotonicity argument as TSO → ARMv8 (RISC-V's Ztso extension makes RVWMO+TSO near-definitional), recorded as litmus-grade for consistency under the stricter standard."
+      "note": "Both halves decided by memalloy over the common Basic_HW fragment, as for TSO → ARMv8. memalloy ships no RISC-V model, so the operand is litmus/memalloy/models/zoo_hw_rvwmo.cat, authored here directly from the thirteen ppo rules of the RVWMO chapter of the RISC-V unprivileged spec; the file annotates each rule it renders and each that is empty on the fragment. Witness at 4 events; containment clean exhaustively to 7. Independent check on the rendering: over the same fragment it is contained in the ARMv8 operand and ARMv8 is not contained in it, which is the direction the same-address ppo rules predict. Bounded evidence about that rendering, not a theorem about RVWMO."
     },
     {
       "from": "IMM",

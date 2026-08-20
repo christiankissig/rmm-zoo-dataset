@@ -17,5 +17,12 @@ herd7 -model aarch64.cat                   LB.litmus   # Sometimes 1 3  (allowed
 (or making the load a `LDAR`) between the load and the store re-establishes the
 ordering.
 
+**Minimality (memalloy).** Over the common `Basic_HW` fragment the comparator
+finds no distinguishing execution at **3 events** and one at **4**, so this
+witness is as small as a separator for this pair can be. The containment half is
+clean exhaustively to 7 events. See [`litmus/memalloy/`](../../memalloy/) — the
+comparator's own simplest witness here is MP rather than LB, at the same four
+events; LB is kept for recognisability, not size.
+
 **Reference:** Pulte, Flur, Deacon, French, Sarkar, Sewell, *Simplifying ARM
 Concurrency*, POPL 2018.

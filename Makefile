@@ -23,13 +23,14 @@ DISTRIBUTION ?= E3PXGEAO2HVOM3
 ALLOW_DEV ?=
 RELEASE_GATE :=
 
-.PHONY: help version litmus kater check build deploy clean
+.PHONY: help version litmus kater memalloy check build deploy clean
 
 help:
 	@echo "rmm-zoo-dataset targets:"
 	@echo "  make version          Print the version + date this build would stamp in"
 	@echo "  make litmus           Regenerate litmus.json from the litmus/ test tree"
 	@echo "  make kater            Re-prove the kater-provenance containments (needs docker + the image)"
+	@echo "  make memalloy         Re-run the memalloy-provenance comparisons (needs MEMALLOY=<checkout>)"
 	@echo "  make check            Verify the dataset: DAG, no contradictions, witness direction, litmus + kater suites"
 	@echo "  make build            Stamp the version and assemble the artifacts into $(DIST)/$(PREFIX)/ (runs check first)"
 	@echo "  make deploy           Build, sync $(DIST)/$(PREFIX)/ to s3://$(BUCKET)/$(PREFIX)/, invalidate CloudFront"
@@ -49,6 +50,12 @@ litmus:
 # it in automatically once the image is local, and skips it otherwise.
 kater:
 	@bash litmus/kater/run.sh
+
+# Re-decide every comparison recorded as provenance "memalloy". Kept out of
+# `make check` deliberately: unlike kater it needs a built source checkout, not
+# just a pulled image, and the containment cases run for minutes.
+memalloy:
+	@MEMALLOY="$(MEMALLOY)" bash litmus/memalloy/run.sh
 
 # Fail-fast gate over models.json + litmus/: acyclicity, no ordered/incomparable
 # contradiction, property, cat- and kat-support integrity, every witness directory

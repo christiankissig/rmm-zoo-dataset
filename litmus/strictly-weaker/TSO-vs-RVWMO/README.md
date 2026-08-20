@@ -16,5 +16,12 @@ herd7 -model riscv.cat                     MP.litmus   # Sometimes 1 3  (allowed
 the writer's stores restores ordering. Note RISC-V *also* offers `fence.tso` and a
 Ztso extension that recover full TSO — see `incomparable/ARMv8-vs-RVWMO`.
 
+**Minimality (memalloy).** Over the common `Basic_HW` fragment the comparator
+finds no distinguishing execution at **3 events** and one at **4**, so this
+witness is as small as a separator for this pair can be — and MP is the shape it
+returns. The containment half is clean exhaustively to 7 events. memalloy ships
+no RISC-V model, so the operand is the one authored in
+[`litmus/memalloy/models/zoo_hw_rvwmo.cat`](../../memalloy/models/zoo_hw_rvwmo.cat).
+
 **Reference:** *The RISC-V Instruction Set Manual* (RVWMO chapter); Pulte,
 Pichon-Pharabod, Kang, Lee, Hur, *Promising-ARM/RISC-V*, PLDI 2019.

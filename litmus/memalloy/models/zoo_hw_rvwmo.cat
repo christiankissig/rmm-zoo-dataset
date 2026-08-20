@@ -1,0 +1,64 @@
+(*
+ * RVWMO -- the RISC-V Weak Memory Ordering -- over memalloy's Basic_HW
+ * vocabulary. Authored for this dataset; memalloy ships no RISC-V model, which
+ * is why the TSO -> RVWMO edge could not be checked at all (dataset issue #3).
+ *
+ * Written directly from the ppo rules in the RISC-V unprivileged spec, chapter
+ * "RVWMO Memory Consistency Model", NOT translated from any existing .cat file.
+ * The spec numbers thirteen ppo rules; this renders the ones that are non-empty
+ * on the common hardware fragment (no fences, no acquire/release annotations),
+ * and the rest are empty there rather than omitted:
+ *
+ *   1  overlapping-address, b a store        -> (M * W) & po & loc
+ *   2  overlapping-address load-load         -> covered by the po-loc/rf/ca
+ *                                               acyclicity below, as in ARMv8
+ *   3  AMO/SC read-back                      -> [range(atom)]; rfi
+ *   4-7 fences, acquire/release              -> EMPTY on this fragment
+ *   8  syntactic address dependency          -> addr
+ *   9  syntactic data dependency to a store  -> data; [W]
+ *   10 syntactic control dependency to store -> ctrl; [W]
+ *   11 addr/data dep to a store, then rfi    -> (addr | data); rfi
+ *   12 addr dep, then po to a store          -> addr; po; [W]
+ *   13 addr dep, then po to a store, then rfi-> addr; po; [W]; rfi
+ *
+ * The global memory order is a total order over memory operations respecting
+ * ppo and the communication relations, so its existence is exactly acyclicity
+ * of ppo | rfe | co | fr -- stated below as the external requirement, with the
+ * load-value/coherence requirement stated internally the same way ARMv8 does.
+ *
+ * Deliberately NOT modelled: the RVWMO "progress" axiom (a liveness property,
+ * outside memalloy's per-execution search), and the whole-instruction I/O
+ * ordering rules, which have no counterpart in this vocabulary.
+ *)
+
+"HW"
+
+include "basic_H.cat"
+include "fr.cat"
+
+(* Coherence-after, as in aarch64.cat *)
+let ca = fr | co
+
+(* Communication, observed across threads *)
+let obs = rfe | fre | coe
+
+(* Preserved program order, rules as annotated above *)
+let ppo = ((M * W) & po & loc)
+    | [range(atom)]; rfi
+    | addr
+    | data; [W]
+    | ctrl; [W]
+    | (addr | data); rfi
+    | addr; po; [W]
+    | addr; po; [W]; rfi
+
+let gmo = (obs | ppo)+
+
+(* Load value / coherence: RVWMO requires per-location SC, as ARMv8 does *)
+acyclic po-loc | ca | rf as internal
+
+(* A global memory order exists iff this is acyclic *)
+irreflexive gmo as external
+
+(* Atomicity: no store to the same address between an LR and its SC *)
+empty atom & (fre; coe) as atomic
