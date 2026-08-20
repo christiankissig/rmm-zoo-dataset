@@ -53,12 +53,12 @@ Each released version is published at
 
 ### Changed
 
-- **`SC → LKMM`** upgraded from `literature`/`cited` to `kater`/`machine_run`.
   All three of LKMM's global ordering axioms — `acyclic(hb)`, the `prop;ppo*`
   work-around, and coherence — are proved to follow from SC's `acyclic(sc)`,
   unbounded. Query:
   [`litmus/kater/queries/strictly-weaker-SC-vs-LKMM.kat`](litmus/kater/queries/strictly-weaker-SC-vs-LKMM.kat).
   Strictness stays with the existing witness.
+- **`SC → LKMM`** upgraded from `literature`/`cited` to `kater`/`machine_run`.
 - **`TSO → ARMv8`** and **`TSO → RVWMO`** upgraded from `litmus` to `memalloy`.
   Both were provisional on a one-sided witness plus a cross-ISA monotonicity
   argument; both halves are now decided by memalloy over the common `Basic_HW`
@@ -82,6 +82,12 @@ Each released version is published at
   does not close the edge either, because it then holds vacuously; the query is
   now stated against a non-degenerate rendering, where it is refuted on a real
   fence-vocabulary gap. The edge stays `provenance: literature`.
+- **`tools/check-consistency.py`** check 4 gains the converse of its kater rule:
+  a query in `litmus/kater/queries/` that backs no `kater`-provenance edge is now
+  an error. Only one direction was checked, so a query could land while its edge
+  upgrade was dropped — the suite would go on proving it, green, while the
+  dataset still recorded the weaker provenance. `open/` and `controls/`, which
+  hold queries that are deliberately not claims, are not scanned.
 - **`litmus/memalloy/README.md`** said the base repo had no model to compare TSO
   and ARMv8 "at the right level of abstraction". It has one — the generic
   `Basic_HW` arch — and the obstacle was the single `-arch` flag, not a missing

@@ -286,6 +286,21 @@ for e in edges:
             err(4, f"edge {a} {e['type']} {b} is provenance=kater but katSupport[{ep}] "
                    f"is not 'specified' -- the check needs a .kat for both endpoints")
 
+# ...and the converse: a query in queries/ that backs no kater-provenance edge is
+# a proof nothing claims. That is the failure mode where the query lands and the
+# edge upgrade is dropped -- the suite goes on proving it, green, while the
+# dataset still records the weaker provenance. Queries that are NOT claims live
+# in open/ (parked obstacles) and controls/ (must-fail), which are not scanned.
+kater_edge_files = {
+    f"{e['type'].replace('_', '-')}-{e['from']}-vs-{e['to']}.kat"
+    for e in edges if e.get("provenance") == "kater"
+}
+if KATER_Q.is_dir():
+    for q in sorted(KATER_Q.glob("*.kat")):
+        if q.name not in kater_edge_files:
+            err(4, f"{q.relative_to(ROOT)} backs no provenance=kater edge -- either "
+                   f"the edge was not upgraded, or the query belongs in open/")
+
 
 # ---- 5. run.sh separation loop -------------------------------------------
 runsh = (LITMUS / "run.sh").read_text().splitlines()
