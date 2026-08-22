@@ -12,6 +12,8 @@ Each released version is published at
 
 ## [Unreleased]
 
+## [1.4.0] — 2026-08-22
+
 ### Added
 
 - **`SRA` (strong release-acquire)**, Lahav, Giannarakis & Vafeiadis, POPL
@@ -283,6 +285,7 @@ once carried live in `rmm-zoo-tool-paper` and `rmm-zoo.kissig.org`, and the
 history was squashed at the split. Releases before 1.2.0 were made from the
 combined repository and are not itemised here.
 
-[Unreleased]: https://github.com/christiankissig/rmm-zoo-dataset/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/christiankissig/rmm-zoo-dataset/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/christiankissig/rmm-zoo-dataset/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/christiankissig/rmm-zoo-dataset/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/christiankissig/rmm-zoo-dataset/releases/tag/v1.2.0
