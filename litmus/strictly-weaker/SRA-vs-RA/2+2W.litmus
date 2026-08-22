@@ -1,0 +1,21 @@
+C 2+2W
+"Two threads each write to both locations and then read the OTHER thread's write
+ to the location it wrote second.  Reading a=b=1 forces mo to run against program
+ order on both locations -- W(y,2) mo W(y,1) and W(x,2) mo W(x,1) -- closing a
+ cycle in (hb u mo):  W(x,1) -po-> W(y,2) -mo-> W(y,1) -po-> W(x,2) -mo-> W(x,1).
+ SRA's strong-write-coherence forbids that cycle.  RA's write-coherence only
+ forbids mo;hb, and neither mo step is followed by hb back to its source, so RA
+ ALLOWS the outcome.  This is the separating behaviour of Lahav et al., POPL 2016,
+ tabulated as Ex. 3.6 in Lahav & Boker, TOPLAS 2022."
+{ }
+P0 (atomic_int* x, atomic_int* y) {
+  atomic_store_explicit(x,1,memory_order_release);
+  atomic_store_explicit(y,2,memory_order_release);
+  int r0 = atomic_load_explicit(y,memory_order_acquire);
+}
+P1 (atomic_int* x, atomic_int* y) {
+  atomic_store_explicit(y,1,memory_order_release);
+  atomic_store_explicit(x,2,memory_order_release);
+  int r1 = atomic_load_explicit(x,memory_order_acquire);
+}
+exists (0:r0=1 /\ 1:r1=1)

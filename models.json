@@ -563,6 +563,45 @@
       "languages": []
     },
     {
+      "id": "SRA",
+      "name": "Strong Release-Acquire",
+      "abbrev": "SRA",
+      "year": 2016,
+      "authors": ["Lahav", "Giannarakis", "Vafeiadis"],
+      "description": "A strengthening of the release-acquire (RA) fragment of C/C++11. RA requires only a local agreement between modification order and happens-before (write-coherence, mo;hb irreflexive); SRA requires a global one — strong-write-coherence, (hb ∪ mo)+ irreflexive — which forbids the 2+2W behaviour RA allows while leaving RA's other guarantees untouched. The strengthening is free: the same local optimisations remain sound and the compilation schemes to x86-TSO and POWER are unchanged. The POWER mapping is moreover complete, so SRA is exactly what POWER provides for programs compiled from the RA fragment, which means SRA cannot be strengthened further without an implementation cost. It also admits an equivalent operational semantics based on point-to-point communication, and supports fences that restore sequential consistency. Ignoring RMWs it coincides with the causal-convergence model CCv, which makes it the bridge between the C11 family and the distributed causal-consistency models; and if every store is implemented as an atomic exchange it precisely captures parallel snapshot isolation (Lahav & Boker, §3.1).",
+      "references": ["Lahav2016", "LahavBoker2022"],
+      "tags": ["language", "formal"],
+      "formalism": ["axiomatic", "operational"],
+      "hardware": [],
+      "languages": ["C11-fragment"]
+    },
+    {
+      "id": "RA",
+      "name": "Release-Acquire (C/C++11 RA fragment)",
+      "abbrev": "RA",
+      "year": 2011,
+      "authors": ["Batty", "Owens", "Sarkar", "Sewell", "Weber"],
+      "description": "The release-acquire fragment of the C/C++11 model: release stores, acquire loads and acquire-release RMWs, with no relaxed, non-atomic or seq_cst accesses. Lahav & Boker (Table 1) axiomatise it as irreflexivity of hb, write-coherence (mo;hb irreflexive), read-coherence (mo;hb;rf^-1 irreflexive) and RMW atomicity. Having no relaxed accesses it is free of out-of-thin-air behaviour, and unlike WRA it provides SC-per-location. It still allows the 2+2W outcome that the strengthening SRA forbids, and store buffering and IRIW, which SC forbids. This is the fragment the zoo's PSI and SI reference implementations are built over, and the source fragment whose standard POWER compilation SRA exactly characterises.",
+      "references": ["Batty2011", "LahavBoker2022"],
+      "tags": ["language", "formal"],
+      "formalism": ["axiomatic"],
+      "hardware": [],
+      "languages": ["C11-fragment"]
+    },
+    {
+      "id": "WRA",
+      "name": "Weak Release-Acquire",
+      "abbrev": "WRA",
+      "year": 2020,
+      "authors": ["Lahav", "Boker"],
+      "description": "The weakening of RA giving the most minimal guarantees a model needs to be causally consistent. Modification order plays no role at all: RA's write-coherence and read-coherence are replaced by weak-read-coherence, which uses the per-location restriction of happens-before rather than mo to decide which of two writes to the same location is the later, and RMW atomicity weakens to 'no two RMW events read from the same write'. Consequently WRA does not provide SC-per-location — even single-location programs may behave non-sequentially (Lahav & Boker Ex. 3.7: WW, Oscillating, SF). It is a fragment of the weak RC11 model, has been considered as a candidate shared-memory semantics in its own right, and is equivalent to the weak causal consistency CC.",
+      "references": ["LahavBoker2020", "LahavBoker2022"],
+      "tags": ["language", "formal"],
+      "formalism": ["axiomatic"],
+      "hardware": [],
+      "languages": ["C11-fragment"]
+    },
+    {
       "id": "ORC11",
       "name": "Operational RC11",
       "abbrev": "ORC11",
@@ -885,6 +924,19 @@
       "authors": ["Burckhardt", "Gotsman", "Yang"],
       "description": "Causal convergence: causal consistency stated in the visibility/arbitration framework. A total arbitration order over all operations abstracts the conflict-resolution policy, so no site may revise its ordering of causally unrelated operations and any two sites order identically whatever they both see — which is why the model implies convergence. This is Burckhardt et al.'s causal consistency restricted to sequential specifications, written by Viotti & Vukolić (ACM Computing Surveys 2016, Eq. 26) as Causality = CausalVisibility ∧ CausalArbitration ∧ RVal, and named CCv by Bouajjani et al. (POPL 2017, §4.5). Strictly weaker than SC, and incomparable to causal memory (the Causal node): a global arbitration order and a per-site unrevised serialisation are different requirements, neither implying the other.",
       "references": ["BurckhardtGotsmanYang2013", "ViottiVukolic2016", "Bouajjani2017"],
+      "tags": ["theoretical", "formal"],
+      "formalism": ["axiomatic"],
+      "hardware": [],
+      "languages": []
+    },
+    {
+      "id": "CC",
+      "name": "Weak Causal Consistency (CC)",
+      "abbrev": "CC",
+      "year": 2017,
+      "authors": ["Bouajjani", "Enea", "Guerraoui", "Hamza"],
+      "description": "The weakest notion of causal consistency in the literature: it asks only that some causal order exist which, per operation, explains that operation's return value (axioms AxCausal and AxCausalValue). Unlike causal memory it lets a site order causally unrelated operations one way and revise that ordering later — modelling implementations that speculate on an order and roll back — and unlike causal convergence it requires no global arbitration order. Strictly weaker than both CM and CCv (Bouajjani et al., POPL 2017, Fig. 1), with Fig. 2 history (2c) satisfying CC and neither of the others. Equivalent to the WRA memory model, which is what makes it the causal-consistency counterpart of the C/C++11 release-acquire family.",
+      "references": ["Bouajjani2017", "Perrin2016"],
       "tags": ["theoretical", "formal"],
       "formalism": ["axiomatic"],
       "hardware": [],
@@ -1873,6 +1925,22 @@
       "note": "Neither contains the other: LKMM provides RCU grace-period ordering and the smp_* barrier family with no C11 counterpart, while C11 offers per-object seq_cst atomics LKMM does not model. The incomparability is at the level of primitives, not reorderings of shared operations. See litmus/incomparable/C11-vs-LKMM."
     },
     {
+      "from": "SRA",
+      "to": "x86-TSO",
+      "type": "compilation",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Lahav, Giannarakis & Vafeiadis, POPL 2016: SRA has exactly the same compilation scheme to x86-TSO as the RA fragment it strengthens — plain loads and stores, no fences — so the strengthening carries no implementation cost on x86."
+    },
+    {
+      "from": "SRA",
+      "to": "POWER",
+      "type": "compilation",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Lahav, Giannarakis & Vafeiadis, POPL 2016: SRA compiles to POWER by the standard RA scheme (lwsync before every store, ctrl+isync after every load), and the mapping is complete as well as sound — the compiled program exhibits exactly the behaviours of the source. Lahav & Boker restate it as SRA precisely coinciding with the POWER model of Alglave et al. restricted to programs compiled from the RA fragment. Completeness is what makes SRA maximal: it cannot be strengthened further without an implementation cost on POWER."
+    },
+    {
       "from": "LKMM",
       "to": "x86-TSO",
       "type": "compilation",
@@ -2058,6 +2126,15 @@
       "evidence": "by_construction",
       "fragment_restricted": false,
       "note": "RMMOA is an operational model whose out-of-order propagation of writes to different locations matches PSO's store→store relaxation."
+    },
+    {
+      "from": "RC11",
+      "to": "RA",
+      "type": "equivalent",
+      "provenance": "literature",
+      "evidence": "by_construction",
+      "fragment_restricted": true,
+      "note": "RA is the release/acquire fragment of the C/C++11 model — release stores, acquire reads, acquire-release RMWs (Lahav & Boker, §3.1). RC11's repairs concern the SC axioms and the relaxed/thin-air fragment, none of which this fragment contains, so RC11 and C11 coincide on it. Drawn against RC11 rather than C11 to match the existing PSI and SI compilation notes, which target 'the release-acquire (RA) fragment of RC11'."
     },
     {
       "from": "RC11",
@@ -2340,6 +2417,64 @@
       "provenance": "literature",
       "evidence": "cited",
       "note": "Causal memory is strictly weaker than sequential consistency (Ahamad et al. 1995; Steinke & Nutt 2004)."
+    },
+    {
+      "from": "SC",
+      "to": "SRA",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "SRA is the strongest of the release-acquire family and is still strictly weaker than SC: Lahav & Boker Ex. 3.5 marks the IRIW outcome allowed under WRA, RA and SRA alike, and SC forbids it. Store buffering is likewise allowed — SRA's compilation to x86-TSO uses plain accesses. The SRA paper supplies fences that restore sequential consistency, which is only meaningful because the model without them is weaker."
+    },
+    {
+      "from": "SRA",
+      "to": "RA",
+      "type": "strictly_weaker",
+      "provenance": "litmus",
+      "evidence": "machine_run",
+      "note": "SRA replaces RA's write-coherence (mo;hb irreflexive — a local agreement between modification order and happens-before) with strong-write-coherence ((hb ∪ mo)+ irreflexive — a global one), keeping RA's other axioms (Lahav & Boker, Table 1); containment is immediate. Strictness is the 2+2W program of Lahav et al. 2016, Lahav & Boker Ex. 3.6: x:=1; y:=2; a:=y || y:=1; x:=2; b:=x with a=b=1. The outcome forces mo edges W(y,2) -> W(y,1) and W(x,2) -> W(x,1), closing an (hb ∪ mo) cycle that SRA forbids while each mo;hb step alone satisfies write-coherence, so RA allows it. Machine-checked: litmus/models/ra.cat and litmus/models/sra.cat are authored for this dataset and differ in that one axiom, and litmus/strictly-weaker/SRA-vs-RA/ runs 2+2W under both (Sometimes 1 8 vs Never 0 5). Because both cat models are hand-written rather than vendored, the directory also carries controls run by run.sh: MP+relacq must be forbidden by both, and IRIW must be allowed by both — the latter checked against Lahav & Boker Ex. 3.5, which marks IRIW allowed under RA and SRA alike. Containment remains the cited one-axiom argument; herd7 decides the strictness half only."
+    },
+    {
+      "from": "RA",
+      "to": "WRA",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "WRA drops modification order entirely, replacing RA's write-coherence and read-coherence with weak-read-coherence over hb|loc; Lahav & Boker note that write-coherence implies [W];hb|loc;[W] subset of mo, so read-coherence implies weak-read-coherence and RA contains WRA (Prop. 3.2). Strictness is Ex. 3.7, three single-location programs (WW, Oscillating, SF) allowed by WRA and forbidden by RA: WRA does not provide SC-per-location, so even one-location programs may behave non-sequentially."
+    },
+    {
+      "from": "SRA",
+      "to": "CCv",
+      "type": "equivalent",
+      "provenance": "literature",
+      "evidence": "cited",
+      "fragment_restricted": true,
+      "note": "Lahav & Boker, §3.1: ignoring RMWs, SRA is equivalent to the causal convergence model CCv of Bouajjani et al., applied to the standard sequential specification of a read/write key-value store (and to the causal consistency of Cerone et al. restricted to single-instruction transactions). fragment_restricted because the equivalence is stated modulo RMWs: SRA's atomicity axiom has no counterpart in a model over a sequential key-value specification. This edge is the bridge between the C11 family and the distributed causal-consistency cluster."
+    },
+    {
+      "from": "WRA",
+      "to": "CC",
+      "type": "equivalent",
+      "provenance": "literature",
+      "evidence": "cited",
+      "fragment_restricted": false,
+      "note": "Lahav & Boker: WRA 'provides the most minimal guarantees required from a model to satisfy causal consistency; it is equivalent to the model called CC studied in' Bouajjani et al. (POPL 2017)."
+    },
+    {
+      "from": "Causal",
+      "to": "CC",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Bouajjani et al., POPL 2017, §4 and Fig. 1: CM and CCv 'are both strictly stronger than CC'. Witness: Fig. 2 history (2c) — pa: wr(x,1) || pb: wr(x,2); rd(x)▷1; rd(x)▷2 — is CC but neither CM nor CCv, since pb revises its ordering of the two writes after already having read one of them."
+    },
+    {
+      "from": "CCv",
+      "to": "CC",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Bouajjani et al., POPL 2017, Lemma 2 (after Perrin et al.): every CCv history is CC, since AxArb gives co subset of arb and hence AxCausalArb implies AxCausalValue. Strictness is the same Fig. 2 history (2c), which is CC but not CCv."
     },
     {
       "from": "SC",
@@ -3185,6 +3320,27 @@
       "venue": "Proc. Euro-Par",
       "year": 1997
     },
+    "Lahav2016": {
+      "title": "Taming Release-Acquire Consistency",
+      "authors": ["Ori Lahav", "Nick Giannarakis", "Viktor Vafeiadis"],
+      "venue": "POPL 2016",
+      "year": 2016,
+      "doi": "10.1145/2837614.2837643"
+    },
+    "LahavBoker2020": {
+      "title": "Decidable Verification under a Causally Consistent Shared Memory",
+      "authors": ["Ori Lahav", "Udi Boker"],
+      "venue": "PLDI 2020",
+      "year": 2020,
+      "doi": "10.1145/3385412.3385966"
+    },
+    "LahavBoker2022": {
+      "title": "What's Decidable about Causally Consistent Shared Memory?",
+      "authors": ["Ori Lahav", "Udi Boker"],
+      "venue": "ACM Trans. Program. Lang. Syst. 44(2), Article 8",
+      "year": 2022,
+      "doi": "10.1145/3505273"
+    },
     "Bouajjani2017": {
       "title": "On Verifying Causal Consistency",
       "authors": ["Ahmed Bouajjani", "Constantin Enea", "Rachid Guerraoui", "Jad Hamza"],
@@ -3366,6 +3522,9 @@
     "DRFx": {"comp_x86": false, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": false, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": true, "ile": true, "sli": false, "rm": true, "irm": true, "strengthen": true, "tp": true, "cse": false, "rp": true, "ti": true, "edrf": true, "coh": true, "no_ub": false, "in_order": true, "no_oota": true},
     "BMM": {"comp_x86": true, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": true, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "ile": true, "sli": true, "rm": false, "tp": true, "cse": false, "ti": false, "edrf": true, "coh": true, "no_ub": true, "in_order": true, "no_oota": true},
     "RMMOA": {"comp_x86": true, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": true, "reorder_ss": true, "reorder_ll": false, "reorder_ls": false, "edrf": true, "no_ub": true, "in_order": true, "no_oota": true},
+    "SRA": {"comp_x86": true, "comp_power": true, "coh": true, "no_oota": true},
+    "RA": {"comp_x86": true, "comp_power": true, "coh": true, "no_oota": true},
+    "WRA": {"coh": false, "no_oota": true},
     "RAR": {"comp_x86": true, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": false, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "sli": false, "rm": true, "strengthen": true, "tp": true, "cse": false, "rp": true, "ti": true, "edrf": true, "coh": true, "no_ub": false, "in_order": true, "no_oota": true},
     "ORC11": {"comp_x86": true, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": false, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "sli": false, "rm": true, "strengthen": true, "tp": true, "cse": false, "rp": true, "ti": true, "edrf": true, "coh": true, "no_ub": false, "in_order": true, "no_oota": true},
     "CRC": {"comp_x86": true, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": false, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "sli": false, "rm": true, "strengthen": true, "tp": true, "cse": false, "rp": true, "ti": true, "edrf": true, "coh": true, "no_ub": false, "in_order": true, "no_oota": true},
@@ -3425,6 +3584,7 @@
     "PRAM": {"coh": false, "mca": false},
     "Causal": {"coh": false, "mca": false},
     "CCv": {"coh": false, "mca": false},
+    "CC": {"coh": false, "mca": false},
     "Slow": {"coh": false, "mca": false},
     "Local": {"coh": false, "mca": false},
     "EC": {"coh": false, "mca": false, "no_oota": true},
@@ -3502,6 +3662,9 @@
     "DRFx": "survey",
     "BMM": "survey",
     "RMMOA": "survey",
+    "SRA": "extrapolated",
+    "RA": "extrapolated",
+    "WRA": "extrapolated",
     "RAR": "survey",
     "ORC11": "survey",
     "CRC": "survey",
@@ -3529,6 +3692,7 @@
     "PRAM": "extrapolated",
     "Causal": "extrapolated",
     "CCv": "extrapolated",
+    "CC": "extrapolated",
     "Slow": "extrapolated",
     "Local": "extrapolated",
     "EC": "extrapolated",
@@ -3619,6 +3783,9 @@
     "BMM": {"status": "expressible", "basis": "extrapolated", "ref": "Demange2013", "note": "A TSO-style buffered abstract machine for Java; machines of this shape have equivalent per-execution axiomatic forms (as x86-TSO does with x86tso.cat), but none is published for BMM."},
     "ClightTSO": {"status": "expressible", "basis": "cited", "ref": "Sevcik2013", "note": "Its consistency dimension is exactly TSO, which tso.cat/x86tso.cat state; the rest of the model (allocation, pointer arithmetic, undefined behaviour) is outside cat's event vocabulary, so no single cat model covers it."},
     "RMMOA": {"status": "expressible", "basis": "extrapolated", "ref": "Boudol2009", "note": "A hierarchy of write buffers; the buffer discipline corresponds to a per-execution preserved-program-order plus coherence condition of PSO shape, but the model is presented purely operationally."},
+    "SRA": {"status": "expressible", "basis": "extrapolated", "ref": "Lahav2016", "note": "Four irreflexivity constraints over hb, mo and rf (irr-hb, strong-write-coherence, read-coherence, atomicity), all per-execution and all in cat's relational vocabulary; strong-write-coherence is just acyclic(hb | mo)."},
+    "RA": {"status": "expressible", "basis": "extrapolated", "ref": "LahavBoker2022", "note": "As SRA but with write-coherence (mo;hb irreflexive) in place of strong-write-coherence — the release/acquire restriction of the vendored cpp11.cat and rc11.cat, and per-execution."},
+    "WRA": {"status": "expressible", "basis": "extrapolated", "ref": "LahavBoker2022", "note": "irr-hb, weak-read-coherence over hb|loc — cat states the per-location restriction of a relation directly — and the weakened RMW condition. Per-execution; mo is not used at all."},
     "RAR": {"status": "expressible", "basis": "cited", "ref": "Doherty2019", "note": "An operational reformulation of the RC11 release-acquire/relaxed fragment, proved to match it — and that fragment is what rc11.cat states."},
     "ORC11": {"status": "expressible", "basis": "cited", "ref": "Dang2019", "note": "An operational presentation of RC11 built for RustBelt; the declarative RC11 it tracks is rc11.cat."},
     "CRC": {"status": "expressible", "basis": "extrapolated", "ref": "Dodds2018", "note": "The underlying consistency model is a C11 fragment (release-acquire, SC fences, catch-fire non-atomics) that cat expresses; the compositional denotational layer is a reasoning device on top of it, not extra behaviour."},
@@ -3645,6 +3812,7 @@
     "PC": {"status": "expressible", "basis": "extrapolated", "ref": "SteinkeNutt2004", "note": "Processor consistency is PRAM plus per-location coherence: both conjuncts are per-execution acyclicity conditions that cat states directly (cat's own scperloc axiom is the coherence half)."},
     "PRAM": {"status": "expressible", "basis": "extrapolated", "ref": "SteinkeNutt2004", "note": "Each process must see every other process's writes in issue order — a per-execution condition, with the per-process serialisations enumerable by cat's linearisations construct."},
     "Causal": {"status": "expressible", "basis": "extrapolated", "ref": "Ahamad1995", "note": "Causal memory is an acyclicity condition over the causal order (po union rf, transitively closed) together with per-process serialisations — all per-execution."},
+    "CC": {"status": "expressible", "basis": "extrapolated", "ref": "Bouajjani2017", "note": "AxCausal and AxCausalValue over an existentially quantified causal order, with a per-operation serialisation of that operation's causal past — the same shape as the Causal and CCv entries, and per-execution."},
     "CCv": {"status": "expressible", "basis": "extrapolated", "ref": "BurckhardtGotsmanYang2013", "note": "Causality plus a total arbitration order over all operations: an acyclicity condition on a single execution, and cat's co already supplies a per-location total order to carry the arbitration."},
     "Slow": {"status": "expressible", "basis": "extrapolated", "ref": "HuttoAhamad1990", "note": "A per-execution constraint on which writes a read may return (own writes immediately, no earlier write by the same writer after a later one), directly statable as cat irreflexivity axioms."},
     "Local": {"status": "expressible", "basis": "extrapolated", "ref": "BatallerBernabeu1997", "note": "Only each process's own operations are constrained to appear in program order — a single per-execution axiom, weaker than cat's usual scperloc."},
@@ -3681,6 +3849,8 @@
   },
   "_katSupportComment": "Whether each model can be written in kater's input language (Kokologiannakis, Lahav & Vafeiadis, 'Kater', POPL 2023) — the fragment in which model comparison is decidable. Narrower than cat, and deliberately a separate axis from catSupport: kater requires consistency to be a conjunction of irreflexivity/emptiness constraints over regular expressions of base relations, so constructs cat states freely (notably intersections like po ∩ sameloc, which kater must first push into a regular form by an incomplete procedure) can put a cat-specified model outside it. 'specified' = a .kat definition exists (named in the note). 'expressible' = no .kat is published, but the model's axioms already have that shape. 'not-expressible' = they do not — the model quantifies over other executions, or needs constructs the fragment cannot state. 'basis': 'kat-model' = a concrete .kat file was identified, 'cited' = the primary literature states the claim, 'extrapolated' = author judgement from the model's definitional style. This map is partial by design: absence means not yet assessed, not 'no'. A model at either end of a 'kater'-provenance edge must appear here as 'specified' — check-consistency enforces it. Anything catSupport marks 'not-expressible' is outside this fragment too, since a per-execution predicate is a precondition for both.",
   "katSupport": {
+    "SRA": {"status": "expressible", "basis": "extrapolated", "ref": "Lahav2016", "note": "Consistency is a conjunction of irreflexivity constraints over regular expressions of base relations — strong-write-coherence is irreflexive((hb | mo)+) — which is exactly kater's fragment. No .kat file is published, so it is expressible rather than specified."},
+    "RA": {"status": "expressible", "basis": "extrapolated", "ref": "LahavBoker2022", "note": "Same shape as SRA, with mo;hb in place of (hb | mo)+. Nothing here needs a construct outside kater's regular fragment."},
     "SC": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "kater's kat/sc.kat: the single relation sc = po | rf | mo | fr, constrained acyclic."},
     "TSO": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "kater's kat/tso.kat, with kat/tso-fm.kat as the Herding-cats-style flavour the two are proved equivalent to (paper Table 1, TSO ↔ TSOFM)."},
     "x86-TSO": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "Covered by kater's kat/tso.kat, which is the same rendering the zoo's by-construction TSO ≡ x86-TSO edge identifies. kat/pex86.kat is the persistency-extended Px86, not this node."},

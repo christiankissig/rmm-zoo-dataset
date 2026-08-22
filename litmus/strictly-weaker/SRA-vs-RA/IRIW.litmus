@@ -1,0 +1,19 @@
+C IRIW
+"POSITIVE CONTROL for sra.cat: SRA must ALLOW this. Independent reads of
+ independent writes -- Lahav & Boker, TOPLAS 2022, Ex. 3.5 marks the annotated
+ outcome allowed under WRA, RA and SRA alike (SC forbids it). SRA's extra axiom
+ is strong-write-coherence, and this execution closes no (hb u mo) cycle, so the
+ strengthening must leave it alone. A sra.cat that over-constrained -- forbidding
+ 2+2W for the wrong reason -- would fail here."
+{ }
+P0 (atomic_int* x) { atomic_store_explicit(x,1,memory_order_release); }
+P1 (atomic_int* y) { atomic_store_explicit(y,1,memory_order_release); }
+P2 (atomic_int* x, atomic_int* y) {
+  int r0 = atomic_load_explicit(x,memory_order_acquire);
+  int r1 = atomic_load_explicit(y,memory_order_acquire);
+}
+P3 (atomic_int* x, atomic_int* y) {
+  int r2 = atomic_load_explicit(y,memory_order_acquire);
+  int r3 = atomic_load_explicit(x,memory_order_acquire);
+}
+exists (2:r0=1 /\ 2:r1=0 /\ 3:r2=1 /\ 3:r3=0)

@@ -1,0 +1,30 @@
+C RA
+
+(*
+ * The release-acquire fragment of C/C++11: release stores, acquire loads and
+ * acquire-release RMWs.  Axiomatised exactly as in Table 1 of
+ *
+ *   Ori Lahav and Udi Boker, "What's Decidable about Causally Consistent
+ *   Shared Memory?", ACM TOPLAS 44(2), 2022.  doi:10.1145/3505273
+ *
+ * written for this dataset (not vendored).  Its only difference from sra.cat is
+ * write-coherence in place of strong-write-coherence -- keep the two in step.
+ *)
+
+include "cos.cat"
+
+let mo = co
+
+(* A release write synchronises with an acquire read that reads from it.  On the
+   RA fragment every write is a release and every read an acquire, so sw is rf;
+   the annotations are stated anyway so the model does not silently treat a
+   relaxed rf as synchronising. *)
+let sw = [W & (REL | ACQ_REL | SC)]; rf; [R & (ACQ | ACQ_REL | SC)]
+let hb = (po | sw)+
+
+irreflexive hb                as irr-hb
+irreflexive mo; hb            as write-coherence
+irreflexive mo; hb; rf^-1     as read-coherence
+irreflexive mo; mo; rf^-1     as atomicity
+
+show hb, mo

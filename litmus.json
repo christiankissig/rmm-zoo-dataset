@@ -417,6 +417,30 @@
       }
     ]
   },
+  "SRA|RA": {
+    "relationship": "strictly-weaker",
+    "summary": "Distinguishing behaviour: a cycle in hb ∪ mo that no single mo;hb step closes.",
+    "tests": [
+      {
+        "name": "2+2W",
+        "file": "2+2W.litmus",
+        "lang": "smrd",
+        "code": "C 2+2W\n\"Two threads each write to both locations and then read the OTHER thread's write\n to the location it wrote second.  Reading a=b=1 forces mo to run against program\n order on both locations -- W(y,2) mo W(y,1) and W(x,2) mo W(x,1) -- closing a\n cycle in (hb u mo):  W(x,1) -po-> W(y,2) -mo-> W(y,1) -po-> W(x,2) -mo-> W(x,1).\n SRA's strong-write-coherence forbids that cycle.  RA's write-coherence only\n forbids mo;hb, and neither mo step is followed by hb back to its source, so RA\n ALLOWS the outcome.  This is the separating behaviour of Lahav et al., POPL 2016,\n tabulated as Ex. 3.6 in Lahav & Boker, TOPLAS 2022.\"\n{ }\nP0 (atomic_int* x, atomic_int* y) {\n  atomic_store_explicit(x,1,memory_order_release);\n  atomic_store_explicit(y,2,memory_order_release);\n  int r0 = atomic_load_explicit(y,memory_order_acquire);\n}\nP1 (atomic_int* x, atomic_int* y) {\n  atomic_store_explicit(y,1,memory_order_release);\n  atomic_store_explicit(x,2,memory_order_release);\n  int r1 = atomic_load_explicit(x,memory_order_acquire);\n}\nexists (0:r0=1 /\\ 1:r1=1)\n"
+      },
+      {
+        "name": "IRIW",
+        "file": "IRIW.litmus",
+        "lang": "smrd",
+        "code": "C IRIW\n\"POSITIVE CONTROL for sra.cat: SRA must ALLOW this. Independent reads of\n independent writes -- Lahav & Boker, TOPLAS 2022, Ex. 3.5 marks the annotated\n outcome allowed under WRA, RA and SRA alike (SC forbids it). SRA's extra axiom\n is strong-write-coherence, and this execution closes no (hb u mo) cycle, so the\n strengthening must leave it alone. A sra.cat that over-constrained -- forbidding\n 2+2W for the wrong reason -- would fail here.\"\n{ }\nP0 (atomic_int* x) { atomic_store_explicit(x,1,memory_order_release); }\nP1 (atomic_int* y) { atomic_store_explicit(y,1,memory_order_release); }\nP2 (atomic_int* x, atomic_int* y) {\n  int r0 = atomic_load_explicit(x,memory_order_acquire);\n  int r1 = atomic_load_explicit(y,memory_order_acquire);\n}\nP3 (atomic_int* x, atomic_int* y) {\n  int r2 = atomic_load_explicit(y,memory_order_acquire);\n  int r3 = atomic_load_explicit(x,memory_order_acquire);\n}\nexists (2:r0=1 /\\ 2:r1=0 /\\ 3:r2=1 /\\ 3:r3=0)\n"
+      },
+      {
+        "name": "MP+relacq",
+        "file": "MP+relacq.litmus",
+        "lang": "smrd",
+        "code": "C MP+relacq\n\"NEGATIVE CONTROL for ra.cat and sra.cat: both models must FORBID this.\n Message passing with a release store and an acquire load. The acquire read of\n the flag synchronises with the release write, so W(x,1) happens-before the read\n of x; reading x=0 then reads an mo-earlier write while aware of an mo-later one,\n which read-coherence forbids in RA and SRA alike. A model that allowed this\n would not be constraining anything, and the 2+2W split would be meaningless.\"\n{ }\nP0 (atomic_int* x, atomic_int* f) {\n  atomic_store_explicit(x,1,memory_order_release);\n  atomic_store_explicit(f,1,memory_order_release);\n}\nP1 (atomic_int* x, atomic_int* f) {\n  int r0 = atomic_load_explicit(f,memory_order_acquire);\n  int r1 = atomic_load_explicit(x,memory_order_acquire);\n}\nexists (1:r0=1 /\\ 1:r1=0)\n"
+      }
+    ]
+  },
   "TSO|ARMv8": {
     "relationship": "strictly-weaker",
     "summary": "Distinguishing behaviour: load→store reordering (load buffering).",

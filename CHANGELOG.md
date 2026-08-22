@@ -14,6 +14,39 @@ Each released version is published at
 
 ### Added
 
+- **`SRA` (strong release-acquire)**, Lahav, Giannarakis & Vafeiadis, POPL
+  2016 — the strengthening of C/C++11's release-acquire fragment that replaces
+  write-coherence (`mo;hb` irreflexive, a *local* agreement between modification
+  order and happens-before) with strong-write-coherence (`(hb ∪ mo)+`
+  irreflexive, a *global* one). It forbids 2+2W at no implementation cost: the
+  same local optimisations stay sound and the x86-TSO and POWER compilation
+  schemes are unchanged.
+- **`RA`** and **`WRA`**, completing the chain `SRA ⊐ RA ⊐ WRA`. RA had been
+  referenced by four existing edge notes ("the release-acquire (RA) fragment of
+  RC11", on PSI, SI, RAR and CRC) without ever being a node. WRA drops
+  modification order entirely and, unlike RA and SRA, does not provide
+  SC-per-location.
+- **`CC` (weak causal consistency)**, Bouajjani et al. — the weakest causal
+  variant, strictly weaker than both CM and CCv, completing that triangle.
+- **`SRA ≡ CCv`** (`fragment_restricted`, modulo RMWs) and **`WRA ≡ CC`**.
+  These are the point of the whole addition: until now the distributed
+  causal-consistency cluster reached the rest of the zoo only through `SC` and
+  `Coherence`. It now connects to the C11 family through the release-acquire
+  models, on Lahav & Boker's equivalences.
+- **`SRA → POWER`** and **`SRA → x86-TSO`** compilation edges. The POWER mapping
+  is *complete* as well as sound — SRA is exactly what POWER provides for
+  programs compiled from the RA fragment, which is why SRA cannot be
+  strengthened further without an implementation cost.
+- **`RC11 ≡ RA`** (`fragment_restricted`, `by_construction`), **`SC → SRA`**,
+  **`Causal → CC`**, **`CCv → CC`**, and references **`Lahav2016`**,
+  **`LahavBoker2020`**, **`LahavBoker2022`**.
+- **`litmus/models/ra.cat`** and **`litmus/models/sra.cat`** — authored for this
+  dataset (not vendored), rendering Lahav & Boker's Table 1 over herd7's C
+  vocabulary. They are line-for-line identical except for the one axiom that
+  separates the models: `irreflexive mo;hb` against `acyclic hb | mo`.
+- **`litmus/strictly-weaker/SRA-vs-RA/`** with `2+2W.litmus`, which herd7 decides
+  `Sometimes 1 8` under RA and `Never 0 5` under SRA.
+
 - **`CCv` (causal convergence)** as its own node, splitting apart two
   incomparable models that had been sharing the `Causal` node. `Causal` is
   Ahamad et al.'s **causal memory (CM)** — Steinke & Nutt restate that
@@ -68,6 +101,18 @@ Each released version is published at
   the suite treats as proofs are not degenerate in that way.
 
 ### Changed
+
+- **`SRA → RA`** upgraded from `literature`/`cited` to `litmus`/`machine_run`.
+  Because both cat models are hand-written rather than vendored, the pair is
+  bracketed by controls that `run.sh` runs alongside the witness — a model that
+  forbade everything, or constrained nothing, would otherwise produce the same
+  split as a correct one. `MP+relacq` must be forbidden by both; `IRIW` must be
+  allowed by both, and that expectation is checked against the literature rather
+  than intuition (Lahav & Boker Ex. 3.5 marks IRIW allowed under WRA, RA and SRA
+  alike). Both models return identical counts on IRIW, which is what says the
+  strengthening bites on 2+2W specifically rather than pruning executions at
+  large. Containment stays the cited one-axiom argument; herd7 decides the
+  strictness half only.
 
 - **`CausalPlus → POCausal`… re-homed onto `CCv`.** `CausalPlus → Causal`,
   `RTCausal → Causal` and `Causal → POCausal` all rest on the

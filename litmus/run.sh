@@ -111,6 +111,19 @@ check "C11 allows MP (relaxed)" Sometimes -c11 strictly-weaker/CRC-vs-C11/MP+rel
 echo "[CSRA vs C11]  LB-oota (control-dep thin-air): C11 allows, CSRA forbids"
 check "C11 allows LB-oota"     Sometimes -c11 strictly-weaker/CSRA-vs-C11/LB-oota.litmus
 
+# SRA vs RA. Both cat models are authored here (models/{ra,sra}.cat), differing
+# only in write-coherence vs strong-write-coherence, so the pair is bracketed by
+# controls: a model that forbade or allowed everything would produce the same
+# split. MP+relacq must be forbidden by both; IRIW must be allowed by both
+# (Lahav & Boker Ex. 3.5 marks it allowed under RA and SRA alike).
+echo "[SRA vs RA]  2+2W: RA's local mo/hb agreement vs SRA's global one"
+check "SRA forbids 2+2W"       Never     -model "$M/sra.cat" strictly-weaker/SRA-vs-RA/2+2W.litmus
+check "RA allows 2+2W"         Sometimes -model "$M/ra.cat"  strictly-weaker/SRA-vs-RA/2+2W.litmus
+check "  control: RA forbids MP+relacq"  Never     -model "$M/ra.cat"  strictly-weaker/SRA-vs-RA/MP+relacq.litmus
+check "  control: SRA forbids MP+relacq" Never     -model "$M/sra.cat" strictly-weaker/SRA-vs-RA/MP+relacq.litmus
+check "  control: RA allows IRIW"        Sometimes -model "$M/ra.cat"  strictly-weaker/SRA-vs-RA/IRIW.litmus
+check "  control: SRA allows IRIW"       Sometimes -model "$M/sra.cat" strictly-weaker/SRA-vs-RA/IRIW.litmus
+
 # Scoped GPU models. herd7 has no scoped architecture, so the weaker (scoped) side
 # is modelled by its semantic equivalent: a release/acquire narrowed to a scope the
 # two threads do NOT share carries no happens-before, i.e. it behaves as relaxed.
