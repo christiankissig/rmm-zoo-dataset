@@ -14,6 +14,22 @@ Each released version is published at
 
 ### Added
 
+- **`CCv` (causal convergence)** as its own node, splitting apart two
+  incomparable models that had been sharing the `Causal` node. `Causal` is
+  Ahamad et al.'s **causal memory (CM)** — Steinke & Nutt restate that
+  definition verbatim (Def. 2.5), characterise it as a per-process serial view
+  over the causal relation (Thm. 3.6) and place it as GPO+GWO (Thm. 4.18), and
+  their "weaker than SC, stronger than PRAM, incomparable to processor and cache
+  consistency" is exactly the node's four Steinke–Nutt edges. But four *other*
+  edges on the node came from Viotti & Vukolić, whose `Causality` (Eq. 26,
+  `CausalVisibility ∧ CausalArbitration ∧ RVal`) is Burckhardt's causal
+  consistency — what Bouajjani et al. name **CCv**, and what Perrin et al.
+  proved **incomparable** to CM. A global arbitration order and a per-site
+  unrevised serialisation are different requirements; neither implies the other.
+- **`Causal ⋈ CCv`** with both witnesses from Bouajjani et al. Fig. 2: history
+  (2a) is CM but not CCv, history (2b) is CCv but not CM.
+- **`SC → CCv`**, and references **`Bouajjani2017`** and **`Perrin2016`**.
+
 - **LKMM as a kater comparison operand**, via
   [`litmus/kater/derive-lkmm.sh`](litmus/kater/derive-lkmm.sh). kater's
   `kat/lkmm2.kat` is written over internal (`-imm`) relations, which kater
@@ -53,6 +69,15 @@ Each released version is published at
 
 ### Changed
 
+- **`CausalPlus → POCausal`… re-homed onto `CCv`.** `CausalPlus → Causal`,
+  `RTCausal → Causal` and `Causal → POCausal` all rest on the
+  visibility/arbitration framework, so their containments are against CCv, not
+  causal memory. They are now `CausalPlus → CCv`, `RTCausal → CCv` and
+  `CCv → POCausal`. `Causal → WFR` deliberately stays on CM: Brzeziński et al.
+  is a shared-memory session-guarantees result in the same lineage as PRAM and
+  Steinke–Nutt, and it is V-V's restatement of it inside their framework that is
+  the loose step.
+
   All three of LKMM's global ordering axioms — `acyclic(hb)`, the `prop;ppo*`
   work-around, and coherence — are proved to follow from SC's `acyclic(sc)`,
   unbounded. Query:
@@ -74,6 +99,18 @@ Each released version is published at
   `power-fm-orig` are not.
 
 ### Fixed
+
+- **`CausalPlus → Causal` and `RTCausal → Causal` were false**, not merely
+  mis-cited, and are now `incomparable`. Both models are contained in CCv
+  (`Causal+ = CCv ∧ StrongConvergence`, `RealTimeCausality = CCv ∧ RealTime`),
+  so both forbid history (2a), which is CM — the strictness half held. The
+  *containment* half did not. History (2b) is CCv and not CM, and it reads each
+  of x, y and z exactly once, so StrongConvergence (V-V Eq. 17, which constrains
+  only reads with equal visible-write sets) is vacuous on it: (2b) is causal+
+  and not CM. For real-time causal, (2b) also admits a schedule — pa's writes
+  all completing before pb starts — whose arbitration order extends `rb`, and
+  RealTime (Eq. 9, `rb ⊆ ar`) constrains arbitration only, not visibility, so
+  `rd(z)▷0` may still miss `wr(z,1)`.
 
 - **`litmus/kater/open/compilation-IMM-vs-POWER.kat`** was parked on a
   misdiagnosis. The refutation was a query-shape error — the assert was against

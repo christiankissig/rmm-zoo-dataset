@@ -870,8 +870,21 @@
       "abbrev": "Causal",
       "year": 1995,
       "authors": ["Ahamad", "Neiger", "Burns", "Kohli", "Hutto"],
-      "description": "Causal memory: for each process, its own operations plus all writes known to it appear in a total order that respects Lamport's potential causality (writes as sends, reads as receives). Strictly weaker than SC; strictly stronger than PRAM; incomparable to processor and cache consistency.",
+      "description": "Causal memory (CM): for each process, its own operations plus all writes known to it appear to that process in a single total order that respects Lamport's potential causality (writes as sends, reads as receives). A site may order causally unrelated operations differently from another site, but may never revise its own ordering. Steinke & Nutt (2004) restate Ahamad et al.'s definition verbatim (Def. 2.5), characterise it as a per-process serial view over the causal relation (Thm. 3.6), and place it in their lattice as GPO+GWO (Thm. 4.18). Strictly weaker than SC; strictly stronger than PRAM; incomparable to processor and cache consistency. Incomparable also to causal convergence (CCv), which instead demands one global arbitration order rather than a per-site serialisation.",
       "references": ["Ahamad1995", "SteinkeNutt2004"],
+      "tags": ["theoretical", "formal"],
+      "formalism": ["axiomatic"],
+      "hardware": [],
+      "languages": []
+    },
+    {
+      "id": "CCv",
+      "name": "Causal Convergence (CCv)",
+      "abbrev": "CCv",
+      "year": 2013,
+      "authors": ["Burckhardt", "Gotsman", "Yang"],
+      "description": "Causal convergence: causal consistency stated in the visibility/arbitration framework. A total arbitration order over all operations abstracts the conflict-resolution policy, so no site may revise its ordering of causally unrelated operations and any two sites order identically whatever they both see — which is why the model implies convergence. This is Burckhardt et al.'s causal consistency restricted to sequential specifications, written by Viotti & Vukolić (ACM Computing Surveys 2016, Eq. 26) as Causality = CausalVisibility ∧ CausalArbitration ∧ RVal, and named CCv by Bouajjani et al. (POPL 2017, §4.5). Strictly weaker than SC, and incomparable to causal memory (the Causal node): a global arbitration order and a per-site unrevised serialisation are different requirements, neither implying the other.",
+      "references": ["BurckhardtGotsmanYang2013", "ViottiVukolic2016", "Bouajjani2017"],
       "tags": ["theoretical", "formal"],
       "formalism": ["axiomatic"],
       "hardware": [],
@@ -922,7 +935,7 @@
       "abbrev": "Causal+",
       "year": 2011,
       "authors": ["Lloyd", "Freedman", "Kaminsky", "Andersen"],
-      "description": "Convergent causal consistency, introduced with the COPS wide-area store. It augments causal consistency with strong convergence: replicas that have applied the same set of writes have equivalent state, so concurrent (causally unrelated) conflicting writes are resolved identically at every replica via commutative/associative handler functions. Viotti & Vukolić (ACM Computing Surveys 2016, Eq. 27) express it as Causal+ = Causality ∧ StrongConvergence, i.e. causal+ strengthens causal consistency exactly as strong eventual consistency strengthens eventual consistency, so it is strictly stronger than causal consistency. Incomparable to real-time causal consistency.",
+      "description": "Convergent causal consistency, introduced with the COPS wide-area store. It augments causal consistency with strong convergence: replicas that have applied the same set of writes have equivalent state, so concurrent (causally unrelated) conflicting writes are resolved identically at every replica via commutative/associative handler functions. Viotti & Vukolić (ACM Computing Surveys 2016, Eq. 27) express it as Causal+ = Causality ∧ StrongConvergence, i.e. causal+ strengthens causal consistency exactly as strong eventual consistency strengthens eventual consistency, so it is strictly stronger than the causal consistency of that framework — causal convergence (CCv), not causal memory. Incomparable to real-time causal consistency, and to causal memory.",
       "references": ["LloydCOPS2011", "ViottiVukolic2016"],
       "tags": ["theoretical", "formal"],
       "formalism": ["axiomatic"],
@@ -935,7 +948,7 @@
       "abbrev": "RTCausal",
       "year": 2011,
       "authors": ["Mahajan", "Alvisi", "Dahlin"],
-      "description": "A strengthening of causal consistency due to Mahajan, Alvisi & Dahlin: in addition to causality it enforces a real-time condition — causally concurrent writes that do not overlap in real time must be applied in their real-time order. Viotti & Vukolić (ACM Computing Surveys 2016, Eq. 28) express it as RealTimeCausality = Causality ∧ RealTime, so it is strictly stronger than causal consistency. It is incomparable to causal+: real-time causality does not imply strong convergence, and causal+ does not imply the real-time ordering (V-V §3.5, correcting Lloyd et al.'s original classification).",
+      "description": "A strengthening of causal consistency due to Mahajan, Alvisi & Dahlin: in addition to causality it enforces a real-time condition — causally concurrent writes that do not overlap in real time must be applied in their real-time order. Viotti & Vukolić (ACM Computing Surveys 2016, Eq. 28) express it as RealTimeCausality = Causality ∧ RealTime, so it is strictly stronger than the causal consistency of that framework — causal convergence (CCv), not causal memory, to which it is incomparable. It is incomparable to causal+: real-time causality does not imply strong convergence, and causal+ does not imply the real-time ordering (V-V §3.5, correcting Lloyd et al.'s original classification).",
       "references": ["Mahajan2011", "ViottiVukolic2016"],
       "tags": ["theoretical", "formal"],
       "formalism": ["axiomatic"],
@@ -2329,6 +2342,22 @@
       "note": "Causal memory is strictly weaker than sequential consistency (Ahamad et al. 1995; Steinke & Nutt 2004)."
     },
     {
+      "from": "SC",
+      "to": "CCv",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Bouajjani et al., POPL 2017, Example 7: history (2d) satisfies CC, CM and CCv, yet admits no total order over all its operations, so it is not sequentially consistent."
+    },
+    {
+      "from": "Causal",
+      "to": "CCv",
+      "type": "incomparable",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Causal memory and causal convergence are incomparable (Perrin, Mostéfaoui & Jard, PPoPP 2016; Bouajjani et al., POPL 2017, §1 and Fig. 1). Both witnesses are in Bouajjani et al. Fig. 2. History (2a) — pa: wr(x,1); rd(x)▷2 || pb: wr(x,2); rd(x)▷1 — is CM but not CCv, because arbitration would have to place wr(x,2) both after and before wr(x,1) (Ex. 5). History (2b) — pa: wr(z,1); wr(x,1); wr(y,1) || pb: wr(x,2); rd(z)▷0; rd(y)▷1; rd(x)▷2 — is CCv but not CM: reading y=1 drags wr(z,1) into pb's causal past behind wr(x,2), which the earlier rd(z)▷0 contradicts (Ex. 6)."
+    },
+    {
       "from": "PC",
       "to": "PRAM",
       "type": "strictly_weaker",
@@ -2377,12 +2406,12 @@
       "note": "Local consistency is the weakest model, strictly weaker than slow consistency (Bataller & Bernabeu-Auban 1997; Steinke & Nutt 2004)."
     },
     {
-      "from": "Causal",
+      "from": "CCv",
       "to": "POCausal",
       "type": "strictly_weaker",
       "provenance": "literature",
       "evidence": "cited",
-      "note": "Burckhardt, Gotsman, Yang & Zawirski, POPL 2014, §7: (cross-object) causal consistency imposes the ordering axioms COCV/COCA, while per-object causal consistency imposes only the weaker per-object axioms POCV/POCA over the per-object happens-before order (Viotti & Vukolić 2016, §3.9). COCV/COCA disallow strictly more anomalies, so cross-object causal consistency is strictly stronger than per-object causal consistency."
+      "note": "Burckhardt, Gotsman, Yang & Zawirski, POPL 2014, §7: (cross-object) causal consistency imposes the ordering axioms COCV/COCA, while per-object causal consistency imposes only the weaker per-object axioms POCV/POCA over the per-object happens-before order (Viotti & Vukolić 2016, §3.9). COCV/COCA disallow strictly more anomalies, so cross-object causal consistency is strictly stronger than per-object causal consistency. Re-homed from the Causal node: Burckhardt's cross-object causal consistency is the visibility/arbitration one, i.e. CCv, not causal memory."
     },
     {
       "from": "POCausal",
@@ -2394,19 +2423,35 @@
     },
     {
       "from": "CausalPlus",
-      "to": "Causal",
+      "to": "CCv",
       "type": "strictly_weaker",
       "provenance": "literature",
       "evidence": "cited",
-      "note": "Causal+ = Causality ∧ StrongConvergence (Viotti & Vukolić 2016, Eq. 27; Lloyd et al., COPS, SOSP 2011). It adds strong convergence (all replicas that applied the same writes have equivalent state) on top of causal consistency, disallowing strictly more behaviours, so causal consistency is strictly weaker than causal+."
+      "note": "Causal+ = Causality ∧ StrongConvergence (Viotti & Vukolić 2016, Eq. 27; Lloyd et al., COPS, SOSP 2011). V-V's Causality (Eq. 26) is the visibility/arbitration causal consistency that Bouajjani et al. name CCv, so this containment is against CCv. Adding strong convergence disallows strictly more behaviours, so CCv is strictly weaker than causal+. Re-homed from the Causal node, where the same note had been read as a containment against causal memory."
+    },
+    {
+      "from": "RTCausal",
+      "to": "CCv",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "RealTimeCausality = Causality ∧ RealTime (Viotti & Vukolić 2016, Eq. 28; Mahajan, Alvisi & Dahlin 2011). V-V's Causality (Eq. 26) is causal convergence, so this containment is against CCv. It adds RealTime (Eq. 9, rb ⊆ ar) — causally concurrent, real-time-non-overlapping writes must be applied in real-time order — disallowing strictly more behaviours, so CCv is strictly weaker than real-time causal consistency. Re-homed from the Causal node, where the same note had been read as a containment against causal memory."
+    },
+    {
+      "from": "CausalPlus",
+      "to": "Causal",
+      "type": "incomparable",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Causal+ = CCv ∧ StrongConvergence, and CCv is incomparable to causal memory, so the two are incomparable rather than ordered. This replaces a strictly_weaker edge that read the Viotti-Vukolić containment (Eq. 27) as being against causal memory; it is against CCv. Witnesses, both Bouajjani et al. POPL 2017 Fig. 2: history (2a) is CM but not CCv, hence not causal+; history (2b) is CCv and not CM, and reads each of x, y and z exactly once, so StrongConvergence (V-V Eq. 17, constraining only reads with equal visible-write sets) is vacuous on it — it is causal+ but not CM."
     },
     {
       "from": "RTCausal",
       "to": "Causal",
-      "type": "strictly_weaker",
+      "type": "incomparable",
       "provenance": "literature",
       "evidence": "cited",
-      "note": "RealTimeCausality = Causality ∧ RealTime (Viotti & Vukolić 2016, Eq. 28; Mahajan, Alvisi & Dahlin 2011). It adds the requirement that causally concurrent, real-time-non-overlapping writes be applied in real-time order, disallowing strictly more behaviours, so causal consistency is strictly weaker than real-time causal consistency."
+      "note": "RealTimeCausality = CCv ∧ RealTime, and CCv is incomparable to causal memory. This replaces a strictly_weaker edge that read the Viotti-Vukolić containment (Eq. 28) as being against causal memory; it is against CCv. Witnesses, both Bouajjani et al. POPL 2017 Fig. 2: history (2a) is CM but not CCv, hence not real-time causal; history (2b) is CCv and not CM, and admits a real-time schedule — pa's writes all completing before pb starts — whose arbitration order (pa's writes before wr(x,2)) extends rb, so RealTime (V-V Eq. 9, rb ⊆ ar) holds. RealTime constrains arbitration only, not visibility, so rd(z)▷0 may still miss wr(z,1): it is real-time causal but not CM."
     },
     {
       "from": "CausalPlus",
@@ -3140,6 +3185,20 @@
       "venue": "Proc. Euro-Par",
       "year": 1997
     },
+    "Bouajjani2017": {
+      "title": "On Verifying Causal Consistency",
+      "authors": ["Ahmed Bouajjani", "Constantin Enea", "Rachid Guerraoui", "Jad Hamza"],
+      "venue": "POPL 2017",
+      "year": 2017,
+      "doi": "10.1145/3009837.3009888"
+    },
+    "Perrin2016": {
+      "title": "Causal Consistency: Beyond Memory",
+      "authors": ["Matthieu Perrin", "Achour Mostéfaoui", "Claude Jard"],
+      "venue": "PPoPP 2016",
+      "year": 2016,
+      "doi": "10.1145/2851141.2851170"
+    },
     "BurckhardtGotsmanYang2013": {
       "title": "Understanding Eventual Consistency",
       "authors": ["Sebastian Burckhardt", "Alexey Gotsman", "Hongseok Yang"],
@@ -3365,6 +3424,7 @@
     "PC": {"coh": true, "mca": false},
     "PRAM": {"coh": false, "mca": false},
     "Causal": {"coh": false, "mca": false},
+    "CCv": {"coh": false, "mca": false},
     "Slow": {"coh": false, "mca": false},
     "Local": {"coh": false, "mca": false},
     "EC": {"coh": false, "mca": false, "no_oota": true},
@@ -3468,6 +3528,7 @@
     "PC": "extrapolated",
     "PRAM": "extrapolated",
     "Causal": "extrapolated",
+    "CCv": "extrapolated",
     "Slow": "extrapolated",
     "Local": "extrapolated",
     "EC": "extrapolated",
@@ -3584,6 +3645,7 @@
     "PC": {"status": "expressible", "basis": "extrapolated", "ref": "SteinkeNutt2004", "note": "Processor consistency is PRAM plus per-location coherence: both conjuncts are per-execution acyclicity conditions that cat states directly (cat's own scperloc axiom is the coherence half)."},
     "PRAM": {"status": "expressible", "basis": "extrapolated", "ref": "SteinkeNutt2004", "note": "Each process must see every other process's writes in issue order — a per-execution condition, with the per-process serialisations enumerable by cat's linearisations construct."},
     "Causal": {"status": "expressible", "basis": "extrapolated", "ref": "Ahamad1995", "note": "Causal memory is an acyclicity condition over the causal order (po union rf, transitively closed) together with per-process serialisations — all per-execution."},
+    "CCv": {"status": "expressible", "basis": "extrapolated", "ref": "BurckhardtGotsmanYang2013", "note": "Causality plus a total arbitration order over all operations: an acyclicity condition on a single execution, and cat's co already supplies a per-location total order to carry the arbitration."},
     "Slow": {"status": "expressible", "basis": "extrapolated", "ref": "HuttoAhamad1990", "note": "A per-execution constraint on which writes a read may return (own writes immediately, no earlier write by the same writer after a later one), directly statable as cat irreflexivity axioms."},
     "Local": {"status": "expressible", "basis": "extrapolated", "ref": "BatallerBernabeu1997", "note": "Only each process's own operations are constrained to appear in program order — a single per-execution axiom, weaker than cat's usual scperloc."},
     "EC": {"status": "not-expressible", "basis": "extrapolated", "ref": "BurckhardtRDT2014", "note": "Eventual delivery is a liveness property over infinite executions ('all but finitely many operations see a given write'). cat checks safety conditions on one finite candidate execution and has no way to state it."},
