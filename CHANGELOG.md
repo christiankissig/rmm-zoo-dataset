@@ -12,6 +12,8 @@ Each released version is published at
 
 ## [Unreleased]
 
+## [1.4.1] — 2026-08-23
+
 ### Added
 
 - **`CCv → WFR`**, `by_construction`. Unlike the sibling edge from `Causal` this
@@ -19,8 +21,26 @@ Each released version is published at
   with `hb = (so ∪ vis)+`, and WritesFollowReads is `(vis; so|rd→wr) ⊆ ar`, so
   the composite lies in `hb ⊆ ar` and CCv satisfies WFR by construction.
 
+### Changed
+
+- **`PSI → RC11` and `SI → RC11` retargeted onto `RA`.** Both notes already
+  ended "the target is the RA fragment of RC11" — Raad, Lahav & Vafeiadis build
+  the reference implementations over the release-acquire fragment, not over full
+  RC11. There was no RA node to point at until 1.4.0; now there is, and the edges
+  say what their notes always said.
+
 ### Fixed
 
+- **The `WFR` description repeated the same false equality** the `Causal → WFR`
+  note carried — `causal = PRAM ∧ writes-follow-reads`, which no source states.
+  Corrected the same way, and it now records the CCv route as well.
+- **`POCausal` and `EC` descriptions named the wrong causal neighbour.** Both
+  place themselves below "causal consistency", but their ordering edges run to
+  `CCv`; neither has any edge to `Causal`. Disambiguated, as `CausalPlus` and
+  `RTCausal` were in 1.4.0. (`Coherence`, `PC` and `PRAM` also say "causal
+  consistency" where they mean causal memory, but those are *correct* — the
+  `Causal` node is CM and those are its Steinke–Nutt edges — so they are left
+  as they are.)
 - **`Causal → WFR` was mis-cited.** The note claimed Brzeziński et al. proved
   `causal = PRAM ∧ writes-follow-reads`, citing Viotti & Vukolić Eq. 25. Eq. 25
   is the *definition* of `WritesFollowReads`, not a theorem about causal
@@ -306,7 +326,8 @@ once carried live in `rmm-zoo-tool-paper` and `rmm-zoo.kissig.org`, and the
 history was squashed at the split. Releases before 1.2.0 were made from the
 combined repository and are not itemised here.
 
-[Unreleased]: https://github.com/christiankissig/rmm-zoo-dataset/compare/v1.4.0...HEAD
+[Unreleased]: https://github.com/christiankissig/rmm-zoo-dataset/compare/v1.4.1...HEAD
+[1.4.1]: https://github.com/christiankissig/rmm-zoo-dataset/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/christiankissig/rmm-zoo-dataset/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/christiankissig/rmm-zoo-dataset/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/christiankissig/rmm-zoo-dataset/releases/tag/v1.2.0
