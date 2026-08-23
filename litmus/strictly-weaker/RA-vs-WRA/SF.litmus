@@ -1,0 +1,15 @@
+C SF
+"Lahav & Boker, TOPLAS 2022, Ex. 3.7 (SF), the store-forwarding shape. A thread
+ writes x=1, reads x=2 from the other thread, then reads x=1 again -- its own
+ earlier write, now stale. RA and SRA FORBID it by read-coherence. WRA ALLOWS it,
+ which is why WRA validates the store-forwarding optimisation that rewrites the
+ second read to the constant 1: the paper notes that same rewrite is UNSOUND for
+ RA and SRA, since it would yield this outcome even under SC."
+{ }
+P0 (atomic_int* x) {
+  atomic_store_explicit(x,1,memory_order_release);
+  int r0 = atomic_load_explicit(x,memory_order_acquire);
+  int r1 = atomic_load_explicit(x,memory_order_acquire);
+}
+P1 (atomic_int* x) { atomic_store_explicit(x,2,memory_order_release); }
+exists (0:r0=2 /\ 0:r1=1)

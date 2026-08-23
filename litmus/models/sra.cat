@@ -9,6 +9,12 @@ C SRA
  *   Consistency", POPL 2016.  doi:10.1145/2837614.2837643
  *   Axioms as tabulated in Lahav & Boker, TOPLAS 44(2), 2022, Table 1.
  *
+ * hb includes the initialisation events, ordered before every thread event:
+ * Lahav & Boker put init po-before all events of every thread. RA and SRA reach
+ * the same verdicts without it (mo already relates IW to every write), but WRA has
+ * no mo, so without it weak-read-coherence could never fire against an initial
+ * value. Stated in all three so the models stay line-for-line comparable.
+ *
  * written for this dataset (not vendored).  Identical to ra.cat except that
  * write-coherence (irreflexive mo;hb -- a local agreement) is replaced by
  * strong-write-coherence (acyclic hb|mo -- a global one).  Keep the two in step.
@@ -19,7 +25,7 @@ include "cos.cat"
 let mo = co
 
 let sw = [W & (REL | ACQ_REL | SC)]; rf; [R & (ACQ | ACQ_REL | SC)]
-let hb = (po | sw)+
+let hb = ((IW * (M \ IW)) | po | sw)+
 
 irreflexive hb                as irr-hb
 acyclic hb | mo               as strong-write-coherence

@@ -1,0 +1,16 @@
+C MP+relacq-ok
+"POSITIVE CONTROL: both models must ALLOW this. The same message-passing program
+ whose STALE outcome every model in this family forbids, but asked here for the
+ outcome where the reader does see the data (r0=1 /\\ r1=1). An SC model that
+ forbade everything would look identical to a correct one on the IRIW split beside
+ it; this is what rules that out."
+{ }
+P0 (atomic_int* x, atomic_int* f) {
+  atomic_store_explicit(x,1,memory_order_release);
+  atomic_store_explicit(f,1,memory_order_release);
+}
+P1 (atomic_int* x, atomic_int* f) {
+  int r0 = atomic_load_explicit(f,memory_order_acquire);
+  int r1 = atomic_load_explicit(x,memory_order_acquire);
+}
+exists (1:r0=1 /\ 1:r1=1)

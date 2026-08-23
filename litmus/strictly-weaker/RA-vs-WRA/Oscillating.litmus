@@ -1,0 +1,15 @@
+C Oscillating
+"Lahav & Boker, TOPLAS 2022, Ex. 3.7 (Oscillating). One reader sees x go 1, then 2,
+ then 1 again while two writers each write once. Under RA and SRA the reader's three
+ reads are hb-ordered and mo totally orders the two writes, so returning to 1 after
+ seeing 2 violates read-coherence: both FORBID it. WRA has no mo, and the two writes
+ are hb|loc-unrelated, so nothing forbids the oscillation: WRA ALLOWS it."
+{ }
+P0 (atomic_int* x) { atomic_store_explicit(x,1,memory_order_release); }
+P1 (atomic_int* x) {
+  int r0 = atomic_load_explicit(x,memory_order_acquire);
+  int r1 = atomic_load_explicit(x,memory_order_acquire);
+  int r2 = atomic_load_explicit(x,memory_order_acquire);
+}
+P2 (atomic_int* x) { atomic_store_explicit(x,2,memory_order_release); }
+exists (1:r0=1 /\ 1:r1=2 /\ 1:r2=1)

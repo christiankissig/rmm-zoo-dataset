@@ -1,0 +1,35 @@
+C WRA
+
+(*
+ * Weak Release-Acquire: the weakening of RA that keeps only the guarantees a
+ * model needs to be causally consistent.  Axioms as tabulated in
+ *
+ *   Ori Lahav and Udi Boker, "What's Decidable about Causally Consistent
+ *   Shared Memory?", ACM TOPLAS 44(2), 2022, Table 1.  doi:10.1145/3505273
+ *
+ * written for this dataset (not vendored).  Modification order plays no role
+ * here at all: RA's write-coherence and read-coherence are replaced by
+ * weak-read-coherence, which uses the per-location restriction of hb rather
+ * than mo to decide which of two writes to a location is the later, and
+ * atomicity weakens to "no two RMWs read from the same write".
+ *
+ * hb includes the initialisation events, ordered before every thread event:
+ * Lahav & Boker put init po-before all events of every thread.  RA and SRA
+ * reach the same verdicts without it (mo already relates IW to every write),
+ * but WRA has no mo, so without it weak-read-coherence could never fire
+ * against an initial value and WRA would wrongly allow message passing.
+ * Stated in all three so the models stay line-for-line comparable.
+ *)
+
+include "cos.cat"
+
+let sw = [W & (REL | ACQ_REL | SC)]; rf; [R & (ACQ | ACQ_REL | SC)]
+let hb = ((IW * (M \ IW)) | po | sw)+
+let hbloc = hb & loc
+
+(* mo is deliberately unused: hb|loc, not mo, decides which write is "later". *)
+irreflexive hb                                    as irr-hb
+irreflexive hbloc; [W]; hb; rf^-1                 as weak-read-coherence
+empty ((rf; [RMW])^-1; (rf; [RMW])) \ id          as weak-atomicity
+
+show hb

@@ -12,6 +12,36 @@ Each released version is published at
 
 ## [Unreleased]
 
+### Added
+
+- **`litmus/models/wra.cat`**, completing the trio. Modification order is
+  deliberately unused: `hb|loc`, not `mo`, decides which of two writes to a
+  location is the later, which is exactly what costs WRA its SC-per-location.
+- **`litmus/strictly-weaker/RA-vs-WRA/`** with all three of Lahav & Boker's
+  Ex. 3.7 witnesses — `WW`, `Oscillating` and `SF`, every one a *single-location*
+  program. `sra.cat` is run alongside and agrees with `ra.cat` on all three, which
+  is what shows this axis is orthogonal to the 2+2W one.
+- **`litmus/strictly-weaker/SC-vs-SRA/`** with `IRIW`. Both models admit 15
+  executions and differ on exactly the witness.
+
+### Changed
+
+- **`RA → WRA`** and **`SC → SRA`** upgraded from `literature`/`cited` to
+  `litmus`/`machine_run`. Every strictly-weaker edge among SC, SRA, RA and WRA is
+  now decided by herd7. Containment stays cited in both cases (Prop. 3.2 for the
+  first); herd7 decides the strictness half only.
+- **`ra.cat` and `sra.cat` now state the initialisation ordering explicitly** —
+  `hb` puts the init events before every thread event, as Lahav & Boker do. Their
+  verdicts are unchanged, because `mo` already relates `IW` to every write and
+  their coherence axioms fire anyway. It is stated because **WRA has no `mo`**:
+  without it, `weak-read-coherence` can never fire against an initial value and
+  WRA wrongly *allows* message passing (`MP+relacq`: `Never 0 3` → `Sometimes 1 3`)
+  — i.e. is not causally consistent at all, contradicting the model's purpose. The
+  `MP+relacq` control caught this on the first run of the draft model. Stating it
+  in all three keeps them line-for-line comparable rather than leaving RA and SRA
+  correct by accident.
+
+
 ## [1.4.1] — 2026-08-23
 
 ### Added

@@ -209,6 +209,30 @@
       }
     ]
   },
+  "RA|WRA": {
+    "relationship": "strictly-weaker",
+    "summary": "Distinguishing behaviour: loss of SC-per-location — on a single location.",
+    "tests": [
+      {
+        "name": "Oscillating",
+        "file": "Oscillating.litmus",
+        "lang": "smrd",
+        "code": "C Oscillating\n\"Lahav & Boker, TOPLAS 2022, Ex. 3.7 (Oscillating). One reader sees x go 1, then 2,\n then 1 again while two writers each write once. Under RA and SRA the reader's three\n reads are hb-ordered and mo totally orders the two writes, so returning to 1 after\n seeing 2 violates read-coherence: both FORBID it. WRA has no mo, and the two writes\n are hb|loc-unrelated, so nothing forbids the oscillation: WRA ALLOWS it.\"\n{ }\nP0 (atomic_int* x) { atomic_store_explicit(x,1,memory_order_release); }\nP1 (atomic_int* x) {\n  int r0 = atomic_load_explicit(x,memory_order_acquire);\n  int r1 = atomic_load_explicit(x,memory_order_acquire);\n  int r2 = atomic_load_explicit(x,memory_order_acquire);\n}\nP2 (atomic_int* x) { atomic_store_explicit(x,2,memory_order_release); }\nexists (1:r0=1 /\\ 1:r1=2 /\\ 1:r2=1)\n"
+      },
+      {
+        "name": "SF",
+        "file": "SF.litmus",
+        "lang": "smrd",
+        "code": "C SF\n\"Lahav & Boker, TOPLAS 2022, Ex. 3.7 (SF), the store-forwarding shape. A thread\n writes x=1, reads x=2 from the other thread, then reads x=1 again -- its own\n earlier write, now stale. RA and SRA FORBID it by read-coherence. WRA ALLOWS it,\n which is why WRA validates the store-forwarding optimisation that rewrites the\n second read to the constant 1: the paper notes that same rewrite is UNSOUND for\n RA and SRA, since it would yield this outcome even under SC.\"\n{ }\nP0 (atomic_int* x) {\n  atomic_store_explicit(x,1,memory_order_release);\n  int r0 = atomic_load_explicit(x,memory_order_acquire);\n  int r1 = atomic_load_explicit(x,memory_order_acquire);\n}\nP1 (atomic_int* x) { atomic_store_explicit(x,2,memory_order_release); }\nexists (0:r0=2 /\\ 0:r1=1)\n"
+      },
+      {
+        "name": "WW",
+        "file": "WW.litmus",
+        "lang": "smrd",
+        "code": "C WW\n\"Lahav & Boker, TOPLAS 2022, Ex. 3.7 (WW). Two threads each write x and then read\n it, and each reads the OTHER thread's value. Both writes are hb|loc-unrelated, so\n WRA's weak-read-coherence -- which uses hb|loc rather than mo to decide which of\n two writes to a location is the later -- has nothing to fire on, and WRA ALLOWS\n the outcome. RA and SRA order the two writes by mo, so whichever is mo-earlier is\n read by a thread aware of the mo-later one, violating read-coherence: both FORBID\n it. This is WRA failing SC-per-location on a single-location program.\"\n{ }\nP0 (atomic_int* x) {\n  atomic_store_explicit(x,1,memory_order_release);\n  int r0 = atomic_load_explicit(x,memory_order_acquire);\n}\nP1 (atomic_int* x) {\n  atomic_store_explicit(x,2,memory_order_release);\n  int r1 = atomic_load_explicit(x,memory_order_acquire);\n}\nexists (0:r0=2 /\\ 1:r1=1)\n"
+      }
+    ]
+  },
   "RC11|C++20": {
     "relationship": "strictly-weaker",
     "summary": "Distinguishing behaviour: out-of-thin-air / plain load buffering.",
@@ -380,6 +404,24 @@
         "relationship": "strictly-weaker",
         "summary": "Zoo edge: SC -> LKMM (strictly_weaker) — containment half. Every SC-consistent execution is LKMM-consistent, so LKMM is the weaker of the two. LKMM states three global ordering axioms — coherence, acyclic(hb), and the prop;ppo* work-around for prop&int — and each must follow from SC's single acyclic(sc). RMW atomicity is not asserted here: like C11's, it is a well-formedness condition on executions rather than an ordering axiom, and both models impose it alike. The LKMM operand is NOT kater's kat/lkmm2.kat: that file is written over internal (-imm) relations, which kater rejects outright, so it does not load in any mode. ../../derived/lkmm.kat is the mechanical restatement over the builtin theory that litmus/kater/derive-lkmm.sh generates from it at run time; the script documents the rewrite in full. As with every kater query, the proof is about that rendering, not about LKMM in the abstract.",
         "code": "// Zoo edge: SC -> LKMM (strictly_weaker) — containment half.\n//\n// Every SC-consistent execution is LKMM-consistent, so LKMM is the weaker of\n// the two. LKMM states three global ordering axioms — coherence, acyclic(hb),\n// and the prop;ppo* work-around for prop&int — and each must follow from SC's\n// single acyclic(sc). RMW atomicity is not asserted here: like C11's, it is a\n// well-formedness condition on executions rather than an ordering axiom, and\n// both models impose it alike.\n//\n// The LKMM operand is NOT kater's kat/lkmm2.kat: that file is written over\n// internal (-imm) relations, which kater rejects outright, so it does not load\n// in any mode. ../../derived/lkmm.kat is the mechanical restatement over the\n// builtin theory that litmus/kater/derive-lkmm.sh generates from it at run\n// time; the script documents the rewrite in full. As with every kater query,\n// the proof is about that rendering, not about LKMM in the abstract.\ninclude \"../../kat/sc.kat\"\ninclude \"../../derived/lkmm.kat\"\n\nassert lkmm::hb <= sc::sc+\nassert lkmm::prop ; lkmm::ppo* <= sc::sc+\nassert po ; lkmm::eco <= sc::sc+\n"
+      }
+    ]
+  },
+  "SC|SRA": {
+    "relationship": "strictly-weaker",
+    "summary": "Distinguishing behaviour: two readers observing independent writes in opposite orders.",
+    "tests": [
+      {
+        "name": "IRIW",
+        "file": "IRIW.litmus",
+        "lang": "smrd",
+        "code": "C IRIW\n\"Independent reads of independent writes, in the release-acquire fragment. Two\n readers observe the two independent writes in OPPOSITE orders. No total order over\n all operations explains that, so SC FORBIDS it. SRA -- the strongest model of the\n release-acquire family -- ALLOWS it: the execution closes no (hb u mo) cycle, so\n strong-write-coherence has nothing to say, and Lahav & Boker Ex. 3.5 marks the\n outcome allowed under WRA, RA and SRA alike. This is the same program the\n SRA-vs-RA directory uses as its positive control, here doing the opposite job:\n there it shows sra.cat does not over-constrain, here it separates SRA from SC.\"\n{ }\nP0 (atomic_int* x) { atomic_store_explicit(x,1,memory_order_release); }\nP1 (atomic_int* y) { atomic_store_explicit(y,1,memory_order_release); }\nP2 (atomic_int* x, atomic_int* y) {\n  int r0 = atomic_load_explicit(x,memory_order_acquire);\n  int r1 = atomic_load_explicit(y,memory_order_acquire);\n}\nP3 (atomic_int* x, atomic_int* y) {\n  int r2 = atomic_load_explicit(y,memory_order_acquire);\n  int r3 = atomic_load_explicit(x,memory_order_acquire);\n}\nexists (2:r0=1 /\\ 2:r1=0 /\\ 3:r2=1 /\\ 3:r3=0)\n"
+      },
+      {
+        "name": "MP+relacq-ok",
+        "file": "MP+relacq-ok.litmus",
+        "lang": "smrd",
+        "code": "C MP+relacq-ok\n\"POSITIVE CONTROL: both models must ALLOW this. The same message-passing program\n whose STALE outcome every model in this family forbids, but asked here for the\n outcome where the reader does see the data (r0=1 /\\\\ r1=1). An SC model that\n forbade everything would look identical to a correct one on the IRIW split beside\n it; this is what rules that out.\"\n{ }\nP0 (atomic_int* x, atomic_int* f) {\n  atomic_store_explicit(x,1,memory_order_release);\n  atomic_store_explicit(f,1,memory_order_release);\n}\nP1 (atomic_int* x, atomic_int* f) {\n  int r0 = atomic_load_explicit(f,memory_order_acquire);\n  int r1 = atomic_load_explicit(x,memory_order_acquire);\n}\nexists (1:r0=1 /\\ 1:r1=1)\n"
       }
     ]
   },

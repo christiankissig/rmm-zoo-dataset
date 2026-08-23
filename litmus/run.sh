@@ -124,6 +124,31 @@ check "  control: SRA forbids MP+relacq" Never     -model "$M/sra.cat" strictly-
 check "  control: RA allows IRIW"        Sometimes -model "$M/ra.cat"  strictly-weaker/SRA-vs-RA/IRIW.litmus
 check "  control: SRA allows IRIW"       Sometimes -model "$M/sra.cat" strictly-weaker/SRA-vs-RA/IRIW.litmus
 
+# RA vs WRA. All three witnesses are single-location programs: WRA decides which of
+# two writes to a location is the later by hb|loc rather than mo, and hb|loc is only
+# partial, so WRA loses SC-per-location. sra.cat agrees with ra.cat throughout (the
+# SRA/RA split is 2+2W, above) and is checked here to show the two axes are separate.
+echo "[RA vs WRA]  Ex. 3.7: WRA has no SC-per-location"
+check "RA forbids WW"           Never     -model "$M/ra.cat"  strictly-weaker/RA-vs-WRA/WW.litmus
+check "WRA allows WW"           Sometimes -model "$M/wra.cat" strictly-weaker/RA-vs-WRA/WW.litmus
+check "RA forbids Oscillating"  Never     -model "$M/ra.cat"  strictly-weaker/RA-vs-WRA/Oscillating.litmus
+check "WRA allows Oscillating"  Sometimes -model "$M/wra.cat" strictly-weaker/RA-vs-WRA/Oscillating.litmus
+check "RA forbids SF"           Never     -model "$M/ra.cat"  strictly-weaker/RA-vs-WRA/SF.litmus
+check "WRA allows SF"           Sometimes -model "$M/wra.cat" strictly-weaker/RA-vs-WRA/SF.litmus
+check "  SRA agrees with RA: WW"          Never -model "$M/sra.cat" strictly-weaker/RA-vs-WRA/WW.litmus
+check "  SRA agrees with RA: Oscillating" Never -model "$M/sra.cat" strictly-weaker/RA-vs-WRA/Oscillating.litmus
+check "  SRA agrees with RA: SF"          Never -model "$M/sra.cat" strictly-weaker/RA-vs-WRA/SF.litmus
+# wra.cat's init ordering is load-bearing: without it weak-read-coherence can never
+# fire against an initial value and WRA wrongly allows message passing, i.e. is not
+# causally consistent. This is the control that catches that.
+check "  control: WRA forbids MP+relacq" Never -model "$M/wra.cat" strictly-weaker/SRA-vs-RA/MP+relacq.litmus
+
+echo "[SC vs SRA]  IRIW: SRA is the strongest of the family, still weaker than SC"
+check "SC forbids IRIW"         Never     -model "$M/abstract-sc.cat" strictly-weaker/SC-vs-SRA/IRIW.litmus
+check "SRA allows IRIW"         Sometimes -model "$M/sra.cat"         strictly-weaker/SC-vs-SRA/IRIW.litmus
+check "  control: SC allows MP+relacq-ok"  Sometimes -model "$M/abstract-sc.cat" strictly-weaker/SC-vs-SRA/MP+relacq-ok.litmus
+check "  control: SRA allows MP+relacq-ok" Sometimes -model "$M/sra.cat"         strictly-weaker/SC-vs-SRA/MP+relacq-ok.litmus
+
 # Scoped GPU models. herd7 has no scoped architecture, so the weaker (scoped) side
 # is modelled by its semantic equivalent: a release/acquire narrowed to a scope the
 # two threads do NOT share carries no happens-before, i.e. it behaves as relaxed.

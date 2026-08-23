@@ -1,0 +1,18 @@
+C WW
+"Lahav & Boker, TOPLAS 2022, Ex. 3.7 (WW). Two threads each write x and then read
+ it, and each reads the OTHER thread's value. Both writes are hb|loc-unrelated, so
+ WRA's weak-read-coherence -- which uses hb|loc rather than mo to decide which of
+ two writes to a location is the later -- has nothing to fire on, and WRA ALLOWS
+ the outcome. RA and SRA order the two writes by mo, so whichever is mo-earlier is
+ read by a thread aware of the mo-later one, violating read-coherence: both FORBID
+ it. This is WRA failing SC-per-location on a single-location program."
+{ }
+P0 (atomic_int* x) {
+  atomic_store_explicit(x,1,memory_order_release);
+  int r0 = atomic_load_explicit(x,memory_order_acquire);
+}
+P1 (atomic_int* x) {
+  atomic_store_explicit(x,2,memory_order_release);
+  int r1 = atomic_load_explicit(x,memory_order_acquire);
+}
+exists (0:r0=2 /\ 1:r1=1)

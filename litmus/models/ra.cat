@@ -7,6 +7,12 @@ C RA
  *   Ori Lahav and Udi Boker, "What's Decidable about Causally Consistent
  *   Shared Memory?", ACM TOPLAS 44(2), 2022.  doi:10.1145/3505273
  *
+ * hb includes the initialisation events, ordered before every thread event:
+ * Lahav & Boker put init po-before all events of every thread. RA and SRA reach
+ * the same verdicts without it (mo already relates IW to every write), but WRA has
+ * no mo, so without it weak-read-coherence could never fire against an initial
+ * value. Stated in all three so the models stay line-for-line comparable.
+ *
  * written for this dataset (not vendored).  Its only difference from sra.cat is
  * write-coherence in place of strong-write-coherence -- keep the two in step.
  *)
@@ -20,7 +26,7 @@ let mo = co
    the annotations are stated anyway so the model does not silently treat a
    relaxed rf as synchronising. *)
 let sw = [W & (REL | ACQ_REL | SC)]; rf; [R & (ACQ | ACQ_REL | SC)]
-let hb = (po | sw)+
+let hb = ((IW * (M \ IW)) | po | sw)+
 
 irreflexive hb                as irr-hb
 irreflexive mo; hb            as write-coherence

@@ -1,0 +1,21 @@
+C IRIW
+"Independent reads of independent writes, in the release-acquire fragment. Two
+ readers observe the two independent writes in OPPOSITE orders. No total order over
+ all operations explains that, so SC FORBIDS it. SRA -- the strongest model of the
+ release-acquire family -- ALLOWS it: the execution closes no (hb u mo) cycle, so
+ strong-write-coherence has nothing to say, and Lahav & Boker Ex. 3.5 marks the
+ outcome allowed under WRA, RA and SRA alike. This is the same program the
+ SRA-vs-RA directory uses as its positive control, here doing the opposite job:
+ there it shows sra.cat does not over-constrain, here it separates SRA from SC."
+{ }
+P0 (atomic_int* x) { atomic_store_explicit(x,1,memory_order_release); }
+P1 (atomic_int* y) { atomic_store_explicit(y,1,memory_order_release); }
+P2 (atomic_int* x, atomic_int* y) {
+  int r0 = atomic_load_explicit(x,memory_order_acquire);
+  int r1 = atomic_load_explicit(y,memory_order_acquire);
+}
+P3 (atomic_int* x, atomic_int* y) {
+  int r2 = atomic_load_explicit(y,memory_order_acquire);
+  int r3 = atomic_load_explicit(x,memory_order_acquire);
+}
+exists (2:r0=1 /\ 2:r1=0 /\ 3:r2=1 /\ 3:r3=0)
