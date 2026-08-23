@@ -12,6 +12,27 @@ Each released version is published at
 
 ## [Unreleased]
 
+### Added
+
+- **`CCv → WFR`**, `by_construction`. Unlike the sibling edge from `Causal` this
+  is a derivation, not a citation: CCv includes `CausalArbitration` (`hb ⊆ ar`)
+  with `hb = (so ∪ vis)+`, and WritesFollowReads is `(vis; so|rd→wr) ⊆ ar`, so
+  the composite lies in `hb ⊆ ar` and CCv satisfies WFR by construction.
+
+### Fixed
+
+- **`Causal → WFR` was mis-cited.** The note claimed Brzeziński et al. proved
+  `causal = PRAM ∧ writes-follow-reads`, citing Viotti & Vukolić Eq. 25. Eq. 25
+  is the *definition* of `WritesFollowReads`, not a theorem about causal
+  consistency, and both sources assert only the implication — causal consistency
+  "requires and includes" the four session guarantees. The equality was never
+  established; whether the converse holds is now #11. The edge itself stands:
+  the implication is all a `strictly_weaker` edge needs, and Brzeziński et al.'s
+  data-centric models are the classical shared-memory taxonomy, so their causal
+  consistency is causal memory and the edge was on the right node — unlike the
+  `CausalPlus` and `RTCausal` edges corrected in 1.4.0.
+
+
 ## [1.4.0] — 2026-08-22
 
 ### Added

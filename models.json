@@ -2597,12 +2597,20 @@
       "note": "Causal+ and real-time causal consistency are incomparable (Viotti & Vukolić 2016, §3.5): real-time causality does not imply strong convergence, and causal+ does not impose real-time ordering — each forbids a behaviour the other allows. (V-V correct Lloyd et al.'s original claim that real-time causal is stronger than causal+.)"
     },
     {
+      "from": "CCv",
+      "to": "WFR",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "by_construction",
+      "note": "Unlike the Causal edge to the same node, this one is a derivation rather than a citation. CCv is CausalVisibility ∧ CausalArbitration ∧ RVal (Viotti & Vukolić 2016, Eq. 26), where CausalArbitration is hb ⊆ ar and hb = (so ∪ vis)+. WritesFollowReads is (vis; so|rd→wr) ⊆ ar (Eq. 25). Since vis ⊆ hb and so ⊆ hb, the composite vis;so|rd→wr lies in hb+ = hb ⊆ ar, so CCv satisfies WFR by construction. The converse fails — WFR constrains only write-after-read within a session and says nothing about visibility or the arbitration of anything else — so writes-follow-reads is strictly weaker."
+    },
+    {
       "from": "Causal",
       "to": "WFR",
       "type": "strictly_weaker",
       "provenance": "literature",
       "evidence": "cited",
-      "note": "Brzezinski et al. (2004) proved causal consistency requires and includes all four session guarantees, i.e. causal = PRAM ∧ writes-follow-reads (Viotti & Vukolić 2016, §3.4, Eq. 25). Causal consistency therefore implies writes-follow-reads while the converse fails, so writes-follow-reads is strictly weaker than causal consistency."
+      "note": "Brzezinski, Sobaniec & Wawrzyniak (PDP 2004) show that causal consistency requires all four session guarantees — read-your-writes, monotonic reads, monotonic writes and writes-follow-reads. Their data-centric models are the classical shared-memory taxonomy (atomic, sequential, causal, processor, PRAM, weak, release, scope, entry), so their causal consistency is causal memory, and this edge is correctly against the Causal node rather than CCv. Causal memory therefore implies writes-follow-reads while the converse fails — one session guarantee constrains far less than a per-site serialisation over the causal order — so writes-follow-reads is strictly weaker. Note this is an implication, not an equality: neither Brzezinski et al. nor Viotti & Vukolić state the converse here (see issue #11), and the earlier gloss 'causal = PRAM ∧ writes-follow-reads, Eq. 25' was wrong twice over — Eq. 25 is the definition of WritesFollowReads, not a theorem about causal consistency, and the sources assert only that causal consistency 'requires and includes them all'."
     },
     {
       "from": "PRAM",
