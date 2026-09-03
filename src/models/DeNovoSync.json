@@ -1,0 +1,18 @@
+{
+  "id": "DeNovoSync",
+  "name": "DeNovoSync",
+  "abbrev": "DeNovoSync",
+  "year": 2015,
+  "authors": ["Sung", "Adve"],
+  "description": "An extension of the DeNovo coherence protocol that lifts DeNovo's restriction to structured synchronization and supports arbitrary synchronization — including non-blocking algorithms — without writer-initiated invalidations. It relies on reader-initiated self-invalidation combined with synchronization read registration and hardware backoff, and adopts the standard data-race-free memory model of C++/Java, which defines sequentially consistent semantics for data-race-free programs; sequential consistency is used as the correctness criterion for synchronization accesses. It thereby guarantees sequential consistency for data-race-free programs while broadening the synchronization constructs DeNovo can support.",
+  "references": ["Sung2015"],
+  "tags": ["hardware"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"irm": true, "edrf": true, "coh": true, "in_order": true, "no_oota": true, "mca": true},
+  "propertyProvenance": "extrapolated",
+  "propertyCitations": {
+    "irm": {"ref": "PoetzlKroening2015", "note": "Assumes SC-for-DRF; inverse roach motel sound for SC-for-DRF per Poetzl & Kroening §4."}
+  },
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Sung2015", "note": "As DeNovo: a coherence protocol supporting arbitrary synchronisation; the programmer-visible guarantee is SC for data-race-free programs, expressible in cat."}
+}

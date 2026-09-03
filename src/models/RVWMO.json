@@ -1,0 +1,19 @@
+{
+  "id": "RVWMO",
+  "name": "RISC-V Weak Memory Ordering",
+  "abbrev": "RVWMO",
+  "year": 2019,
+  "authors": ["Waterman", "Lee", "Asanovic", "Patterson"],
+  "description": "The official memory model for RISC-V. A carefully designed relaxed model weaker than TSO but stronger than POWER/ARM. Defines ordering via FENCE instructions and load-reserved/store-conditional pairs. Formally specified in the RISC-V ISA manual.",
+  "references": ["RISCV2019", "Pulte2019"],
+  "tags": ["hardware", "formal", "standard"],
+  "formalism": ["axiomatic"],
+  "hardware": ["RISC-V"],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": true},
+  "propertyProvenance": "extrapolated",
+  "propertyCitations": {
+    "mca": {"ref": "RISCV2019", "note": "The RISC-V RVWMO chapter specifies the model to be multicopy atomic — a store's visibility to all other harts is a single global event."}
+  },
+  "catSupport": {"status": "specified", "basis": "cat-model", "ref": "RISCV2019", "note": "herd7's riscv.cat is the official RVWMO model distributed with the ISA manual (riscv-tso.cat for the Ztso extension)."}
+}

@@ -1,0 +1,16 @@
+{
+  "id": "CSRA",
+  "name": "Concurrency Semantics for Relaxed Atomics",
+  "abbrev": "CSRA",
+  "year": 2016,
+  "authors": ["Pichon-Pharabod", "Sewell"],
+  "description": "A concurrency semantics for relaxed atomics that permits optimisation while avoiding thin-air executions. It pairs a memory subsystem inspired by the POWER model with a thread subsystem in which each thread is represented as an event structure; at each step the machine may either commit an event to memory or transform one of the event structures. Soundness of the optimal compilation mappings to x86 and POWER was shown, though the mappings to ARMv7/ARMv8 were later revealed to be non-optimal.",
+  "references": ["PichonPharabod2016", "Moiseenko2021"],
+  "tags": ["language", "formal"],
+  "formalism": ["event-structure"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"comp_x86": true, "comp_power": true, "comp_armv7": false, "comp_armv8": false, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "ile": true, "sli": false, "rm": true, "strengthen": false, "cse": false, "ti": false, "vr": true, "coh": true, "no_ub": false, "in_order": false, "no_oota": true},
+  "propertyProvenance": "survey",
+  "catSupport": {"status": "not-expressible", "basis": "cited", "ref": "PichonPharabod2016", "note": "The thread subsystem speculates over an event structure and commits under a rewriting discipline; allowedness depends on alternative executions, not on the single candidate execution cat sees."}
+}

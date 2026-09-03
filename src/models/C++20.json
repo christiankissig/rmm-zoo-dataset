@@ -1,0 +1,16 @@
+{
+  "id": "C++20",
+  "name": "C++20 Memory Model",
+  "abbrev": "C++20",
+  "year": 2020,
+  "authors": ["Boehm", "Giroux", "Vafeiadis"],
+  "description": "The C++ memory model as revised for C++20. It adopts the repaired sequential-consistency semantics of Lahav et al. (P0668), strengthening seq_cst atomics and fences so the broken IRIW / SC-fence behaviours of C++11/14/17 become forbidden; and it weakens release sequences (P0982) so that only RMWs — not later relaxed stores by the same thread — continue them. It still does not resolve the thin-air problem, so out-of-thin-air reads remain (unlike RC11). The seq_cst strengthening and the release-sequence weakening pull in opposite directions, leaving C++20 incomparable with the original C11/C++11 model and strictly weaker than RC11. This is also the model Rust normatively adopts for core::sync::atomic: the shipped Rust atomics model is C++20 (not full RC11 — see ORC11, the stronger operational RC11 used to verify Rust's standard library).",
+  "references": ["Boehm2018", "Boehm2019", "Lahav2017", "ISO2020"],
+  "tags": ["language", "formal", "standard"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": ["C++20", "C++23", "C23", "Rust"],
+  "properties": {"comp_x86": true, "comp_power": true, "comp_armv7": true, "comp_armv8": true, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "sli": false, "rm": true, "strengthen": true, "tp": true, "cse": false, "ti": true, "edrf": false, "coh": true, "no_ub": false, "in_order": false, "no_oota": false, "mca": false},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "specified", "basis": "cat-model", "ref": "Cooksey2025", "note": "Mechanised as litmus/models/cpp/cpp2w.cat (vendored from gonzalobg/cpp_memory_model, herd7-checked)."}
+}

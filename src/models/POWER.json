@@ -1,0 +1,20 @@
+{
+  "id": "POWER",
+  "name": "IBM POWER Memory Model",
+  "abbrev": "POWER",
+  "year": 2011,
+  "authors": ["Alglave", "Maranget", "Sarkar", "Sewell"],
+  "description": "The POWER architecture model allows extensive reorderings and non-multi-copy-atomic (non-MCA) behaviour: a store can be visible to one thread before others. Requires explicit barriers (sync, lwsync, isync) or dependencies for ordering.",
+  "references": ["Sarkar2011", "Mador-Haim2012", "Alglave2014"],
+  "tags": ["hardware", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": ["IBM POWER"],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
+  "propertyProvenance": "extrapolated",
+  "propertyCitations": {
+    "mca": {"ref": "Sarkar2011", "note": "POWER is the canonical non-multicopy-atomic architecture; Sarkar et al.'s operational storage-subsystem model lets a write propagate to different threads at different times."}
+  },
+  "catSupport": {"status": "specified", "basis": "cat-model", "ref": "Alglave2014", "note": "herd7's ppc.cat — the cat model of Alglave, Maranget & Tautschnig, validated against POWER hardware."},
+  "katSupport": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "kater ships kat/power-fm.kat and the simplified kat/power-fm-simpl.kat, kat/power-weak.kat and kat/power-fm-orig.kat. Three of them are unusable as comparison targets: power-weak, power-fm-simpl and power-fm-simpl-full carry the term eco*;po?;eco* in ar, and eco* contains the identity, so ar contains po and every containment into ar+ holds vacuously (checked: po <= power-weak::ar+ holds, where po <= tso::tso+ and po <= arm8::ob+ are both refuted). Only power-fm and power-fm-orig are non-degenerate, and against those the IMM compilation query is refuted on a fence-vocabulary gap. The paper notes the full model needs manual rotations to check within reasonable time (§3.7). See litmus/kater/open/compilation-IMM-vs-POWER.kat."}
+}

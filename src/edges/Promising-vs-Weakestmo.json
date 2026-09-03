@@ -1,0 +1,8 @@
+{
+  "from": "Promising",
+  "to": "Weakestmo",
+  "type": "incomparable",
+  "provenance": "litmus",
+  "evidence": "cited",
+  "note": "Both are semantic-dependency-preserving models that forbid out-of-thin-air, admit the optimal compilation mappings, and give external DRF. Weakestmo is built on event structures (vs Promising's promises/certification) and, unlike the Promising semantics, supports sequentially consistent accesses; neither is a subset of the other."
+}

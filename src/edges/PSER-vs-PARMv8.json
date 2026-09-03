@@ -1,0 +1,8 @@
+{
+  "from": "PSER",
+  "to": "PARMv8",
+  "type": "compilation",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Raad, Wickerson & Vafeiadis (OOPSLA 2019) prove that PSER (persistent serialisability) compiles correctly to PARMv8."
+}

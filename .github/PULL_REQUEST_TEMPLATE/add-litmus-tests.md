@@ -8,8 +8,8 @@ about: Add or update a witness under litmus/
 - **Directory:** `litmus/<strictly-weaker|incomparable>/<A>-vs-<B>/`
 - **Edge it witnesses:** `A` … `B` …
 
-The directory name follows the edge in `models.json`: `from` (stronger) first,
-`to` (weaker) second. Check 6 rejects a directory whose name, type or direction
+The directory name follows the edge's own file name,
+`src/edges/<from>-vs-<to>.json`: `from` (stronger) first, `to` (weaker) second. Check 6 rejects a directory whose name, type or direction
 disagrees with the edge.
 
 ## The distinguishing behaviour
@@ -39,8 +39,8 @@ two identical verdicts witness nothing, and check 5 rejects them.
       `litmus/models/` with a comment on what it encodes, or vendored with
       `PROVENANCE.md` + upstream licence
 - [ ] `make litmus` run and `litmus.json` committed (the page fetches it)
-- [ ] The edge's `evidence` in `models.json` upgraded if this makes it
-      `machine_run`
+- [ ] The edge's `evidence` in `src/edges/<A>-vs-<B>.json` upgraded if this
+      makes it `machine_run` (then `make models`)
 
 **If herd7 cannot exhibit it,** say so instead of forcing a verdict. herd7 ties
 read values to actual stores, so it cannot produce out-of-thin-air executions;

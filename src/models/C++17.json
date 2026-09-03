@@ -1,0 +1,16 @@
+{
+  "id": "C++17",
+  "name": "C++17 Memory Model",
+  "abbrev": "C++17",
+  "year": 2017,
+  "authors": ["ISO/IEC"],
+  "description": "The C/C++ memory model as of C++17. It narrows release sequences relative to C++11/14: a release sequence is continued only by read-modify-writes, no longer by later relaxed stores of the same thread, so a pattern that synchronised under C++11/14 stops synchronising. It keeps the (broken) C++11 seq_cst and leaves the thin-air problem unresolved. Behaviourally it is therefore strictly weaker than C11/C++11 — it admits a non-synchronising outcome C++11 forbids while forbidding nothing C++11 allows. Mechanised by the cpp17.cat model (vendored from gonzalobg/cpp_memory_model; herd7-checked). Its relationship to C++20 turns on where exactly the release-sequence change landed in the standard — the cpp_memory_model models attribute the narrowing to C++17 while WG21 P0982 is a C++20 paper — so no direct C++17↔C++20 edge is drawn; see the C11↔C++17 litmus README.",
+  "references": ["Batty2011", "ISO2017", "Cooksey2025"],
+  "tags": ["language", "formal", "standard"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": ["C++17"],
+  "properties": {"comp_x86": true, "comp_power": true, "comp_armv7": true, "comp_armv8": true, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "sli": false, "rm": true, "strengthen": true, "tp": true, "cse": false, "ti": true, "edrf": false, "coh": true, "no_ub": false, "in_order": false, "no_oota": false, "mca": false},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "specified", "basis": "cat-model", "ref": "Cooksey2025", "note": "Mechanised as litmus/models/cpp/cpp17.cat (vendored from gonzalobg/cpp_memory_model, herd7-checked)."}
+}

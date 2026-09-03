@@ -1,0 +1,8 @@
+{
+  "from": "Causal",
+  "to": "CCv",
+  "type": "incomparable",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Causal memory and causal convergence are incomparable (Perrin, Mostéfaoui & Jard, PPoPP 2016; Bouajjani et al., POPL 2017, §1 and Fig. 1). Both witnesses are in Bouajjani et al. Fig. 2. History (2a) — pa: wr(x,1); rd(x)▷2 || pb: wr(x,2); rd(x)▷1 — is CM but not CCv, because arbitration would have to place wr(x,2) both after and before wr(x,1) (Ex. 5). History (2b) — pa: wr(z,1); wr(x,1); wr(y,1) || pb: wr(x,2); rd(z)▷0; rd(y)▷1; rd(x)▷2 — is CCv but not CM: reading y=1 drags wr(z,1) into pb's causal past behind wr(x,2), which the earlier rd(z)▷0 contradicts (Ex. 6)."
+}

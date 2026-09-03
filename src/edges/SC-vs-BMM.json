@@ -1,0 +1,8 @@
+{
+  "from": "SC",
+  "to": "BMM",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "machine_run",
+  "note": "BMM equips each thread with a store buffer, so the store→load (SB) outcome becomes observable; SC forbids it."
+}

@@ -1,0 +1,8 @@
+{
+  "from": "SI",
+  "to": "PSI",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Raad, Lahav & Vafeiadis: PSI is a weakening of Snapshot Isolation — the 'long fork' anomaly (IRIW-with-transactions) is allowed under PSI but disallowed under SI (ESOP 2018, §1), while SI permits only the write-skew anomaly and otherwise coincides with serializability (VMCAI 2019). So SI admits strictly fewer transactional behaviours than PSI."
+}

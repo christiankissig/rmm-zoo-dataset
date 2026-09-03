@@ -1,0 +1,8 @@
+{
+  "from": "IMM",
+  "to": "x86-TSO",
+  "type": "compilation",
+  "provenance": "kater",
+  "evidence": "machine_run",
+  "note": "IMM compiles correctly to x86-TSO. Machine-checked with kater: imm::psc ⊆ tso::tso* over kater's imm.kat and tso.kat (litmus/kater/queries/compilation-IMM-vs-x86-TSO.kat). kater's tso.kat is the TSO rendering; it carries to the x86-TSO node along the by-construction TSO ≡ x86-TSO equivalence edge."
+}

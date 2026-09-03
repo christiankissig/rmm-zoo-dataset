@@ -1,0 +1,15 @@
+{
+  "id": "WebGPU",
+  "name": "WebGPU / WGSL Memory Model",
+  "abbrev": "WebGPU",
+  "year": 2023,
+  "authors": ["W3C GPU for the Web WG"],
+  "description": "A relaxed, scoped memory model for portable GPU compute in the browser, derived closely from Vulkan's. WGSL provides relaxed atomics, work-group barriers and storage/work-group address spaces; implementations lower it to Vulkan, Metal or Direct3D 12.",
+  "references": ["WGSL"],
+  "tags": ["language", "gpu", "scoped"],
+  "hardware": [],
+  "languages": ["WGSL", "WebGPU"],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "in_order": false, "no_ub": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "WGSL", "note": "Derived from Vulkan's per-execution scoped model and specified in prose in the WGSL spec; no formal cat (or Alloy) artefact of its own."}
+}

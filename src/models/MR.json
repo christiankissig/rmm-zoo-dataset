@@ -1,0 +1,16 @@
+{
+  "id": "MR",
+  "name": "Monotonic Reads (Session Guarantee)",
+  "abbrev": "MR",
+  "year": 1994,
+  "authors": ["Terry", "Demers", "Petersen", "Spreitzer", "Theimer", "Welch"],
+  "description": "Monotonic reads session guarantee of Terry et al. (PDIS 1994): successive reads within a session reflect a non-decreasing set of writes, i.e. a session never observes an earlier state after observing a later one. One of the four session guarantees. Brzezinski et al. (2003) proved PRAM = read-your-writes ∧ monotonic reads ∧ monotonic writes (Viotti & Vukolić 2016, Eq. 20), so monotonic reads alone is strictly weaker than PRAM.",
+  "references": ["TerryDS1994", "Brzezinski2003", "ViottiVukolic2016"],
+  "tags": ["theoretical", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"coh": false, "mca": false},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "TerryDS1994", "note": "A per-execution condition on one session's successive reads (the observed write set may not shrink), statable as a cat irreflexivity axiom over po and the communication relations."}
+}

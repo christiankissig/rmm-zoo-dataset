@@ -1,0 +1,8 @@
+{
+  "from": "PTX",
+  "to": "AMDGPU",
+  "type": "incomparable",
+  "provenance": "memalloy",
+  "evidence": "machine_run",
+  "note": "Both are scoped release-consistency ISA models, but expose different scope sets (CTA/GPU/system vs HSA work-group/agent/system) and cache-control qualifiers; neither subsumes the other."
+}

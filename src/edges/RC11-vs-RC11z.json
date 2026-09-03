@@ -1,0 +1,9 @@
+{
+  "from": "RC11",
+  "to": "RC11z",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "by_construction",
+  "fragment_restricted": true,
+  "note": "RC11z extends the operational RC11-RAR semantics so that allocation and deallocation are explicit write events; a read taking its value from such an event surfaces as a read-from-uninitialised or use-after-free error. On the concurrency behaviours of well-allocated programs it coincides with RC11 — the added allocation layer exists to verify safe memory reclamation (RCU)."
+}

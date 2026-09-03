@@ -1,0 +1,8 @@
+{
+  "from": "IMM",
+  "to": "POWER",
+  "type": "compilation",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "IMM compiles correctly to POWER."
+}

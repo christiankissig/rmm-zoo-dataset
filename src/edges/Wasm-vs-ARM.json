@@ -1,0 +1,8 @@
+{
+  "from": "Wasm",
+  "to": "ARM",
+  "type": "compilation",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Watt et al. 2019 Fig. 19 gives the compilation of Wasm memory accesses to ARMv7, following the established C/C++11 SC-atomic schemes [Sewell & Sevcik 2016]; full mixed-size correctness is flagged as an open problem (§7.1.1)."
+}

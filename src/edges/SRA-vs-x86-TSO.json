@@ -1,0 +1,8 @@
+{
+  "from": "SRA",
+  "to": "x86-TSO",
+  "type": "compilation",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Lahav, Giannarakis & Vafeiadis, POPL 2016: SRA has exactly the same compilation scheme to x86-TSO as the RA fragment it strengthens — plain loads and stores, no fences — so the strengthening carries no implementation cost on x86."
+}

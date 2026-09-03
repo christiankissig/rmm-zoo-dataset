@@ -1,0 +1,16 @@
+{
+  "id": "PwP",
+  "name": "Pomsets with Preconditions",
+  "abbrev": "PwP",
+  "year": 2020,
+  "authors": ["Jagadeesan", "Jeffrey", "Riely"],
+  "description": "A denotational relaxed-memory model for a Java-like language that combines pomsets (Gischer 1988) with preconditions (Hoare-style logical formulae labelling events) to calculate semantic dependencies. It bans out-of-thin-air reads while supporting temporal-safety reasoning, all expected sequential compiler optimizations (including common subexpression elimination, unlike C11 relaxed atomics), and the sc-drf criterion. The model realizes multi-copy atomicity and compiles to x64 and Arm8 without extra fences on relaxed accesses, but is deliberately not implementable on non-MCA processors such as POWER and Armv7. It is the base model that Pomsets with Predicate Transformers / 'The Leaky Semicolon' (Jeffrey et al. 2022) extends to give a direct, compositional account of sequential composition; that later work's PwT-mca1 imposes the same reads-from-implies-order requirement (m7c) as PwP and is thus close to it, while its PwT-mca2 drops m7c and is a strictly weaker model new to the 2022 paper.",
+  "references": ["Jagadeesan2020"],
+  "tags": ["language", "formal"],
+  "formalism": ["event-structure"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"comp_x86": true, "comp_power": false, "comp_armv7": false, "comp_armv8": true, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "cse": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "not-expressible", "basis": "cited", "ref": "Jagadeesan2020", "note": "Semantic dependency is computed from logical preconditions carried by events during composition of the program's denotation, not read off a candidate execution."}
+}

@@ -1,0 +1,9 @@
+{
+  "from": "SC",
+  "to": "DeNovoND",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "cited",
+  "fragment_restricted": true,
+  "note": "Sung, Komuravelli & Adve (DeNovoND, ASPLOS 2013) state their disciplined-non-determinism (lock-based) design guarantees sequential consistency, so on the data-race-free fragment it admits exactly the SC outcomes. Like DeNovo it assumes software supplies race-freedom and defines no behaviour for racy programs; the value-add over DeNovo is the coherence design (locks / access signatures), not the consistency class."
+}

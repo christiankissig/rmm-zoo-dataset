@@ -1,0 +1,8 @@
+{
+  "from": "RTCausal",
+  "to": "Causal",
+  "type": "incomparable",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "RealTimeCausality = CCv ∧ RealTime, and CCv is incomparable to causal memory. This replaces a strictly_weaker edge that read the Viotti-Vukolić containment (Eq. 28) as being against causal memory; it is against CCv. Witnesses, both Bouajjani et al. POPL 2017 Fig. 2: history (2a) is CM but not CCv, hence not real-time causal; history (2b) is CCv and not CM, and admits a real-time schedule — pa's writes all completing before pb starts — whose arbitration order (pa's writes before wr(x,2)) extends rb, so RealTime (V-V Eq. 9, rb ⊆ ar) holds. RealTime constrains arbitration only, not visibility, so rd(z)▷0 may still miss wr(z,1): it is real-time causal but not CM."
+}

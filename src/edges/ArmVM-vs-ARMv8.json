@@ -1,0 +1,9 @@
+{
+  "from": "ArmVM",
+  "to": "ARMv8",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "cited",
+  "fragment_restricted": true,
+  "note": "Simner et al., ESOP 2022, Sec. 6 (metatheorems 1–2): for programs with stable, injectively-mapped address spaces the relaxed virtual-memory model collapses exactly to the base Armv8-A user-mode concurrency model. The model is built as an extension of that base model; outside this fragment (translation-table manipulation, TLBI) it admits additional executions not expressible in base ARMv8, so the equivalence is fragment-restricted to static/injective mappings."
+}

@@ -1,0 +1,8 @@
+{
+  "from": "PC",
+  "to": "Causal",
+  "type": "incomparable",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Processor and causal consistency are incomparable: each forbids a behaviour the other allows (Steinke & Nutt 2004)."
+}

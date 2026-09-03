@@ -1,0 +1,8 @@
+{
+  "from": "Alpha",
+  "to": "Coherence",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Alpha guarantees per-location (SC-per-location) coherence and enforces cross-location ordering only via mb/wmb fences (Alpha Architecture Reference Manual; Alglave, Maranget & Tautschnig, Herding Cats, TOPLAS 2014, p.4); bare coherence has neither. Separating outcome: MP+mb+mb, forbidden by Alpha, allowed by Coherence. Cited (Alpha has no herd7 cat model), not machine-run."
+}

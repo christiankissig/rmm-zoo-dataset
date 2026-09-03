@@ -1,0 +1,8 @@
+{
+  "from": "Weakestmo",
+  "to": "C11",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Weakestmo grounds thin-air reads with event structures and is, in the authors' words, 'stronger than C11 (which allows OOTA) and weaker than RC11': every separating outcome (the OOTA load-buffering test and the 'RNG' bogus-value example) is allowed by C11 and forbidden by Weakestmo, with no behaviour Weakestmo allows that C11 forbids. So C11 is strictly weaker. (Reclassified from incomparable; see litmus/strictly-weaker/Weakestmo-vs-C11.)"
+}

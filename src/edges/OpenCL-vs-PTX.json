@@ -1,0 +1,8 @@
+{
+  "from": "OpenCL",
+  "to": "PTX",
+  "type": "compilation",
+  "provenance": "memalloy",
+  "evidence": "machine_run",
+  "note": "OpenCL kernels compile to PTX on NVIDIA GPUs. Verified sound by memalloy: no execution where the compiled PTX behaviour violates the source OpenCL semantics, up to 4 OpenCL / 6 PTX events (opencl_scoped -> ptx_orig via the opencl_ptx mapping); the known-buggy mapping variant yields a counterexample at 5 events, confirming the check discriminates. Reproduced via litmus/memalloy/ (Docker)."
+}

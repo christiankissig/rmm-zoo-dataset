@@ -1,0 +1,15 @@
+{
+  "id": "CUDA",
+  "name": "CUDA C++ Memory Model",
+  "abbrev": "CUDA",
+  "year": 2017,
+  "authors": ["NVIDIA"],
+  "description": "The host/device-coherent, C++-style scoped memory model exposed by CUDA since version 9 (cuda::atomic with thread-scope template parameters). It mirrors the C++11 atomics interface and is layered on, and lowered to, the PTX memory model.",
+  "references": ["Lustig2019"],
+  "tags": ["language", "gpu", "scoped"],
+  "hardware": [],
+  "languages": ["CUDA C++"],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": false, "in_order": false, "no_oota": false},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Lustig2019", "note": "The C++-style scoped surface is layered on PTX's axiomatic model, so a cat rendering would follow PTX's; none is published at the CUDA level."}
+}

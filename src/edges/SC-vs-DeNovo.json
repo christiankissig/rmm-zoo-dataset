@@ -1,0 +1,9 @@
+{
+  "from": "SC",
+  "to": "DeNovo",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "by_construction",
+  "fragment_restricted": true,
+  "note": "The paper states DeNovo provides sequential consistency for data-race-free programs, so on the race-free fragment it admits exactly the SC outcomes. Unlike DRFx it assumes race-freedom is supplied by the disciplined language (Deterministic Parallel Java) rather than detected at runtime, and defines no behaviour for racy programs."
+}

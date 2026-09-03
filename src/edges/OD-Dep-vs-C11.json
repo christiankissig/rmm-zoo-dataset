@@ -1,0 +1,8 @@
+{
+  "from": "OD-Dep",
+  "to": "C11",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Ou & Demsky 2018, §6: both approaches 'explore stronger memory models than the existing C/C++ memory model' — they forbid the OOTA/thin-air executions C11 permits while retaining ordinary relaxed-atomics reordering."
+}

@@ -1,0 +1,8 @@
+{
+  "from": "C11",
+  "to": "JSMM",
+  "type": "incomparable",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "The JavaScript model is based on C11 and shares its thin-air problem (only internal DRF), but — unlike C11 — it does not treat racy non-atomic accesses as undefined behaviour and it natively supports mixed-size accesses over SharedArrayBuffer. Neither contains the other."
+}

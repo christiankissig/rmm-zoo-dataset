@@ -1,0 +1,8 @@
+{
+  "from": "CCv",
+  "to": "WFR",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "by_construction",
+  "note": "Unlike the Causal edge to the same node, this one is a derivation rather than a citation. CCv is CausalVisibility ∧ CausalArbitration ∧ RVal (Viotti & Vukolić 2016, Eq. 26), where CausalArbitration is hb ⊆ ar and hb = (so ∪ vis)+. WritesFollowReads is (vis; so|rd→wr) ⊆ ar (Eq. 25). Since vis ⊆ hb and so ⊆ hb, the composite vis;so|rd→wr lies in hb+ = hb ⊆ ar, so CCv satisfies WFR by construction. The converse fails — WFR constrains only write-after-read within a session and says nothing about visibility or the arbitration of anything else — so writes-follow-reads is strictly weaker."
+}

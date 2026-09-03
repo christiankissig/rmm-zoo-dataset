@@ -1,0 +1,9 @@
+{
+  "from": "TSO",
+  "to": "BMM",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "by_construction",
+  "fragment_restricted": true,
+  "note": "BMM is a pragmatic TSO-style buffered model proposed as a candidate Java memory model; on the store-buffer relaxations it coincides with TSO."
+}

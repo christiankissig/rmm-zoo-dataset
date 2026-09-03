@@ -1,0 +1,8 @@
+{
+  "from": "CCv",
+  "to": "POCausal",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Burckhardt, Gotsman, Yang & Zawirski, POPL 2014, §7: (cross-object) causal consistency imposes the ordering axioms COCV/COCA, while per-object causal consistency imposes only the weaker per-object axioms POCV/POCA over the per-object happens-before order (Viotti & Vukolić 2016, §3.9). COCV/COCA disallow strictly more anomalies, so cross-object causal consistency is strictly stronger than per-object causal consistency. Re-homed from the Causal node: Burckhardt's cross-object causal consistency is the visibility/arbitration one, i.e. CCv, not causal memory."
+}

@@ -1,0 +1,8 @@
+{
+  "from": "CRC",
+  "to": "C11",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "machine_run",
+  "note": "CRC is a compositional semantics for a thin-air-free fragment of C11 (non-atomics with catch-fire, release-acquire, SC fences); by omitting relaxed atomics it forbids the out-of-thin-air behaviours plain C11 permits."
+}

@@ -1,0 +1,17 @@
+{
+  "id": "SRA",
+  "name": "Strong Release-Acquire",
+  "abbrev": "SRA",
+  "year": 2016,
+  "authors": ["Lahav", "Giannarakis", "Vafeiadis"],
+  "description": "A strengthening of the release-acquire (RA) fragment of C/C++11. RA requires only a local agreement between modification order and happens-before (write-coherence, mo;hb irreflexive); SRA requires a global one — strong-write-coherence, (hb ∪ mo)+ irreflexive — which forbids the 2+2W behaviour RA allows while leaving RA's other guarantees untouched. The strengthening is free: the same local optimisations remain sound and the compilation schemes to x86-TSO and POWER are unchanged. The POWER mapping is moreover complete, so SRA is exactly what POWER provides for programs compiled from the RA fragment, which means SRA cannot be strengthened further without an implementation cost. It also admits an equivalent operational semantics based on point-to-point communication, and supports fences that restore sequential consistency. Ignoring RMWs it coincides with the causal-convergence model CCv, which makes it the bridge between the C11 family and the distributed causal-consistency models; and if every store is implemented as an atomic exchange it precisely captures parallel snapshot isolation (Lahav & Boker, §3.1).",
+  "references": ["Lahav2016", "LahavBoker2022"],
+  "tags": ["language", "formal"],
+  "formalism": ["axiomatic", "operational"],
+  "hardware": [],
+  "languages": ["C11-fragment"],
+  "properties": {"comp_x86": true, "comp_power": true, "coh": true, "no_oota": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Lahav2016", "note": "Four irreflexivity constraints over hb, mo and rf (irr-hb, strong-write-coherence, read-coherence, atomicity), all per-execution and all in cat's relational vocabulary; strong-write-coherence is just acyclic(hb | mo)."},
+  "katSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Lahav2016", "note": "Consistency is a conjunction of irreflexivity constraints over regular expressions of base relations — strong-write-coherence is irreflexive((hb | mo)+) — which is exactly kater's fragment. No .kat file is published, so it is expressible rather than specified."}
+}

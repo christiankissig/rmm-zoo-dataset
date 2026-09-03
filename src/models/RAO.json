@@ -1,0 +1,16 @@
+{
+  "id": "RAO",
+  "name": "Relaxed Atomic + Ordering",
+  "abbrev": "RAO",
+  "year": 2007,
+  "authors": ["Saraswat", "Jagadeesan", "Michael", "von Praun"],
+  "description": "The 'Relaxed Atomic + Ordering' model, in which relaxed behaviours are explained through transformations applied over a sequentially consistent execution. The authors claim the external DRF guarantee while still permitting thin-air values — two properties known to be incompatible in general (Batty et al., ESOP 2015) — which the survey attributes to restrictions on the supported input language (for example, the absence of general conditional statements).",
+  "references": ["Saraswat2007", "Batty2015", "Moiseenko2021"],
+  "tags": ["language", "formal", "theoretical"],
+  "formalism": ["reordering"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"coh": false, "no_ub": true, "in_order": false, "no_oota": false},
+  "propertyProvenance": "survey",
+  "catSupport": {"status": "not-expressible", "basis": "cited", "ref": "Saraswat2007", "note": "Allowed behaviours are those obtainable by applying a sequence of program transformations to an SC execution: a rewriting derivation, not a predicate on the candidate execution."}
+}

@@ -1,0 +1,15 @@
+{
+  "id": "OCaml",
+  "name": "OCaml Memory Model",
+  "abbrev": "OCaml MM",
+  "year": 2018,
+  "authors": ["Dolan", "Sivaramakrishnan", "Madhavapeddy"],
+  "description": "Memory model for OCaml multicore. Based on a 'local DRF' guarantee. Provides strong guarantees for well-typed programs without data races, and well-defined (though weak) semantics for racy accesses.",
+  "references": ["Dolan2018", "Morisset2019"],
+  "tags": ["language", "formal"],
+  "hardware": [],
+  "languages": ["OCaml"],
+  "properties": {"comp_x86": true, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": false, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "tp": true, "cse": true, "edrf": true, "coh": false, "no_ub": true, "in_order": true, "no_oota": true},
+  "propertyProvenance": "survey",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Dolan2018", "note": "Defined operationally over per-location timestamped histories; the guarantees it delivers (coherence, SC atomics, local DRF) are per-execution conditions, but no cat rendering is published."}
+}

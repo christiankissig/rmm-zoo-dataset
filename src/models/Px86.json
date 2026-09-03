@@ -1,0 +1,16 @@
+{
+  "id": "Px86",
+  "name": "Persistent x86 (Px86)",
+  "abbrev": "Px86",
+  "year": 2020,
+  "authors": ["Raad", "Wickerson", "Neiger", "Vafeiadis"],
+  "description": "First formalisation of the persistency semantics of the Intel-x86 architecture, layering a persist-order axiom (what survives a crash on non-volatile memory) on top of the x86 (x86-TSO) consistency model. Given both operationally and declaratively, with the two shown equivalent. The persist dimension is orthogonal to x86's store-load reordering; the crash-free behaviour coincides with x86-TSO.",
+  "references": ["Raad2020"],
+  "tags": ["hardware", "formal"],
+  "formalism": ["axiomatic", "operational"],
+  "hardware": ["x86", "x86-64"],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Raad2020", "note": "A declarative persist-order axiom layered on x86-TSO; per-execution and cat-shaped, but herd7 has no persistency events."}
+}

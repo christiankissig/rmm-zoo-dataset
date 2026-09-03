@@ -24,24 +24,31 @@ edges floats unattached, so a new model needs at least one relation.
 
 ## Checklist
 
-`models.json`:
+A new model is one new file, `src/models/<id>.json`, carrying everything the
+model asserts about itself:
 
-- [ ] Entry in `models`: `id`, `name`, `abbrev`, `year`, `authors`,
-      `description`, `references`, `tags`, `hardware`, `languages`
-- [ ] Every id in `references` resolves to an entry in the `references` block
+- [ ] The entry: `id` (matching the file name), `name`, `abbrev`, `year`,
+      `authors`, `description`, `references`, `tags`, `hardware`, `languages`
+- [ ] Every id in `references` resolves to an entry in `src/references.json`
       (add it if new: `title`, `authors`, `venue`, `year`, `doi`)
-- [ ] `modelProperties["<id>"]` — the full property vector (check 1 rejects a
-      model without one)
-- [ ] `modelPropertyProvenance["<id>"]` — `survey` if the row comes from the
+- [ ] `properties` — the full property vector (check 1 rejects a model without
+      one)
+- [ ] `propertyProvenance` — `survey` if the row comes from the
       Moiseenko–Podkopaev–Koznov survey, `extrapolated` if author-assigned
-- [ ] `modelPropertyCitations["<id>"]` for any cell that needs a per-cell source
-- [ ] `catSupport["<id>"]` — `status` (`specified` / `expressible` /
+- [ ] `propertyCitations` for any cell that needs a per-cell source
+- [ ] `catSupport` — `status` (`specified` / `expressible` /
       `not-expressible`), `basis` (`cat-model` / `cited` / `extrapolated`),
       `ref`, and a `note` saying why (check 1 requires all four)
-- [ ] `katSupport["<id>"]` if the model has, or could have, a kater `.kat` —
-      optional (the map is partial by design), but required for either endpoint
-      of a `provenance: kater` edge
-- [ ] At least one edge in `edges` relating the model to an existing one
+- [ ] `katSupport` if the model has, or could have, a kater `.kat` — optional
+      (the map is partial by design), but required for either endpoint of a
+      `provenance: kater` edge
+
+And beside it:
+
+- [ ] `src/models/_order.txt` — the id placed in the strength order (a model
+      left out still ships, at the end of the list, with a warning)
+- [ ] At least one `src/edges/<from>-vs-<to>.json` relating the model to an
+      existing one
 
 You do **not** need to place the model in the map's tier layout — that lives in
 the site repo, and an unplaced model renders in a fallback tier until it is
@@ -58,8 +65,10 @@ Witnesses, if any new edge has `provenance: litmus`, `memalloy` or `kater`:
 ## Verification
 
 ```sh
+make models             # recompile models.json from src/ (commit the result)
 make check              # all 6 checks; runs the litmus suite if herd7 is on PATH
 ```
 
 - [ ] `make check` passes
-- [ ] Regenerated files are committed (`litmus.json`, if `litmus/` changed)
+- [ ] Regenerated files are committed (`models.json`; `litmus.json` too, if
+      `litmus/` changed)

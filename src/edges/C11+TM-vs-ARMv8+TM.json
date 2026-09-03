@@ -1,0 +1,8 @@
+{
+  "from": "C11+TM",
+  "to": "ARMv8+TM",
+  "type": "compilation",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Chong, Sorensen & Wickerson (PLDI 2018) state a (bounded) sound compilation of C++ transactions to ARMv8. Caveat: the ARMv8+TM target is the untested/proposed model for which naive lock elision is unsound (Example 1.1), so this edge inherits that caveat."
+}

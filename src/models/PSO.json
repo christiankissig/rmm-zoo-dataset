@@ -1,0 +1,15 @@
+{
+  "id": "PSO",
+  "name": "Partial Store Order",
+  "abbrev": "PSO",
+  "year": 1992,
+  "authors": ["SPARC International"],
+  "description": "Extends TSO by additionally allowing store-store reordering to different addresses. A thread's writes to distinct locations may become visible to other threads out of program order.",
+  "references": ["SPARC1992", "Alglave2010", "AdveGharachorloo1996"],
+  "tags": ["hardware"],
+  "hardware": ["SPARC-PSO"],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": false, "reorder_ls": false, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "specified", "basis": "cat-model", "ref": "Alglave2014", "note": "An instance of the Herding cats generic framework (ppo additionally drops W->W); run here as litmus/models/abstract-pso.cat."}
+}

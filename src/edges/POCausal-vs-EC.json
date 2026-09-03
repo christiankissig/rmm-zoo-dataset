@@ -1,0 +1,8 @@
+{
+  "from": "POCausal",
+  "to": "EC",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Burckhardt, Gotsman, Yang & Zawirski, POPL 2014, §7: an execution is per-object causally consistent iff it is eventually consistent (EVENTUAL+THINAIR) AND satisfies the per-object ordering axioms POCV/POCA. Adding those axioms disallows strictly more anomalies (e.g. Fig. 14(b), §3.1), so eventual consistency is strictly weaker than per-object causal consistency."
+}

@@ -1,0 +1,9 @@
+{
+  "from": "Px86view",
+  "to": "Px86axiom",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "cited",
+  "fragment_restricted": false,
+  "note": "Cho, Lee, Raad & Kang (PLDI 2021), Theorem 5.3: a behaviour is allowed under Px86axiom iff it is allowed under the operational Px86view. Full equivalence (mechanised in Coq), covering the persistency dimension, hence not fragment_restricted."
+}

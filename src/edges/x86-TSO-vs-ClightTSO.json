@@ -1,0 +1,9 @@
+{
+  "from": "x86-TSO",
+  "to": "ClightTSO",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "by_construction",
+  "fragment_restricted": false,
+  "note": "Ševčík et al. 2013 §1.2, §4.4: ClightTSO is defined to mirror the x86-TSO model at the language level (loads, stores, compare-and-swap, barriers with TSO behaviour), with a single TSO abstract machine shared across all compiler levels — the same store→load relaxation by construction, not a restricted fragment."
+}

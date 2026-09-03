@@ -1,0 +1,16 @@
+{
+  "id": "PEx86",
+  "name": "Persistent Ex86 (PEx86)",
+  "abbrev": "PEx86",
+  "year": 2022,
+  "authors": ["Raad", "Maranget", "Vafeiadis"],
+  "description": "Extends the Px86 (Px86sim) persistency model of Raad et al. to cover the full range of Intel-x86 memory types (uncacheable, write-combined, write-through, write-back) and non-temporal stores (MOVNT), together with their subtle interactions, validated by extensive testing on real Intel-x86 hardware. PEx86 is a conservative extension of Px86sim: for programs restricted to regular stores on write-back memory it coincides with Px86, differing only in a minor divergence over flush/flushopt ordering that PEx86 drops to follow the updated Intel manual. Given both operationally and declaratively.",
+  "references": ["Raad2022"],
+  "tags": ["hardware", "formal"],
+  "formalism": ["axiomatic", "operational"],
+  "hardware": ["x86", "x86-64"],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Raad2022", "note": "Declarative model of x86 memory types and non-temporal stores plus persistency. The consistency half is mixed-size cat territory (x86tso-mixed.cat); the persist dimension is not part of any shipped cat model."}
+}

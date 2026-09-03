@@ -1,0 +1,8 @@
+{
+  "from": "Causal",
+  "to": "CC",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Bouajjani et al., POPL 2017, §4 and Fig. 1: CM and CCv 'are both strictly stronger than CC'. Witness: Fig. 2 history (2c) — pa: wr(x,1) || pb: wr(x,2); rd(x)▷1; rd(x)▷2 — is CC but neither CM nor CCv, since pb revises its ordering of the two writes after already having read one of them."
+}

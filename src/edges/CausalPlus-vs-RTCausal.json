@@ -1,0 +1,8 @@
+{
+  "from": "CausalPlus",
+  "to": "RTCausal",
+  "type": "incomparable",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Causal+ and real-time causal consistency are incomparable (Viotti & Vukolić 2016, §3.5): real-time causality does not imply strong convergence, and causal+ does not impose real-time ordering — each forbids a behaviour the other allows. (V-V correct Lloyd et al.'s original claim that real-time causal is stronger than causal+.)"
+}

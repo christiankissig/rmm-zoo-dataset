@@ -1,0 +1,16 @@
+{
+  "id": "PRAM",
+  "name": "PRAM (Pipelined RAM) Consistency",
+  "abbrev": "PRAM",
+  "year": 1988,
+  "authors": ["Lipton", "Sandberg"],
+  "description": "Writes performed by a single process are seen by all other processes in the order they were issued, but writes from different processes may be seen in different orders by different processes. Strictly weaker than processor and causal consistency; incomparable to cache consistency; strictly stronger than slow consistency.",
+  "references": ["LiptonSandberg1988", "SteinkeNutt2004"],
+  "tags": ["theoretical", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"coh": false, "mca": false},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "SteinkeNutt2004", "note": "Each process must see every other process's writes in issue order — a per-execution condition, with the per-process serialisations enumerable by cat's linearisations construct."}
+}

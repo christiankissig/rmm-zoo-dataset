@@ -1,0 +1,16 @@
+{
+  "id": "Vulkan",
+  "name": "Vulkan Memory Model",
+  "abbrev": "Vulkan",
+  "year": 2018,
+  "authors": ["Khronos Group", "Alglave"],
+  "description": "Khronos's formal, relaxed, scoped memory model for the Vulkan GPU API. Ordering is expressed through scoped synchronisation plus explicit availability and visibility operations that move writes through the cache hierarchy. Specified executably in Alloy, with the formalisation led largely by Jade Alglave and collaborators.",
+  "references": ["VulkanMM", "Hower2014"],
+  "tags": ["language", "gpu", "formal", "scoped"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": ["SPIR-V", "Vulkan"],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "in_order": false},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "cited", "ref": "VulkanMM", "note": "Khronos specifies the model executably in Alloy rather than cat. Its availability/visibility rules are per-execution constraints, expressible with cat's scope support."}
+}

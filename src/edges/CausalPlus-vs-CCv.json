@@ -1,0 +1,8 @@
+{
+  "from": "CausalPlus",
+  "to": "CCv",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Causal+ = Causality ∧ StrongConvergence (Viotti & Vukolić 2016, Eq. 27; Lloyd et al., COPS, SOSP 2011). V-V's Causality (Eq. 26) is the visibility/arbitration causal consistency that Bouajjani et al. name CCv, so this containment is against CCv. Adding strong convergence disallows strictly more behaviours, so CCv is strictly weaker than causal+. Re-homed from the Causal node, where the same note had been read as a containment against causal memory."
+}

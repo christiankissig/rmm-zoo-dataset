@@ -1,0 +1,9 @@
+{
+  "from": "Px86",
+  "to": "x86-TSO",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "cited",
+  "fragment_restricted": true,
+  "note": "Raad, Wickerson, Neiger & Vafeiadis (POPL 2020): Px86's crash-free behaviour coincides with x86-TSO. fragment_restricted because the equivalence holds only on the crash-free fragment; the persist-order axiom is orthogonal."
+}

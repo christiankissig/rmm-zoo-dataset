@@ -1,0 +1,16 @@
+{
+  "id": "PromisingARM",
+  "name": "Promising-ARM/RISC-V",
+  "abbrev": "P-ARM/RV",
+  "year": 2019,
+  "authors": ["Pulte", "Pichon-Pharabod", "Kang", "Lee", "Hur"],
+  "description": "A timestamp-based operational concurrency model for the ARMv8 and RISC-V instruction sets. It computes allowed behaviours incrementally from thread-local conditions, executing instructions in program order (bar early writes) without branch speculation, giving a substantially simpler operational presentation than prior ARM/RISC-V operational models. It reworks the timestamp/promise approach of the C/C++ Promising Semantics with a new uniform treatment of dependencies, but targets ISAs rather than C/C++, so it is a distinct model. Proven equivalent in Coq (for finite executions) to the axiomatic ARMv8 and RVWMO models.",
+  "references": ["Pulte2019", "Kang2017"],
+  "tags": ["hardware", "formal"],
+  "formalism": ["operational"],
+  "hardware": ["ARMv8", "AArch64", "RISC-V"],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "specified", "basis": "cited", "ref": "Pulte2019", "note": "Despite its promise-based operational presentation, it is proved equivalent in Coq (for finite executions) to the axiomatic Armv8 and RVWMO models — that is, its behaviours are exactly those of herd7's aarch64.cat and riscv.cat. Unlike C/C++ Promising, its certification needs no value speculation."}
+}

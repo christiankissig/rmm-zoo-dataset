@@ -1,0 +1,8 @@
+{
+  "from": "RC11",
+  "to": "RC17",
+  "type": "strictly_weaker",
+  "provenance": "litmus",
+  "evidence": "machine_run",
+  "note": "RC17 is RC11 with the C++17 release-sequence narrowing (RMWs only). Like the C11→C++17 case the narrowing is monotone — it only removes synchronisation — so RC17 admits an outcome RC11 forbids and forbids nothing RC11 allows. Mechanised: mp-rs-add-est-atomic is Never under rc11.cat and Sometimes under rc17.cat. Models vendored from gonzalobg/cpp_memory_model; see litmus/strictly-weaker/RC11-vs-RC17."
+}

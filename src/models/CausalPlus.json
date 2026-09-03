@@ -1,0 +1,16 @@
+{
+  "id": "CausalPlus",
+  "name": "Causal+ (Convergent Causal) Consistency",
+  "abbrev": "Causal+",
+  "year": 2011,
+  "authors": ["Lloyd", "Freedman", "Kaminsky", "Andersen"],
+  "description": "Convergent causal consistency, introduced with the COPS wide-area store. It augments causal consistency with strong convergence: replicas that have applied the same set of writes have equivalent state, so concurrent (causally unrelated) conflicting writes are resolved identically at every replica via commutative/associative handler functions. Viotti & Vukolić (ACM Computing Surveys 2016, Eq. 27) express it as Causal+ = Causality ∧ StrongConvergence, i.e. causal+ strengthens causal consistency exactly as strong eventual consistency strengthens eventual consistency, so it is strictly stronger than the causal consistency of that framework — causal convergence (CCv), not causal memory. Incomparable to real-time causal consistency, and to causal memory.",
+  "references": ["LloydCOPS2011", "ViottiVukolic2016"],
+  "tags": ["theoretical", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"coh": false, "mca": false},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "LloydCOPS2011", "note": "Causality plus convergence: convergence is the totality of the per-object arbitration order, which cat's co already provides. (The eventual-delivery assumption it inherits from the replicated setting is, as for EC, outside cat.)"}
+}

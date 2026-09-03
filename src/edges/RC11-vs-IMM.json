@@ -1,0 +1,8 @@
+{
+  "from": "RC11",
+  "to": "IMM",
+  "type": "incomparable",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "IMM is designed to compile correctly to hardware; it is related to RC11 but targets a different point in the design space."
+}

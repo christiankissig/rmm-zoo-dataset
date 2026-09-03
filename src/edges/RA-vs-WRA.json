@@ -1,0 +1,8 @@
+{
+  "from": "RA",
+  "to": "WRA",
+  "type": "strictly_weaker",
+  "provenance": "litmus",
+  "evidence": "machine_run",
+  "note": "WRA drops modification order entirely, replacing RA's write-coherence and read-coherence with weak-read-coherence over hb|loc; Lahav & Boker note that write-coherence implies [W];hb|loc;[W] subset of mo, so read-coherence implies weak-read-coherence and RA contains WRA (Prop. 3.2). Strictness is Ex. 3.7, three single-location programs (WW, Oscillating, SF) allowed by WRA and forbidden by RA: WRA does not provide SC-per-location, so even one-location programs may behave non-sequentially. Machine-checked: litmus/models/wra.cat against ra.cat, with all three witnesses in litmus/strictly-weaker/RA-vs-WRA/ (Never 0 4 / 0 20 / 0 4 under RA, Sometimes under WRA), and sra.cat run alongside to show it agrees with RA on all three — this axis is orthogonal to the 2+2W one. Containment remains the cited Prop. 3.2 argument; herd7 decides strictness only."
+}

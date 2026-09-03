@@ -1,0 +1,16 @@
+{
+  "id": "JAM",
+  "name": "Java Access Modes",
+  "abbrev": "JAM",
+  "year": 2019,
+  "authors": ["Bender", "Palsberg"],
+  "description": "A formalisation of a revised Java Memory Model built on the 'Java Access Modes' (plain, opaque, release/acquire, volatile) introduced with VarHandles in JDK 9. Inspired by RC11, it adopts RC11's solution to the out-of-thin-air problem and forbids load/store reorderings for opaque or stronger accesses, but it deliberately does not tackle thin-air on the level of plain (non-atomic) accesses.",
+  "references": ["Bender2019", "Moiseenko2021"],
+  "tags": ["language", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": ["Java", "JVM"],
+  "properties": {"comp_x86": true, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "strengthen": true, "cse": false, "edrf": true, "coh": true, "no_ub": true, "in_order": true, "no_oota": true},
+  "propertyProvenance": "survey",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Bender2019", "note": "RC11-shaped acyclicity axioms over Java's access modes — essentially a relabelling of the fragment rc11.cat already states."}
+}

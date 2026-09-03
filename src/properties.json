@@ -1,0 +1,77 @@
+{
+  "_propertySchemaComment": "Single source of truth for the per-model property filter columns, mirrored by both the interactive map (index.html reads data.propertySchema) and the per-model pages (tools/gen-pages.py). Each group has a display heading, a sub-label, and an ordered list of [key, label] field pairs; the key indexes into modelProperties. Grouped as in Tables 1–2 of Moiseenko et al., 'A Survey of Programming Language Memory Models' (2021), except Atomicity (Su & Colvin 2026, §2.4) and the Inverse roach motel column (Poetzl & Kroening 2015; see propertyProvenance).",
+  "propertySchema": [
+    {
+      "group": "Compilation",
+      "sub": "optimal mapping to",
+      "fields": [
+        ["comp_x86", "x86"],
+        ["comp_power", "POWER"],
+        ["comp_armv7", "Armv7"],
+        ["comp_armv8", "Armv8"]
+      ]
+    },
+    {
+      "group": "Reordering",
+      "sub": "sound",
+      "fields": [
+        ["reorder_sl", "Store→Load"],
+        ["reorder_ss", "Store→Store"],
+        ["reorder_ll", "Load→Load"],
+        ["reorder_ls", "Load→Store"]
+      ]
+    },
+    {
+      "group": "Elimination",
+      "sub": "sound",
+      "fields": [
+        ["elim_sl", "Store/Load"],
+        ["elim_ss", "Store/Store"],
+        ["elim_ll", "Load/Load"],
+        ["elim_ls", "Load/Store"]
+      ]
+    },
+    {
+      "group": "Other local",
+      "sub": "transformations",
+      "fields": [
+        ["ile", "Irrelevant load elim."],
+        ["sli", "Speculative load intro."],
+        ["rm", "Roach motel"],
+        ["irm", "Inverse roach motel"],
+        ["strengthen", "Strengthening"],
+        ["tp", "Trace preserving"],
+        ["cse", "Common subexpr. elim."]
+      ]
+    },
+    {
+      "group": "Global",
+      "sub": "transformations",
+      "fields": [
+        ["rp", "Register promotion"],
+        ["ti", "Thread inlining"],
+        ["vr", "Value range"]
+      ]
+    },
+    {
+      "group": "Reasoning",
+      "sub": "guarantees",
+      "fields": [
+        ["edrf", "External DRF"],
+        ["coh", "Coherence"],
+        ["no_ub", "No undefined behaviour"],
+        ["in_order", "In-order execution"],
+        ["no_oota", "No out-of-thin-air"]
+      ]
+    },
+    {
+      "group": "Atomicity",
+      "sub": "guarantees",
+      "fields": [
+        ["mca", "Multicopy atomic"]
+      ]
+    }
+  ],
+  "_propertyProvenanceComment": "Per-property (column) provenance. The default source for the property columns is the Moiseenko–Podkopaev–Koznov survey (Tables 1–2); this map records only the columns whose definition/data come from a different source, so a reader knows a given cell is not survey-tabulated even when the per-model modelPropertyProvenance says 'survey'. Absence here = the survey default.",
+  "propertyProvenance": {"irm": "Inverse (reversed) roach motel reordering — moving a shared access out of a critical section. Not tabulated by the Moiseenko et al. survey; the transformation and its soundness for the SC-for-DRF execution model were introduced by Poetzl & Kroening, 'Formalizing and Checking Thread Refinement for Data-Race-Free Execution Models' (arXiv:1510.07171, 2015), §4. The 'yes' cells are therefore author-assigned to the SC-preserving / SC-for-DRF models on the strength of that result, not taken from the survey.", "mca": "Multicopy atomicity — not from the Moiseenko et al. survey but from Su & Colvin, 'Weak Memory Model Formalisms: Introduction and Survey' (Concurrency Comput. Pract. Exper. 38(2), 2026), §2.4."}
+}

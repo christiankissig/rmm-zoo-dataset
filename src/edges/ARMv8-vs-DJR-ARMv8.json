@@ -1,0 +1,9 @@
+{
+  "from": "ARMv8",
+  "to": "DJR-ARMv8",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "by_construction",
+  "fragment_restricted": true,
+  "note": "Dongol, Jagadeesan & Riely (POPL 2018) instantiate their transactional framework at ARMv8; the added transactional axioms only constrain transactional events, so on programs with no transactions the ARMv8 instance coincides with ARMv8 by construction. fragment_restricted: the coincidence holds only on the non-transactional fragment."
+}

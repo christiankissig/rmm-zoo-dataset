@@ -1,0 +1,8 @@
+{
+  "from": "Vulkan",
+  "to": "PTX",
+  "type": "compilation",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Vulkan/SPIR-V compute shaders compile to PTX on NVIDIA GPUs."
+}

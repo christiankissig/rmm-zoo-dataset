@@ -1,0 +1,8 @@
+{
+  "from": "Slow",
+  "to": "Local",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Local consistency is the weakest model, strictly weaker than slow consistency (Bataller & Bernabeu-Auban 1997; Steinke & Nutt 2004)."
+}

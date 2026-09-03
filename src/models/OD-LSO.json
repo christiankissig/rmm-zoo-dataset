@@ -1,0 +1,16 @@
+{
+  "id": "OD-LSO",
+  "name": "Ou–Demsky Load-Store-Ordering Criterion",
+  "abbrev": "OD-LSO",
+  "year": 2018,
+  "authors": ["Ou", "Demsky"],
+  "description": "An execution criterion that forbids out-of-thin-air (OOTA) results by preserving load→store ordering, requiring the union of sequence-before and reads-from to be acyclic. Targeted at C/C++-like memory models in which racing operations are explicitly labelled atomic, so it constrains only relaxed atomics; the authors implement it in the LLVM AArch64 backend and report no average overhead (6.3% worst case) on concurrent data-structure benchmarks. A strictly stronger guarantee than the paper's dependency-preserving criterion.",
+  "references": ["Ou2018", "BoehmDemsky2014"],
+  "tags": ["language", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": ["C", "C++"],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": false, "coh": true, "no_oota": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Ou2018", "note": "The criterion is literally a cat axiom: acyclic(sb | rf)."}
+}

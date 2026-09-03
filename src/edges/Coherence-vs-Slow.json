@@ -1,0 +1,8 @@
+{
+  "from": "Coherence",
+  "to": "Slow",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Slow consistency is strictly weaker than cache consistency (Hutto & Ahamad 1990; Steinke & Nutt 2004)."
+}

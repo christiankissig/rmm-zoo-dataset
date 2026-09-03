@@ -1,0 +1,15 @@
+{
+  "id": "RMO",
+  "name": "Relaxed Memory Order",
+  "abbrev": "RMO",
+  "year": 1994,
+  "authors": ["SPARC International"],
+  "description": "The weakest SPARC model. Allows all four reorderings (load-load, load-store, store-load, store-store) between independent memory operations.",
+  "references": ["SPARC1994", "Alglave2010", "AdveGharachorloo1996"],
+  "tags": ["hardware"],
+  "hardware": ["SPARC-RMO"],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "specified", "basis": "cat-model", "ref": "Alglave2014", "note": "An instance of the Herding cats generic framework with dependency-only ppo; run here as litmus/models/abstract-rmo.cat."}
+}

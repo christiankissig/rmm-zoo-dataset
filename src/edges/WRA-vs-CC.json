@@ -1,0 +1,9 @@
+{
+  "from": "WRA",
+  "to": "CC",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "cited",
+  "fragment_restricted": false,
+  "note": "Lahav & Boker: WRA 'provides the most minimal guarantees required from a model to satisfy causal consistency; it is equivalent to the model called CC studied in' Bouajjani et al. (POPL 2017)."
+}

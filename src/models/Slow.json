@@ -1,0 +1,16 @@
+{
+  "id": "Slow",
+  "name": "Slow Consistency",
+  "abbrev": "Slow",
+  "year": 1990,
+  "authors": ["Hutto", "Ahamad"],
+  "description": "A read must return some value previously written to the location, and once a value has been read no earlier write to that location by the same writer may be returned; a process sees its own writes immediately. Strictly weaker than both PRAM and cache consistency; strictly stronger than local consistency.",
+  "references": ["HuttoAhamad1990", "SteinkeNutt2004"],
+  "tags": ["theoretical", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"coh": false, "mca": false},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "HuttoAhamad1990", "note": "A per-execution constraint on which writes a read may return (own writes immediately, no earlier write by the same writer after a later one), directly statable as cat irreflexivity axioms."}
+}

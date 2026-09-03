@@ -1,0 +1,15 @@
+{
+  "id": "Alpha",
+  "name": "DEC Alpha Memory Model",
+  "abbrev": "Alpha",
+  "year": 1992,
+  "authors": ["Sites"],
+  "description": "DEC's Alpha is widely regarded as the weakest mainstream hardware memory model. It permits all four load/store reorderings and, distinctively, does not preserve dependent (address- or data-dependent) load ordering without an explicit memory barrier (mb) — behaviour no other mainstream ISA exhibits, and the historical case that motivated Linux's smp_read_barrier_depends()/RCU barrier machinery. Non-multi-copy-atomic.",
+  "references": ["Sites1992", "LinuxMemBarriers"],
+  "tags": ["hardware"],
+  "hardware": ["DEC Alpha"],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "specified", "basis": "cat-model", "ref": "Alglave2014", "note": "An instance of the Herding cats generic framework with no dependency ordering; run here as litmus/models/abstract-alpha.cat."}
+}

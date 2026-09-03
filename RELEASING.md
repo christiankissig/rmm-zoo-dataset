@@ -11,7 +11,9 @@ dated by that commit) and stamps it into the published copies under `dist/data/`
 There is nothing to keep in sync, so nothing can drift.
 
 `make check` enforces that: it fails if `models.json` has a hand-written version
-instead of the placeholders.
+instead of the placeholders — and, since `models.json` is compiled from `src/`
+by `make models` (which writes the placeholders itself), there is nowhere in the
+sources to write a version in the first place.
 
 ```sh
 make version    # what a build would stamp in, and where it came from

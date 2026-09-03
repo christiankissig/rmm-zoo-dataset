@@ -1,0 +1,8 @@
+{
+  "from": "TSO",
+  "to": "RMMOA",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "machine_run",
+  "note": "Like PSO, RMMOA's hierarchical store buffers additionally permit store→store reordering to distinct addresses, which TSO forbids."
+}

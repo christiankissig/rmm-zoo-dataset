@@ -1,0 +1,16 @@
+{
+  "id": "PSI",
+  "name": "Parallel Snapshot Isolation (PSI)",
+  "abbrev": "PSI",
+  "year": 2018,
+  "authors": ["Raad", "Lahav", "Vafeiadis"],
+  "description": "A standard database / distributed transactional consistency model, given a declarative (acyclicity-axiom) semantics by Raad, Lahav & Vafeiadis together with a simple lock-based reference implementation built on top of the release-acquire (RA) fragment of the C/C++11 memory model and proved sound and complete against the declarative specification — the first treatment of PSI as an STM model over a weak-memory programming language. PSI weakens serializability, letting conflicting transactions without a write-write conflict commit in parallel; it permits the write-skew anomaly and the long-fork anomaly (the latter forbidden under Snapshot Isolation). The authors also give Robust PSI (RPSI), extending PSI to mixed transactional/non-transactional code with its own sound-and-complete RA implementation.",
+  "references": ["RaadPSI2018"],
+  "tags": ["theoretical", "formal"],
+  "formalism": ["axiomatic", "operational"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"coh": true, "no_oota": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "RaadPSI2018", "note": "Declarative acyclicity axioms over transactional executions; a cat rendering needs transaction-class events (the extension Chong et al. added to herd7) but no additional expressive power."}
+}

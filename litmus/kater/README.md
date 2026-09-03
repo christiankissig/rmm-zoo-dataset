@@ -13,8 +13,8 @@ approaches are not sound … can thus provide no formal guarantees about whether
 the property holds"*). A kater pass is **unbounded**: a proof, not a
 no-counterexample-yet.
 
-Edges whose containment comes from kater carry `"provenance": "kater"` in
-`models.json`, and one query file here per edge, named for it.
+Edges whose containment comes from kater carry `"provenance": "kater"` in their
+`src/edges/<from>-vs-<to>.json`, and one query file here per edge, named for it.
 
 ## The division of labour
 
@@ -86,10 +86,11 @@ assert tso::tso <= sc::sc+
 
 Two constraints on what can be checked at all, both enforced by `make check`:
 
-- both endpoints need a `.kat` — recorded in `models.json`'s `katSupport`, which
-  is the cat-specifiability axis narrowed to kater's fragment (conjunctions of
-  irreflexivity/emptiness constraints over regular expressions; no `po ∩ sameloc`
-  except through an incomplete rewriting procedure);
+- both endpoints need a `.kat` — recorded as each model's `katSupport` in
+  `src/models/<id>.json`, which is the cat-specifiability axis narrowed to
+  kater's fragment (conjunctions of irreflexivity/emptiness constraints over
+  regular expressions; no `po ∩ sameloc` except through an incomplete rewriting
+  procedure);
 - the query proves something about **that `.kat` rendering**, not about the model
   in the abstract — so the edge's note names the file, exactly as `catSupport`
   notes name a concrete `.cat`.

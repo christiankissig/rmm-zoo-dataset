@@ -1,0 +1,8 @@
+{
+  "from": "PTX",
+  "to": "TileIR",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "NVIDIA Tile IR docs §7: 'The axioms and relations of the Tile IR memory model are intended to be a strict weakening of the PTX memory model.' Vendor-asserted (note the hedged 'intended to be' language); not independently proven or machine-checked."
+}

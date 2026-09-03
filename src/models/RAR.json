@@ -1,0 +1,16 @@
+{
+  "id": "RAR",
+  "name": "Operational Release-Acquire/Relaxed RC11",
+  "abbrev": "RAR",
+  "year": 2019,
+  "authors": ["Doherty", "Dongol", "Wehrheim", "Derrick"],
+  "description": "An operational reformulation of RC11 supporting release-acquire and relaxed accesses (hence RAR), on top of which the authors build a proof calculus for invariant-based reasoning and mechanically verify mutual-exclusion algorithms.",
+  "references": ["Doherty2019", "Moiseenko2021"],
+  "tags": ["language", "formal", "operational"],
+  "formalism": ["operational"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"comp_x86": true, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": false, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "sli": false, "rm": true, "strengthen": true, "tp": true, "cse": false, "rp": true, "ti": true, "edrf": true, "coh": true, "no_ub": false, "in_order": true, "no_oota": true},
+  "propertyProvenance": "survey",
+  "catSupport": {"status": "expressible", "basis": "cited", "ref": "Doherty2019", "note": "An operational reformulation of the RC11 release-acquire/relaxed fragment, proved to match it — and that fragment is what rc11.cat states."}
+}

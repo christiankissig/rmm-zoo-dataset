@@ -1,0 +1,16 @@
+{
+  "id": "PTSOsyn",
+  "name": "Synchronous PTSO (PTSOsyn)",
+  "abbrev": "PTSOsyn",
+  "year": 2021,
+  "authors": ["Khyzha", "Lahav"],
+  "description": "An operational x86-TSO persistency model with synchronous explicit persist operations and per-cache-line persistence buffers, developed as a developer-friendly reformulation of Raad et al.'s Px86, whose persists are asynchronous. Khyzha & Lahav prove PTSOsyn equivalent, in terms of reachable states, to Px86, so its crash-free consistency coincides with x86-TSO while persistency is governed by synchronous per-line persists that are closer to programmers' intuition.",
+  "references": ["KhyzhaLahav2021"],
+  "tags": ["hardware", "formal"],
+  "formalism": ["operational", "axiomatic"],
+  "hardware": ["x86", "x86-64"],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "KhyzhaLahav2021", "note": "Presented operationally with per-cache-line persistence buffers, alongside a declarative characterisation — per-execution modulo the persist events cat does not have."}
+}

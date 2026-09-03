@@ -1,0 +1,8 @@
+{
+  "from": "ARM",
+  "to": "POWER",
+  "type": "incomparable",
+  "provenance": "literature",
+  "evidence": "machine_run",
+  "note": "Over the common instruction set ARMv7 and POWER coincide on every standard litmus family (verified against herd7's arm.cat and ppc.cat). Their incomparability is instruction-level: POWER's lightweight cumulative barrier lwsync (which allows SB) has no ARMv7 counterpart. See litmus/incomparable/ARM-vs-POWER."
+}

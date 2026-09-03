@@ -1,0 +1,16 @@
+{
+  "id": "RMMOA",
+  "name": "Relaxed Memory Models: an Operational Approach",
+  "abbrev": "RMMOA",
+  "year": 2009,
+  "authors": ["Boudol", "Petri"],
+  "description": "An operational approach to the semantics of relaxed memory, built on an abstract machine with a main memory and a hierarchical structure of store buffers in which writes to different locations may propagate to memory out of order — the same store→store relaxation as PSO. The authors prove the external DRF theorem.",
+  "references": ["Boudol2009", "Moiseenko2021"],
+  "tags": ["language", "formal", "operational"],
+  "formalism": ["mechanistic"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"comp_x86": true, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": true, "reorder_ss": true, "reorder_ll": false, "reorder_ls": false, "edrf": true, "no_ub": true, "in_order": true, "no_oota": true},
+  "propertyProvenance": "survey",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Boudol2009", "note": "A hierarchy of write buffers; the buffer discipline corresponds to a per-execution preserved-program-order plus coherence condition of PSO shape, but the model is presented purely operationally."}
+}

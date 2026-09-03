@@ -1,0 +1,9 @@
+{
+  "from": "SRA",
+  "to": "CCv",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "cited",
+  "fragment_restricted": true,
+  "note": "Lahav & Boker, §3.1: ignoring RMWs, SRA is equivalent to the causal convergence model CCv of Bouajjani et al., applied to the standard sequential specification of a read/write key-value store (and to the causal consistency of Cerone et al. restricted to single-instruction transactions). fragment_restricted because the equivalence is stated modulo RMWs: SRA's atomicity axiom has no counterpart in a model over a sequential key-value specification. This edge is the bridge between the C11 family and the distributed causal-consistency cluster."
+}

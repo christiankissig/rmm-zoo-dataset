@@ -1,0 +1,8 @@
+{
+  "from": "SC",
+  "to": "x86-TSO",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "machine_run",
+  "note": "x86-TSO is the formal model equivalent of TSO for x86."
+}

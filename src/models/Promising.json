@@ -1,0 +1,16 @@
+{
+  "id": "Promising",
+  "name": "Promising Semantics",
+  "abbrev": "PS",
+  "year": 2017,
+  "authors": ["Kang", "Hur", "Lahav", "Vafeiadis", "Dreyer"],
+  "description": "An operational model for relaxed memory based on the notion of thread-local 'promises': a thread may promise a future write and later fulfil it. Eliminates thin-air values, supports DRF-SC, and can express optimisation-friendly behaviour. Extended to PS 2.0 for mixed-size and non-atomic accesses.",
+  "references": ["Kang2017", "Lee2020"],
+  "tags": ["language", "formal", "operational"],
+  "formalism": ["operational"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"comp_x86": true, "comp_power": true, "comp_armv7": true, "comp_armv8": true, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": true, "ile": true, "sli": true, "rm": true, "strengthen": true, "tp": true, "cse": true, "rp": true, "ti": false, "vr": true, "edrf": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
+  "propertyProvenance": "survey",
+  "catSupport": {"status": "not-expressible", "basis": "cited", "ref": "Podkopaev2019", "note": "A promise is legal only if the promising thread can certify it by a future thread-local execution, so whether one execution is allowed depends on other executions — not statable as a per-execution cat predicate. IMM was introduced precisely to give Promising a declarative over-approximation."}
+}

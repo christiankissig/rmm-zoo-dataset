@@ -1,0 +1,9 @@
+{
+  "from": "SC",
+  "to": "Spandex",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "cited",
+  "fragment_restricted": true,
+  "note": "Alsop, Sinclair & Adve (Spandex, ISCA 2018) state they assume a sequential-consistency-for-data-race-free (SC-for-DRF) model, so on the race-free fragment it admits exactly the SC outcomes; the flexible coherence request types affect only performance, not the consistency guarantee."
+}

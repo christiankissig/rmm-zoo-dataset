@@ -1,0 +1,8 @@
+{
+  "from": "C11",
+  "to": "LKMM",
+  "type": "incomparable",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Neither contains the other: LKMM provides RCU grace-period ordering and the smp_* barrier family with no C11 counterpart, while C11 offers per-object seq_cst atomics LKMM does not model. The incomparability is at the level of primitives, not reorderings of shared operations. See litmus/incomparable/C11-vs-LKMM."
+}

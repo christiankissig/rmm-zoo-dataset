@@ -1,0 +1,9 @@
+{
+  "from": "SC",
+  "to": "DeNovoSync",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "cited",
+  "fragment_restricted": true,
+  "note": "Sung & Adve (DeNovoSync, ASPLOS 2015) adopt the standard C++/Java data-race-free memory model, which defines sequentially consistent semantics for data-race-free programs (SC is used as the correctness criterion for synchronization accesses), so on the race-free fragment it admits exactly the SC outcomes. It extends DeNovo to arbitrary synchronization while keeping this SC-for-DRF contract."
+}

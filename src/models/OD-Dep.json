@@ -1,0 +1,16 @@
+{
+  "id": "OD-Dep",
+  "name": "Ou–Demsky Dependency-Preserving Criterion",
+  "abbrev": "OD-Dep",
+  "year": 2018,
+  "authors": ["Ou", "Demsky"],
+  "description": "An execution criterion that forbids out-of-thin-air (OOTA) results by preserving a syntactic notion of dependency, requiring the union of (syntactic) dependency and reads-from to be acyclic. A strictly weaker guarantee than load-store ordering, targeted at Java-like languages in which every memory access can contribute to OOTA. Implemented in the LLVM compiler; the authors measure a 3.1% average (17.6% worst-case) overhead on SPEC CPU2006 for a prototype dependency-preserving compiler.",
+  "references": ["Ou2018", "BoehmDemsky2014"],
+  "tags": ["language", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": ["Java", "C", "C++"],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "coh": true, "no_oota": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Ou2018", "note": "acyclic(dep | rf) over syntactic dependencies, which cat exposes as data/addr/ctrl."}
+}

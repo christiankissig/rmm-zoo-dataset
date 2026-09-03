@@ -1,0 +1,16 @@
+{
+  "id": "x86-TSO+TM",
+  "name": "x86-TSO + Transactional Memory",
+  "abbrev": "x86-TSO+TM",
+  "year": 2018,
+  "authors": ["Chong", "Sorensen", "Wickerson"],
+  "description": "An axiomatic (herd7-style) extension of the x86-TSO memory model with rules for hardware transactional memory (Intel TSX). Transactions are treated as atomic units bounded by implicit fences (a committed transaction has LOCK-prefix ordering semantics) with strong isolation. The additions only constrain transactional events, so on programs without transactions the model coincides with x86-TSO. Validated by synthesising 'minimally forbidden' litmus tests that were run on four Intel TSX implementations (Haswell, Broadwell, Skylake, Kabylake) and never observed.",
+  "references": ["Chong2018"],
+  "tags": ["hardware", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": ["x86", "x86-64"],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "specified", "basis": "cited", "ref": "Chong2018", "note": "Chong, Sorensen & Wickerson give the transactional extension in cat on top of the x86-TSO model, executable in their herd7 extension (and driven with memalloy to synthesise the validating litmus tests)."}
+}

@@ -1,0 +1,16 @@
+{
+  "id": "MRD",
+  "name": "Modular Relaxed Dependencies (MRD)",
+  "abbrev": "MRD",
+  "year": 2020,
+  "authors": ["Paviotti", "Cooksey", "Paradis", "Wright", "Owens", "Batty"],
+  "description": "Resolves the thin-air problem by tracking syntactic dependencies modularly, using a denotational semantics. Intended as a sound and compositional replacement for relaxed C11 atomics.",
+  "references": ["Paviotti2020"],
+  "tags": ["language", "formal"],
+  "formalism": ["event-structure"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"comp_x86": true, "comp_power": true, "comp_armv7": true, "comp_armv8": true, "edrf": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true},
+  "propertyProvenance": "survey",
+  "catSupport": {"status": "not-expressible", "basis": "cited", "ref": "Paviotti2020", "note": "Dependencies are computed denotationally over an event structure that holds many conflicting executions at once; the verdict is not a filter on a single candidate execution. Checked by MoRDor rather than herd7."}
+}

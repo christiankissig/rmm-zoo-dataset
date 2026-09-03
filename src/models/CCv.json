@@ -1,0 +1,16 @@
+{
+  "id": "CCv",
+  "name": "Causal Convergence (CCv)",
+  "abbrev": "CCv",
+  "year": 2013,
+  "authors": ["Burckhardt", "Gotsman", "Yang"],
+  "description": "Causal convergence: causal consistency stated in the visibility/arbitration framework. A total arbitration order over all operations abstracts the conflict-resolution policy, so no site may revise its ordering of causally unrelated operations and any two sites order identically whatever they both see — which is why the model implies convergence. This is Burckhardt et al.'s causal consistency restricted to sequential specifications, written by Viotti & Vukolić (ACM Computing Surveys 2016, Eq. 26) as Causality = CausalVisibility ∧ CausalArbitration ∧ RVal, and named CCv by Bouajjani et al. (POPL 2017, §4.5). Strictly weaker than SC, and incomparable to causal memory (the Causal node): a global arbitration order and a per-site unrevised serialisation are different requirements, neither implying the other.",
+  "references": ["BurckhardtGotsmanYang2013", "ViottiVukolic2016", "Bouajjani2017"],
+  "tags": ["theoretical", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"coh": false, "mca": false},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "BurckhardtGotsmanYang2013", "note": "Causality plus a total arbitration order over all operations: an acyclicity condition on a single execution, and cat's co already supplies a per-location total order to carry the arbitration."}
+}

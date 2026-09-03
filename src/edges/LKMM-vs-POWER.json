@@ -1,0 +1,8 @@
+{
+  "from": "LKMM",
+  "to": "POWER",
+  "type": "compilation",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Linux kernel primitives compile correctly to IBM POWER."
+}

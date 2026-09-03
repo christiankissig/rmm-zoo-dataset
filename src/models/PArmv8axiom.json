@@ -1,0 +1,16 @@
+{
+  "id": "PArmv8axiom",
+  "name": "Axiomatic PArmv8 (PArmv8axiom)",
+  "abbrev": "PArmv8axiom",
+  "year": 2021,
+  "authors": ["Cho", "Lee", "Raad", "Kang"],
+  "description": "Cho et al.'s declarative Armv8 persistency model, which simplifies and fixes documented flaws in Raad et al.'s PARMv8. Formally, they prove (Thm 6.1) that PArmv8axiom is equivalent to SPArmv8, a strengthening of PARMv8, and (Thm 6.2) that it is equivalent to the operational PArmv8view. This axiomatic model has been reviewed by Arm engineers; the crash-free behaviour coincides with Armv8.",
+  "references": ["Cho2021"],
+  "tags": ["hardware", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": ["ARMv8", "AArch64"],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Cho2021", "note": "Declarative persistency axioms over Armv8 executions (aarch64.cat plus a persist-order axiom in shape); no cat model exists for the persistency dimension."}
+}

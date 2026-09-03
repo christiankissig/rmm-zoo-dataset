@@ -8,7 +8,7 @@ other forbids, bounded by a number of events `N`. It either returns the **simple
 distinguishing litmus test** or finds **none up to `N` events**.
 
 This is the tool behind the zoo's scoped-GPU verdicts. Edges whose verdict comes
-from memalloy carry `"provenance": "memalloy"` in `models.json`
+from memalloy carry `"provenance": "memalloy"` in their `src/edges/` file
 (`HRF → ScopedC11`, `PTX ↔ AMDGPU`, `OpenCL ↔ Vulkan`).
 
 ## The recipe (per edge type)

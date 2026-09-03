@@ -1,0 +1,8 @@
+{
+  "from": "SC",
+  "to": "OD-LSO",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Ou & Demsky 2018, §6: 'the constraints we impose in general are much weaker than the sequential consistency memory model.' The load-store-ordering criterion permits relaxed-atomics reorderings SC forbids while ruling out OOTA."
+}

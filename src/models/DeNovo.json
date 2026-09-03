@@ -1,0 +1,18 @@
+{
+  "id": "DeNovo",
+  "name": "DeNovo",
+  "abbrev": "DeNovo",
+  "year": 2011,
+  "authors": ["Choi", "Komuravelli", "Sung", "Smolinski", "Honarmand", "Adve", "Adve", "Carter", "Chou"],
+  "description": "A hardware/software co-designed cache-coherence protocol that exploits a disciplined parallel programming model (Deterministic Parallel Java) — structured parallel control, data-race freedom, and deterministic semantics — to simplify the memory hierarchy. By assuming race-free code the protocol eliminates transient coherence states (model checking finds 15x fewer reachable states than a conventional MESI protocol) and guarantees sequential consistency for data-race-free programs, while improving cache hit rates, network traffic, performance, and energy.",
+  "references": ["Choi2011"],
+  "tags": ["hardware", "language"],
+  "hardware": [],
+  "languages": ["DPJ"],
+  "properties": {"irm": true, "edrf": true, "coh": true, "in_order": true, "no_oota": true, "mca": true},
+  "propertyProvenance": "extrapolated",
+  "propertyCitations": {
+    "irm": {"ref": "PoetzlKroening2015", "note": "Assumes SC-for-DRF; inverse roach motel sound for SC-for-DRF per Poetzl & Kroening §4."}
+  },
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Choi2011", "note": "A coherence protocol plus a disciplined programming model rather than a consistency specification: the exposed guarantee is SC for the race-free, structured-parallel programs it targets, which sc.cat states."}
+}

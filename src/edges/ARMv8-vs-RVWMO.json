@@ -1,0 +1,8 @@
+{
+  "from": "ARMv8",
+  "to": "RVWMO",
+  "type": "incomparable",
+  "provenance": "literature",
+  "evidence": "machine_run",
+  "note": "Both are multi-copy atomic and coincide on every standard litmus family over the common instruction set (verified against herd7's aarch64.cat and riscv.cat). The incomparability is instruction-level: RISC-V's fence.tso (which allows SB) and the RCsc/RCpc atomics differ from ARMv8's. See litmus/incomparable/ARMv8-vs-RVWMO."
+}

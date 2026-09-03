@@ -1,0 +1,16 @@
+{
+  "id": "ClightTSO",
+  "name": "ClightTSO",
+  "abbrev": "ClightTSO",
+  "year": 2013,
+  "authors": ["Ševčík", "Vafeiadis", "Zappa Nardelli", "Jagannathan", "Sewell"],
+  "description": "The source-level memory model of CompCertTSO, a Coq-verified compiler from a concurrent C-like language (a threaded extension of CompCert's Clight) to x86 assembly. By design it mirrors the x86-TSO model at the language level, exposing per-thread FIFO store buffers, loads, stores, compare-and-swap, and memory barriers with TSO behaviour; a single TSO abstract machine is shared across all of the compiler's intermediate languages. The store→load relaxation is thus exactly that of TSO/x86-TSO, making it a verified-compiler vehicle for the same model rather than a behaviourally distinct one.",
+  "references": ["Sevcik2013", "Sevcik2011"],
+  "tags": ["language", "formal"],
+  "formalism": ["operational"],
+  "hardware": [],
+  "languages": ["C", "Clight"],
+  "properties": {"comp_x86": true, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": true, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "coh": true, "in_order": true, "no_oota": true, "mca": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "cited", "ref": "Sevcik2013", "note": "Its consistency dimension is exactly TSO, which tso.cat/x86tso.cat state; the rest of the model (allocation, pointer arithmetic, undefined behaviour) is outside cat's event vocabulary, so no single cat model covers it."}
+}

@@ -1,0 +1,9 @@
+{
+  "from": "x86-TSO",
+  "to": "DJR-TSO",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "by_construction",
+  "fragment_restricted": true,
+  "note": "Dongol, Jagadeesan & Riely (POPL 2018) instantiate their transactional framework at TSO; the added transactional axioms only constrain transactional events, so on programs with no transactions the TSO instance coincides with (x86-)TSO by construction. fragment_restricted: the coincidence holds only on the non-transactional fragment."
+}

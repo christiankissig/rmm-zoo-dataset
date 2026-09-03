@@ -13,7 +13,8 @@ make check    # 8 consistency checks; runs the litmus suite if herd7 is on PATH
 ```
 
 - [ ] `make check` passes
-- [ ] Regenerated files are committed (`make litmus` after a `litmus/` edit)
+- [ ] Regenerated files are committed (`make models` after a `src/` edit,
+      `make litmus` after a `litmus/` edit)
 
 ---
 

@@ -1,0 +1,8 @@
+{
+  "from": "Vulkan",
+  "to": "AMDGPU",
+  "type": "compilation",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Vulkan/SPIR-V compute shaders compile to AMD's GPU ISA."
+}

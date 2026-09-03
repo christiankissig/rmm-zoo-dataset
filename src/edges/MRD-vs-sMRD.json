@@ -1,0 +1,8 @@
+{
+  "from": "MRD",
+  "to": "sMRD",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "machine_run",
+  "note": "Symbolic MRD extends MRD: it keeps the modular semantic-dependency approach and thin-air freedom, but additionally admits aggressive optimisations MRD forbids — those exploiting alias analysis, undefined-behaviour freedom, and extrinsic choices such as over-alignment — and handles dynamic memory rather than only concrete locations. Admitting more transformations, it permits strictly more behaviours."
+}

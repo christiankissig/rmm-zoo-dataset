@@ -1,0 +1,15 @@
+{
+  "id": "Metal",
+  "name": "Apple Metal Memory Model",
+  "abbrev": "Metal",
+  "year": 2017,
+  "authors": ["Apple"],
+  "description": "Apple's GPU programming model provides a relaxed memory model with atomics (relaxed/acquire/release) and threadgroup/device barriers in the Metal Shading Language. It is less formally specified in public than the other GPU models here.",
+  "references": ["MetalSpec"],
+  "tags": ["language", "gpu", "scoped"],
+  "hardware": ["Apple GPU"],
+  "languages": ["Metal Shading Language"],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "in_order": false},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "MetalSpec", "note": "Only informally specified. The documented guarantees (relaxed/acquire-release atomics, threadgroup and device barriers) are per-execution conditions a cat model could state, but there is no formal semantics to transcribe."}
+}

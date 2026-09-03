@@ -1,6 +1,7 @@
 # rmm-zoo-dataset — the Relaxed Memory Model Zoo dataset
-# Plain data: one JSON of models/edges/properties, plus the litmus witness tree.
-# No bundler, no dependencies — Python 3 for the gate and the generator, and
+# Plain data: the src/ tree (one file per model and per edge) compiled into
+# models.json, plus the litmus witness tree compiled into litmus.json.
+# No bundler, no dependencies — Python 3 for the gate and the generators, and
 # herd7 (optional) to run the witnesses.
 #
 # The site that renders this dataset lives in a separate repository and consumes
@@ -23,11 +24,12 @@ DISTRIBUTION ?= E3PXGEAO2HVOM3
 ALLOW_DEV ?=
 RELEASE_GATE :=
 
-.PHONY: help version litmus kater memalloy check build deploy clean
+.PHONY: help version models litmus kater memalloy check build deploy clean
 
 help:
 	@echo "rmm-zoo-dataset targets:"
 	@echo "  make version          Print the version + date this build would stamp in"
+	@echo "  make models           Regenerate models.json from the src/ sources"
 	@echo "  make litmus           Regenerate litmus.json from the litmus/ test tree"
 	@echo "  make kater            Re-prove the kater-provenance containments (needs docker + the image)"
 	@echo "  make memalloy         Re-run the memalloy-provenance comparisons (needs MEMALLOY=<checkout>)"
@@ -39,6 +41,13 @@ help:
 # What `make build` would stamp in: the tag on HEAD, or a dev version off it.
 version:
 	@python3 tools/version.py
+
+# Compile the src/ tree — one file per model, one per edge, plus the shared
+# bibliography and property schema — into models.json. Committed, like
+# litmus.json, so a consumer gets the built dataset without running the build;
+# `make check` fails if the committed copy has fallen behind the sources.
+models:
+	@python3 tools/gen-models.py
 
 # Bake the litmus/ test tree into litmus.json (committed, so a consumer gets the
 # built artifact without running the generator). Re-run whenever tests change.
@@ -61,8 +70,12 @@ memalloy:
 # contradiction, property, cat- and kat-support integrity, every witness directory
 # matching its edge's type and direction, every kater claim backed by its query,
 # and — where the tools are installed — the litmus and kater suites themselves.
+# Preceded by the cheaper structural gate: models.json must be exactly what the
+# src/ sources compile to, so nobody edits the generated artifact by hand and
+# nobody publishes sources that were never built.
 # A build/deploy aborts rather than publish an inconsistent dataset.
 check:
+	@python3 tools/gen-models.py --check
 	@python3 tools/check-consistency.py
 
 # Build == stamp the version into the templates and stage the published files

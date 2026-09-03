@@ -1,0 +1,16 @@
+{
+  "id": "EC",
+  "name": "Eventual Consistency (basic)",
+  "abbrev": "EC",
+  "year": 2014,
+  "authors": ["Burckhardt", "Gotsman", "Yang", "Zawirski"],
+  "description": "Basic eventual consistency for replicated data stores, defined axiomatically over abstract executions with visibility and arbitration relations (in analogy to weak shared-memory models) by two axioms: EVENTUAL guarantees an update cannot stay invisible to infinitely many operations on the same object, so if updates stop replicas converge to the same state; THINAIR forbids out-of-thin-air values. Causal (and further sequential/linearizable) consistency are obtained by adding successively stronger ordering axioms (POCV/POCA, then COCV/COCA) on top of it, so eventual consistency is strictly weaker than causal consistency — the causal consistency of Burckhardt's framework, i.e. causal convergence (CCv), reached here via per-object causal. First given a formal definition in MSR-TR-2013-39 (2013).",
+  "references": ["BurckhardtGotsmanYang2013", "BurckhardtRDT2014"],
+  "tags": ["theoretical", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"coh": false, "mca": false, "no_oota": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "not-expressible", "basis": "extrapolated", "ref": "BurckhardtRDT2014", "note": "Eventual delivery is a liveness property over infinite executions ('all but finitely many operations see a given write'). cat checks safety conditions on one finite candidate execution and has no way to state it."}
+}

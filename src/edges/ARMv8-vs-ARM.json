@@ -1,0 +1,8 @@
+{
+  "from": "ARMv8",
+  "to": "ARM",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "machine_run",
+  "note": "ARMv7 is non-MCA and weaker than ARMv8."
+}

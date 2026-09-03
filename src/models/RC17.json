@@ -1,0 +1,16 @@
+{
+  "id": "RC17",
+  "name": "Repaired C11 with C++17 release sequences (RC17)",
+  "abbrev": "RC17",
+  "year": 2025,
+  "authors": ["Brito Gadeschi", "Cooksey"],
+  "description": "RC11 updated to account for the C++17 release-sequence definition: like RC11 (repaired seq_cst, no out-of-thin-air via acyclic(po|rf)), but a release sequence is continued only by read-modify-writes, not by later same-thread relaxed stores. It is therefore strictly weaker than RC11 (it admits a non-synchronising outcome RC11 forbids) and strictly stronger than C++17 (it keeps the no-thin-air axiom C++17 lacks). Mechanised by the rc17.cat model (vendored from gonzalobg/cpp_memory_model; herd7-checked).",
+  "references": ["Lahav2017", "Cooksey2025"],
+  "tags": ["language", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": ["C11-variant"],
+  "properties": {"comp_x86": true, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": false, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "sli": false, "rm": true, "strengthen": true, "tp": true, "cse": false, "rp": true, "ti": true, "edrf": true, "coh": true, "no_ub": false, "in_order": true, "no_oota": true, "mca": false},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "specified", "basis": "cat-model", "ref": "Cooksey2025", "note": "Mechanised as litmus/models/cpp/rc17.cat (vendored from gonzalobg/cpp_memory_model, herd7-checked)."}
+}

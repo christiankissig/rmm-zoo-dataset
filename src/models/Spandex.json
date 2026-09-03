@@ -1,0 +1,18 @@
+{
+  "id": "Spandex",
+  "name": "Spandex",
+  "abbrev": "Spandex",
+  "year": 2018,
+  "authors": ["Alsop", "Sinclair", "Adve"],
+  "description": "A flexible coherence interface for heterogeneous CPU/GPU systems in the DeNovo lineage that lets devices with diverse coherence properties and memory demands interoperate efficiently by directly translating between request types rather than forcing a single protocol on every device. It assumes a sequential-consistency-for-data-race-free (SC-for-DRF) consistency model, so on the race-free fragment it admits exactly the SC behaviours; the choice of coherence request type affects only performance, never the consistency guarantee. It is reported to reduce execution time by 16% on average (max 29%) and network traffic by 27% (max 58%) versus a hierarchical baseline.",
+  "references": ["Alsop2018"],
+  "tags": ["hardware"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"irm": true, "edrf": true, "coh": true, "in_order": true, "no_oota": true, "mca": true},
+  "propertyProvenance": "extrapolated",
+  "propertyCitations": {
+    "irm": {"ref": "PoetzlKroening2015", "note": "Assumes SC-for-DRF; inverse roach motel sound for SC-for-DRF per Poetzl & Kroening §4."}
+  },
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Alsop2018", "note": "A coherence interface for heterogeneous devices, not a consistency specification; the guarantee it preserves (SC for DRF, with scopes) is per-execution and expressible in scoped cat."}
+}

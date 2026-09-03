@@ -1,0 +1,8 @@
+{
+  "from": "MRD",
+  "to": "C11",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "machine_run",
+  "note": "MRD is a proposed replacement for C11 relaxed atomics, forbidding thin-air reads that C11 allows."
+}

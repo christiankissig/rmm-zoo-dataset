@@ -1,0 +1,8 @@
+{
+  "from": "LKMM",
+  "to": "x86-TSO",
+  "type": "compilation",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Linux kernel primitives compile correctly to x86; LKMM is designed to be no stronger than the hardware it runs on."
+}

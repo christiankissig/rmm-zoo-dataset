@@ -1,0 +1,8 @@
+{
+  "from": "TSO",
+  "to": "PSO",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "machine_run",
+  "note": "PSO additionally allows store-store reordering to different addresses."
+}

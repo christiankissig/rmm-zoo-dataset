@@ -1,0 +1,9 @@
+{
+  "from": "PSO",
+  "to": "RMMOA",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "by_construction",
+  "fragment_restricted": false,
+  "note": "RMMOA is an operational model whose out-of-order propagation of writes to different locations matches PSO's store→store relaxation."
+}

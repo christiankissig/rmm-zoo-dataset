@@ -1,0 +1,8 @@
+{
+  "from": "RMO",
+  "to": "Alpha",
+  "type": "strictly_weaker",
+  "provenance": "litmus",
+  "evidence": "machine_run",
+  "note": "SPARC RMO preserves address/data/control dependencies; DEC Alpha uniquely relaxes dependent-load ordering (Alglave, Maranget & Tautschnig, Herding Cats, TOPLAS 2014, p.18) and is non-multi-copy-atomic. Separating outcome: MP+dmb+addr, forbidden by RMO (address dependency preserved), allowed by Alpha (dependent loads not ordered) — machine-run under herd7 against a portable abstract-alpha.cat (RMO Never 0 3, Alpha Sometimes 1 3). Containment is the litmus-tier monotonicity argument: Alpha relaxes strictly more than RMO (dependencies; store atomicity) and no less on any axis, so Alpha ⊆ RMO, strict by the witness. See litmus/strictly-weaker/RMO-vs-Alpha."
+}

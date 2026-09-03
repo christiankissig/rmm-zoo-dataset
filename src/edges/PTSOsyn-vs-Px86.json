@@ -1,0 +1,9 @@
+{
+  "from": "PTSOsyn",
+  "to": "Px86",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "cited",
+  "fragment_restricted": false,
+  "note": "Khyzha & Lahav (POPL 2021): the synchronous-persist model PTSOsyn is proven equivalent, in terms of reachable states, to Raad et al.'s asynchronous-persist Px86 (POPL 2020). Full equivalence (crashes included), so not fragment_restricted; the caveat is that it is a state-based / reachable-state equivalence rather than a full trace equivalence."
+}

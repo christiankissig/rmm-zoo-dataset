@@ -1,0 +1,8 @@
+{
+  "from": "CSRA",
+  "to": "C11",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "machine_run",
+  "note": "CSRA pairs a POWER-inspired memory subsystem with per-thread event structures and permits optimisation while avoiding thin-air. Its authors state CSRA is a subset of C/C++11 by design ('the converse is not to be expected ... the point of our model is to exclude the thin-air executions that C/C++11 allows'): only out-of-thin-air outcomes separate them, all allowed by C11 and forbidden by CSRA. So C11 is strictly weaker. (Reclassified from incomparable; see litmus/strictly-weaker/CSRA-vs-C11.)"
+}

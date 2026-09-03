@@ -1,0 +1,8 @@
+{
+  "from": "SC",
+  "to": "C11",
+  "type": "strictly_weaker",
+  "provenance": "kater",
+  "evidence": "machine_run",
+  "note": "DRF-SC: SC-annotated programs behave as SC, but C11 allows weaker behaviours for non-SC atomics. Containment is machine-checked: kater derives both of C11's global axioms — acyclic(psc) and coherence — from acyclic(sc) over kater's sc.kat and c11-old.kat (litmus/kater/queries/strictly-weaker-SC-vs-C11.kat). Strictness is the relaxed-SB witness in litmus/strictly-weaker/SC-vs-C11/."
+}

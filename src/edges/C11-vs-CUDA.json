@@ -1,0 +1,8 @@
+{
+  "from": "C11",
+  "to": "CUDA",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "machine_run",
+  "note": "CUDA's cuda::atomic mirrors C++11 atomics but adds thread scopes (block, device, system); sub-system scopes admit behaviours C11 forbids."
+}

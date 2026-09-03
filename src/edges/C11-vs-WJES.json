@@ -1,0 +1,8 @@
+{
+  "from": "C11",
+  "to": "WJES",
+  "type": "incomparable",
+  "provenance": "litmus",
+  "evidence": "machine_run",
+  "note": "WJES uses a game-semantics-inspired notion of well-justification to forbid thin-air and prove external DRF. A load→load reordering counterexample shows its mappings to ARMv7/ARMv8/POWER are not optimal, so it is incomparable with C11."
+}

@@ -1,0 +1,8 @@
+{
+  "from": "CausalPlus",
+  "to": "Causal",
+  "type": "incomparable",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Causal+ = CCv ∧ StrongConvergence, and CCv is incomparable to causal memory, so the two are incomparable rather than ordered. This replaces a strictly_weaker edge that read the Viotti-Vukolić containment (Eq. 27) as being against causal memory; it is against CCv. Witnesses, both Bouajjani et al. POPL 2017 Fig. 2: history (2a) is CM but not CCv, hence not causal+; history (2b) is CCv and not CM, and reads each of x, y and z exactly once, so StrongConvergence (V-V Eq. 17, constraining only reads with equal visible-write sets) is vacuous on it — it is causal+ but not CM."
+}

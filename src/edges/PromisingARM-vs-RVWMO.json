@@ -1,0 +1,9 @@
+{
+  "from": "PromisingARM",
+  "to": "RVWMO",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "cited",
+  "fragment_restricted": true,
+  "note": "Pulte et al. (PLDI 2019), Appendix D, Theorem D.2: the operational Promising-RISC-V model is proven equivalent in Coq to the axiomatic RVWMO model for finite executions."
+}

@@ -1,0 +1,17 @@
+{
+  "id": "IMM",
+  "name": "Intermediate Memory Model (IMM)",
+  "abbrev": "IMM",
+  "year": 2019,
+  "authors": ["Podkopaev", "Lahav", "Vafeiadis"],
+  "description": "Bridging model between high-level language models and hardware. Correctly compiles to x86-TSO, ARMv8, and POWER. Supports DRF-SC and eliminates thin-air reads. Serves as a compilation target and proof intermediate.",
+  "references": ["Podkopaev2019"],
+  "tags": ["language", "formal", "compilation"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"comp_x86": true, "comp_power": true, "comp_armv8": true, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "edrf": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Podkopaev2019", "note": "Declarative by construction: acyclicity and irreflexivity axioms over one candidate execution, mechanised in Coq. The axioms transcribe to cat directly, but no cat file accompanies the development."},
+  "katSupport": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "kater's kat/imm.kat (kat/imm-genmc.kat is the code-export variant)."}
+}

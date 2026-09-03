@@ -1,0 +1,16 @@
+{
+  "id": "WJES",
+  "name": "Well-Justified Event Structures",
+  "abbrev": "WJES",
+  "year": 2016,
+  "authors": ["Jeffrey", "Riely"],
+  "description": "A model based on event structures with a notion of well-justification — inspired by game semantics — used to forbid thin-air values and prove the external DRF guarantee. The authors do not study the soundness of program transformations, but exhibit a load→load reordering counterexample, which also implies that the compilation mappings to ARMv7, ARMv8, and POWER are not optimal.",
+  "references": ["Jeffrey2016", "Moiseenko2021"],
+  "tags": ["language", "formal"],
+  "formalism": ["event-structure"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_ll": false, "elim_ll": false, "elim_ls": false, "edrf": true, "coh": false, "no_ub": true, "in_order": false, "no_oota": true},
+  "propertyProvenance": "survey",
+  "catSupport": {"status": "not-expressible", "basis": "cited", "ref": "Jeffrey2016", "note": "Well-justification quantifies over alternative configurations of the event structure (a game-semantics style justification order), which no per-execution cat axiom captures."}
+}

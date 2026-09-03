@@ -1,0 +1,8 @@
+{
+  "from": "C11",
+  "to": "Wasm",
+  "type": "compilation",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Watt et al. 2019 §7.2 / Fig. 20 give the compilation of C/C++11 accesses to Wasm memory accesses, mapping all C/C++ atomics (relaxed, acquire/release, seq_cst) onto Wasm seqcst atomics; the sketch shows the compiled program is SC-DRF and thus behaviourally correct at the level of memory accesses."
+}

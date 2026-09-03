@@ -1,0 +1,9 @@
+{
+  "from": "SC",
+  "to": "VbD",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "by_construction",
+  "fragment_restricted": false,
+  "note": "Volatile-by-default makes every Java access sequentially consistent, so it admits exactly the SC outcomes; it differs from SC only in enforcement mechanism (speculative JIT recompilation) and performance."
+}

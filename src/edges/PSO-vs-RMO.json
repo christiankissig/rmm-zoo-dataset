@@ -1,0 +1,8 @@
+{
+  "from": "PSO",
+  "to": "RMO",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "machine_run",
+  "note": "RMO allows all four reordering types including load-load and load-store."
+}

@@ -1,0 +1,9 @@
+{
+  "from": "PromisingARM",
+  "to": "ARMv8",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "cited",
+  "fragment_restricted": true,
+  "note": "Pulte et al. (PLDI 2019), Appendix D, Theorem D.1: the operational Promising-ARM model is proven equivalent in Coq to the axiomatic ARMv8 model for finite executions."
+}

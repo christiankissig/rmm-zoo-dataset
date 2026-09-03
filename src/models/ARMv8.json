@@ -1,0 +1,20 @@
+{
+  "id": "ARMv8",
+  "name": "ARMv8 / AArch64 Memory Model",
+  "abbrev": "ARMv8",
+  "year": 2018,
+  "authors": ["Pulte", "Flur", "Deacon", "French", "Sarkar", "Sewell"],
+  "description": "A strengthened, formally specified model for ARMv8. Multi-copy atomic (stores become visible to all threads simultaneously). Introduces the LDAR/STLR acquire-release instructions. Strictly stronger than ARMv7.",
+  "references": ["Pulte2018"],
+  "tags": ["hardware", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": ["ARMv8", "AArch64"],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": true},
+  "propertyProvenance": "extrapolated",
+  "propertyCitations": {
+    "mca": {"ref": "Pulte2018", "note": "Pulte et al. give ARMv8 an explicitly multicopy-atomic semantics — the revised architecture (and this paper's title) fixes each write to become visible to all other threads at a single point."}
+  },
+  "catSupport": {"status": "specified", "basis": "cat-model", "ref": "Pulte2018", "note": "herd7's aarch64.cat is Arm's own machine-readable model — the architecture is officially specified in cat."},
+  "katSupport": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "kater's kat/arm8.kat: dob/aob/bob ordering and acyclic(ob), with ISB and DMB.ST introduced as extra fence predicates."}
+}

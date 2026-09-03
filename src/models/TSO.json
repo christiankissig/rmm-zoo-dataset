@@ -1,0 +1,19 @@
+{
+  "id": "TSO",
+  "name": "Total Store Order",
+  "abbrev": "TSO",
+  "year": 2004,
+  "authors": ["Owens", "Sarkar", "Sewell"],
+  "description": "A write goes into a per-thread FIFO store buffer before becoming globally visible. Reads can observe a thread's own buffered write before others can. Store-load reordering is the principal relaxation over SC.",
+  "references": ["Sewell2010", "Owens2009", "AdveGharachorloo1996"],
+  "tags": ["hardware", "formal"],
+  "hardware": ["x86", "SPARC-TSO"],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
+  "propertyProvenance": "extrapolated",
+  "propertyCitations": {
+    "mca": {"ref": "Owens2009", "note": "TSO's shared-memory-plus-store-buffer structure makes writes multicopy atomic (Owens et al., x86-TSO extended version)."}
+  },
+  "catSupport": {"status": "specified", "basis": "cat-model", "ref": "Alglave2014", "note": "herd7's tso.cat (zoo copy litmus/models/abstract-tso.cat): the Herding cats framework instantiated with ppo = po minus W->R."},
+  "katSupport": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "kater's kat/tso.kat, with kat/tso-fm.kat as the Herding-cats-style flavour the two are proved equivalent to (paper Table 1, TSO ↔ TSOFM)."}
+}

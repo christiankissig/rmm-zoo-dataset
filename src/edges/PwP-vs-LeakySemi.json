@@ -1,0 +1,8 @@
+{
+  "from": "PwP",
+  "to": "LeakySemi",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Leaky Semicolon §9/App. E: 'PwT-mca generalizes PwP to account for sequential composition'; PwP imposes m7c (reads-from implies pomset order) and 'is similar to PwT-mca1', whereas 'PwT-mca2 ... drops ... m7c' and 'is a weaker model new to this paper' (§4.2). Dropping m7c admits behaviours PwP forbids: the Arm8 execution of §4.2 is allowed by PwT-mca2 but 'disallowed by PwT-mca1', witnessing that the LeakySemi/PwT-mca model is strictly weaker (more permissive) than PwP. Since PwP is roughly PwT-mca1 rather than exactly it (§9: 'PwT is based on PwP, [but] there are many differences'), no equivalence is claimed."
+}

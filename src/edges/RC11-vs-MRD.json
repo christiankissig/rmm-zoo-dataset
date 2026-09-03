@@ -1,0 +1,8 @@
+{
+  "from": "RC11",
+  "to": "MRD",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Paviotti et al. (Modular Relaxed Dependencies in Weak Memory Concurrency, ESOP 2020) relax the RC11 axiomatic model with their MRD dependency model to form MRD-C11. Lemma 3 (Implementability of MRD-C11): for all programs P, ⟦P⟧MRD-C11 ⊇ ⟦P⟧RC11 — MRD-C11 is strictly weaker than RC11, admitting the false-dependency-eliminating load→store reorderings RC11 forbids while still forbidding out-of-thin-air. (The MRD+IMM instantiation of Theorem 3, ⟦P⟧MRD+IMM ⊇ ⟦P⟧IMM, is a distinct model and is not represented by this node.)"
+}

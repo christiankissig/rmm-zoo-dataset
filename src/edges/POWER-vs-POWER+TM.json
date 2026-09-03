@@ -1,0 +1,9 @@
+{
+  "from": "POWER",
+  "to": "POWER+TM",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "by_construction",
+  "fragment_restricted": true,
+  "note": "Chong, Sorensen & Wickerson (PLDI 2018) add TM rules on top of the POWER consistency axioms (their Fig. 6) that only constrain transactional events; on the non-transactional fragment it coincides with POWER by construction. Validated on a POWER8 machine (no forbidden test observed)."
+}

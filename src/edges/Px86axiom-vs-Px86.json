@@ -1,0 +1,9 @@
+{
+  "from": "Px86axiom",
+  "to": "Px86",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "cited",
+  "fragment_restricted": true,
+  "note": "Equivalent modulo Cho's fix. Cho, Lee, Raad & Kang (PLDI 2021), Theorem 4.3, prove Px86axiom equivalent to SPx86 -- a *strengthened* Px86 whose clflush executes synchronously -- which repairs documented flaws in Raad et al.'s original Px86. So this is an equivalence to the fixed model, not literally the original Px86; fragment_restricted because the two coincide only on the fragment where those flaws do not manifest."
+}

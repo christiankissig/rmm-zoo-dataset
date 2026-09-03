@@ -1,0 +1,16 @@
+{
+  "id": "PTX",
+  "name": "NVIDIA PTX Memory Model",
+  "abbrev": "PTX",
+  "year": 2019,
+  "authors": ["Lustig", "Sahasrabuddhe", "Giroux"],
+  "description": "A scoped, relaxed model for NVIDIA's PTX virtual ISA, with relaxed/acquire/release atomics and explicit thread scopes (CTA, GPU, system). Synchronisation only takes effect between threads that share the named scope, so narrower scopes admit weak behaviours a flat model forbids. Formalised and machine-checked by Lustig et al. (ASPLOS 2019) and the foundation for CUDA's cuda::atomic semantics.",
+  "references": ["Lustig2019", "Alglave2015"],
+  "tags": ["hardware", "gpu", "formal", "scoped"],
+  "formalism": ["axiomatic"],
+  "hardware": ["NVIDIA GPU", "PTX"],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "cited", "ref": "Lustig2019", "note": "Per-execution scoped axiomatic model, published as an executable Alloy formalisation; herd's bell/cat scope support (Alglave et al. 2015) makes a cat rendering routine, but none ships with the ISA spec."}
+}

@@ -1,0 +1,8 @@
+{
+  "from": "RC11",
+  "to": "JAM",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "JAM borrows RC11's OOTA fix for opaque and stronger accesses, but unlike RC11 it does not tackle thin-air for plain (non-atomic) accesses, so it permits more behaviours."
+}

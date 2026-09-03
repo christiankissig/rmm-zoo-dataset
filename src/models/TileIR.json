@@ -1,0 +1,16 @@
+{
+  "id": "TileIR",
+  "name": "NVIDIA Tile IR Memory Model",
+  "abbrev": "Tile IR",
+  "year": 2026,
+  "authors": ["NVIDIA"],
+  "description": "The memory model of NVIDIA's Tile IR, a tile-based virtual ISA introduced with CUDA 13.1 (2026) as a lower-level compilation target for tile programs (e.g. the experimental Triton-to-Tile-IR backend). This axiomatic, scoped model defines coherence order, happens-before, program order, 'morally strong' accesses, reads-from and token-based dependency ordering, with scopes tile_block/device/sys; global memory accesses are unordered by default. NVIDIA's documentation states the axioms and relations are intended to be a strict weakening of the PTX model. Vendor documentation only — no peer-reviewed formalisation or proof.",
+  "references": ["TileIR2026"],
+  "tags": ["hardware", "gpu", "formal", "scoped"],
+  "formalism": ["axiomatic"],
+  "hardware": ["NVIDIA GPU", "Tile IR"],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "in_order": false, "no_oota": true, "mca": false},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "TileIR2026", "note": "Axiomatic scoped model in the PTX lineage, specified in prose in the CUDA documentation; no machine-readable cat rendering is published."}
+}

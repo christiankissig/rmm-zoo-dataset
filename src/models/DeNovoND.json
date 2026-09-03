@@ -1,0 +1,18 @@
+{
+  "id": "DeNovoND",
+  "name": "DeNovoND",
+  "abbrev": "DeNovoND",
+  "year": 2013,
+  "authors": ["Sung", "Komuravelli", "Adve"],
+  "description": "A hardware/software co-designed extension of the DeNovo coherence protocol that adds efficient support for disciplined non-determinism — lock-based synchronization — on top of DeNovo's deterministic core. It combines distributed queue-based locks with access signatures to keep the protocol free of transient coherence states, invalidation traffic, directories, and false sharing, while still guaranteeing sequential consistency for data-race-free programs. It is reported to match or improve on a MESI baseline in performance and energy for non-deterministic (lock-based) workloads.",
+  "references": ["Sung2013"],
+  "tags": ["hardware", "language"],
+  "hardware": [],
+  "languages": ["DPJ"],
+  "properties": {"irm": true, "edrf": true, "coh": true, "in_order": true, "no_oota": true, "mca": true},
+  "propertyProvenance": "extrapolated",
+  "propertyCitations": {
+    "irm": {"ref": "PoetzlKroening2015", "note": "Assumes SC-for-DRF; inverse roach motel sound for SC-for-DRF per Poetzl & Kroening §4."}
+  },
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Sung2013", "note": "As DeNovo: the protocol is the artefact, and the guarantee exposed to the programmer (SC for disciplined, lock-using programs) is what a cat model would state."}
+}

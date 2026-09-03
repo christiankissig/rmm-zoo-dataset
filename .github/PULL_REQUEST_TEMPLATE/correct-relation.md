@@ -5,6 +5,9 @@ about: Add, remove, redirect or reclassify an edge
 
 ## The relation
 
+The edge is one file, `src/edges/<from>-vs-<to>.json` — added, edited, renamed
+(a redirect is a rename) or deleted.
+
 - **Models:** `A` … and `B` …
 - **Currently:** *(edge type + direction, or "no edge")* …
 - **Should be:** …
@@ -77,6 +80,7 @@ directory README rewritten to argue the new claim, and `litmus/run.sh` updated.
 
 ```sh
 bash litmus/run.sh      # per-test PASS/FAIL, if the witness is herd7-runnable
+make models             # regenerate models.json (committed)
 make litmus             # regenerate litmus.json (committed) if litmus/ changed
 make check
 ```

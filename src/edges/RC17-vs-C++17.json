@@ -1,0 +1,8 @@
+{
+  "from": "RC17",
+  "to": "C++17",
+  "type": "strictly_weaker",
+  "provenance": "litmus",
+  "evidence": "machine_run",
+  "note": "RC17 and C++17 share the C++17 release sequences but RC17 additionally keeps RC11's no-thin-air axiom acyclic(po ∪ rf), which C++17 lacks. So C++17 permits plain load-buffering / out-of-thin-air reads RC17 forbids, and forbids nothing RC17 allows (RC17 = C++17 plus one axiom, by construction). Mechanised: the relaxed LB shape is Never under rc17.cat and Sometimes under cpp17.cat. Parallels the existing RC11→C11 edge. See litmus/strictly-weaker/RC17-vs-C++17."
+}

@@ -1,0 +1,16 @@
+{
+  "id": "LeakySemi",
+  "name": "Pomsets with Predicate Transformers (The Leaky Semicolon)",
+  "abbrev": "PwT",
+  "year": 2022,
+  "authors": ["Jeffrey", "Riely", "Batty", "Cooksey", "Kaysin", "Podkopaev"],
+  "description": "A compositional, denotational relaxed-memory model based on pomsets with predicate transformers (PwT), extending Pomsets with Preconditions (Jagadeesan, Jeffrey & Riely, POPL 2020) with families of predicate transformers so that the denotation of a sequential composition S1;S2 is computed directly from those of S1 and S2. It bans out-of-thin-air behaviour (verified in Coq) while permitting common compiler and hardware reorderings, and defines two instances: PwT-C11 (inherits RC11's top-level axioms; lowers to any C11-supported architecture) and PwT-mca (fully compositional, with optimal lowering to multi-copy-atomic architectures such as Arm8). Despite the overlapping author set, this is the pomsets/preconditions lineage rather than the Well-Justified Event Structures (Jeffrey & Riely 2016) event-structures line; the paper states no formal ordering to WJES.",
+  "references": ["Jeffrey2022"],
+  "tags": ["language", "formal"],
+  "formalism": ["event-structure"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"comp_armv8": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "not-expressible", "basis": "cited", "ref": "Jeffrey2022", "note": "A denotational pomsets-with-predicate-transformers semantics computed compositionally over program syntax, not a filter on candidate executions. Its PwT-C11 instance does inherit RC11's top-level axioms, which cat states — but the dependency calculation that gives the model its content does not."}
+}

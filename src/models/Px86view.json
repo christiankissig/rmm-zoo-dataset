@@ -1,0 +1,16 @@
+{
+  "id": "Px86view",
+  "name": "View-based Px86 (Px86view)",
+  "abbrev": "Px86view",
+  "year": 2021,
+  "authors": ["Cho", "Lee", "Raad", "Kang"],
+  "description": "The first operational, view-based persistency model for Intel-x86, part of Cho et al.'s revamp of hardware persistency. Each thread tracks views over the store/persist history in a uniform operational style, extending the x86view consistency model with persistency. Proven equivalent (mechanised in Coq) to the axiomatic Px86axiom, and thereby to Raad et al.'s Px86 modulo the flaws Cho et al. repair. The crash-free behaviour coincides with x86-TSO.",
+  "references": ["Cho2021"],
+  "tags": ["hardware", "formal"],
+  "formalism": ["operational"],
+  "hardware": ["x86", "x86-64"],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "cited", "ref": "Cho2021", "note": "Operational and view-based, but proved equivalent in Coq to the declarative Px86axiom, so it does have a per-execution characterisation — one no cat model states, for want of persist events."}
+}

@@ -1,0 +1,9 @@
+{
+  "from": "PTSO",
+  "to": "x86-TSO",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "cited",
+  "fragment_restricted": true,
+  "note": "Raad & Vafeiadis (OOPSLA 2018): PTSO layers epoch persistency on TSO; on the crash-free fragment its behaviour coincides with x86-TSO. fragment_restricted because the equivalence holds only crash-free — persistency adds an orthogonal persist-order dimension the consistency model does not see."
+}

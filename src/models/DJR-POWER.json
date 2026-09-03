@@ -1,0 +1,16 @@
+{
+  "id": "DJR-POWER",
+  "name": "POWER + DJR Transactions",
+  "abbrev": "POWER+DJR",
+  "year": 2018,
+  "authors": ["Dongol", "Jagadeesan", "Riely"],
+  "description": "The PPC (POWER) instance of the unified declarative transactional framework of Dongol, Jagadeesan & Riely (POPL 2018), which adds transactions to a relaxed-memory architecture parametric in the base model (the paper instantiates it at SC, TSO, ARMv8 and PPC/POWER). It treats relaxed memory as a restricted distributed system with no global real-time clock and uses observation-based 'observable serializability' rather than strict serializability, admitting flexible STM-style abort. A genuine sibling to the Chong-Sorensen-Wickerson TM cluster with a distinct construction and authorship. The added transactional axioms only constrain transactional events, so on programs with no transactions this instance coincides with POWER by construction.",
+  "references": ["Dongol2018"],
+  "tags": ["hardware", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": ["IBM POWER"],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Dongol2018", "note": "Declarative transaction axioms over the POWER base model — per-execution and cat-expressible, but published as inference rules rather than cat."}
+}

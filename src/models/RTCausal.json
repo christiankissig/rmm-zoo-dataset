@@ -1,0 +1,16 @@
+{
+  "id": "RTCausal",
+  "name": "Real-Time Causal Consistency",
+  "abbrev": "RTCausal",
+  "year": 2011,
+  "authors": ["Mahajan", "Alvisi", "Dahlin"],
+  "description": "A strengthening of causal consistency due to Mahajan, Alvisi & Dahlin: in addition to causality it enforces a real-time condition — causally concurrent writes that do not overlap in real time must be applied in their real-time order. Viotti & Vukolić (ACM Computing Surveys 2016, Eq. 28) express it as RealTimeCausality = Causality ∧ RealTime, so it is strictly stronger than the causal consistency of that framework — causal convergence (CCv), not causal memory, to which it is incomparable. It is incomparable to causal+: real-time causality does not imply strong convergence, and causal+ does not imply the real-time ordering (V-V §3.5, correcting Lloyd et al.'s original classification).",
+  "references": ["Mahajan2011", "ViottiVukolic2016"],
+  "tags": ["theoretical", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"coh": false, "mca": false},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "not-expressible", "basis": "extrapolated", "ref": "Mahajan2011", "note": "The real-time condition — causally concurrent writes that do not overlap in real time must be ordered — refers to wall-clock intervals; cat's vocabulary has no notion of real time."}
+}

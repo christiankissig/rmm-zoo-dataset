@@ -1,0 +1,8 @@
+{
+  "from": "SC",
+  "to": "LKMM",
+  "type": "strictly_weaker",
+  "provenance": "kater",
+  "evidence": "machine_run",
+  "note": "Containment proved by kater, unbounded: each of LKMM's three global ordering axioms — acyclic(hb), the prop;ppo* work-around, and coherence — follows from SC's acyclic(sc). The operand is not kater's kat/lkmm2.kat, which is written over internal (-imm) relations and does not load in any mode; it is the mechanical restatement over kater's builtin theory that litmus/kater/derive-lkmm.sh generates, so the proof is about that rendering. Query: litmus/kater/queries/strictly-weaker-SC-vs-LKMM.kat. Strictness stays with the witness: LKMM permits reorderings of plain and *_ONCE accesses (e.g. store-buffering, SB) that SC forbids; DRF-style synchronisation must be requested explicitly with smp_mb() and friends. See litmus/strictly-weaker/SC-vs-LKMM."
+}

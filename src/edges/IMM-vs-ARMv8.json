@@ -1,0 +1,8 @@
+{
+  "from": "IMM",
+  "to": "ARMv8",
+  "type": "compilation",
+  "provenance": "kater",
+  "evidence": "machine_run",
+  "note": "IMM compiles correctly to ARMv8. Machine-checked with kater: imm::psc ⊆ arm8::ob*, the mapping's soundness condition, under the well-formedness premise rf;rmw ⊆ mo (litmus/kater/queries/compilation-IMM-vs-ARMv8.kat) — the paper's Table 1 query, reproduced here."
+}

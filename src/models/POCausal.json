@@ -1,0 +1,16 @@
+{
+  "id": "POCausal",
+  "name": "Per-Object Causal Consistency",
+  "abbrev": "PO-Causal",
+  "year": 2014,
+  "authors": ["Burckhardt", "Gotsman", "Yang", "Zawirski"],
+  "description": "Per-object (per-key) causal consistency: causal consistency restricted to a per-object happens-before order hbo = ((so ∩ ob) ∪ vis)+, as described by Burckhardt, Gotsman, Yang & Zawirski (POPL 2014) and Viotti & Vukolić (ACM Computing Surveys 2016, §3.9). In Burckhardt's framework it is eventual consistency (EVENTUAL+THINAIR) plus the per-object ordering axioms POCV/POCA, whereas (cross-object) causal consistency additionally imposes the stronger COCV/COCA. Hence it sits strictly between eventual consistency (weaker) and, above it, the causal consistency of that same framework — causal convergence (CCv), not causal memory, to which it is unordered.",
+  "references": ["BurckhardtRDT2014", "ViottiVukolic2016"],
+  "tags": ["theoretical", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"coh": false, "mca": false},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "BurckhardtRDT2014", "note": "The per-object causal order hbo = ((so & ob) | vis)+ is an acyclicity condition on a single execution, in cat's relational vocabulary."}
+}

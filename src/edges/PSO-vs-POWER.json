@@ -1,0 +1,8 @@
+{
+  "from": "PSO",
+  "to": "POWER",
+  "type": "strictly_weaker",
+  "provenance": "litmus",
+  "evidence": "machine_run",
+  "note": "Empirically PSO is a subset of POWER: every PSO-allowed behaviour is also POWER-allowed, while POWER additionally allows load-load reordering (e.g. MP+sync+po) and non-MCA behaviour that PSO forbids. No PSO-allowed/POWER-forbidden witness exists on the standard litmus families, so the earlier 'incomparable' classification was too generous. See litmus/strictly-weaker/PSO-vs-POWER."
+}

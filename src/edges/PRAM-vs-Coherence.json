@@ -1,0 +1,8 @@
+{
+  "from": "PRAM",
+  "to": "Coherence",
+  "type": "incomparable",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "PRAM and cache consistency are incomparable: PRAM orders a process's own writes globally but not per-location, cache consistency the converse (Goodman 1989; Steinke & Nutt 2004)."
+}

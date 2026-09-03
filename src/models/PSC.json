@@ -1,0 +1,16 @@
+{
+  "id": "PSC",
+  "name": "Persistent Sequential Consistency (PSC)",
+  "abbrev": "PSC",
+  "year": 2021,
+  "authors": ["Khyzha", "Lahav"],
+  "description": "A simpler and stronger sequentially-consistent persistency model introduced alongside PTSOsyn: it layers an epoch-persistency dimension over SC rather than TSO, so the crash-free behaviour coincides with sequential consistency. Khyzha & Lahav develop a sound mapping from PSC down to x86 and establish a data-race-freedom guarantee giving programmers a safe programming discipline for persistent memory.",
+  "references": ["KhyzhaLahav2021"],
+  "tags": ["theoretical", "formal"],
+  "formalism": ["axiomatic", "operational"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"reorder_sl": false, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "KhyzhaLahav2021", "note": "An epoch-persistency dimension over SC, given declaratively as well as operationally; per-execution, but with persist events outside cat's vocabulary."}
+}

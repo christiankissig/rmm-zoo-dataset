@@ -1,0 +1,8 @@
+{
+  "from": "Causal",
+  "to": "Coherence",
+  "type": "incomparable",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Causal and cache consistency are incomparable (Steinke & Nutt 2004)."
+}

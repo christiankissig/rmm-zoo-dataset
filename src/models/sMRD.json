@@ -1,0 +1,16 @@
+{
+  "id": "sMRD",
+  "name": "Symbolic MRD",
+  "abbrev": "sMRD",
+  "year": 2025,
+  "authors": ["Richards", "Wright", "Cooksey", "Batty"],
+  "description": "A successor to Modular Relaxed Dependencies (MRD) and the first thin-air-free memory model to admit compiler optimisations that aggressively leverage alias analysis, an assumption of freedom from undefined behaviour, and the extrinsic choices of real implementations (e.g. over-alignment). Built on symbolic execution, it models dynamic memory — allocation, dereferencing, and reclamation — rather than only concrete locations, and exports a semantic-dependency relation that integrates with the C/C++ memory model, preserving the standard compilation mappings for atomics. It matches every test in the recently published ISO C/C++ semantic-dependency desiderata, and its tooling runs orders of magnitude faster than other executable thin-air-free semantics.",
+  "references": ["Richards2025", "Paviotti2020"],
+  "tags": ["language", "formal"],
+  "formalism": ["event-structure"],
+  "hardware": [],
+  "languages": ["C", "C++"],
+  "properties": {"comp_x86": true, "comp_power": true, "comp_armv7": true, "comp_armv8": true, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": true, "ile": true, "strengthen": true, "tp": true, "vr": true, "coh": true, "no_ub": false, "in_order": false, "no_oota": true},
+  "propertyProvenance": "survey",
+  "catSupport": {"status": "not-expressible", "basis": "cited", "ref": "Richards2025", "note": "Same event-structure/denotational shape as MRD, with symbolic addresses on top; no per-candidate-execution predicate to encode in cat."}
+}

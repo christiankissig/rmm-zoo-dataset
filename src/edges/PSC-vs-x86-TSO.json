@@ -1,0 +1,8 @@
+{
+  "from": "PSC",
+  "to": "x86-TSO",
+  "type": "compilation",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Khyzha & Lahav (POPL 2021) develop a sound mapping from the stronger SC-based persistency model PSC down to x86; the mapping targets the x86-TSO consistency model."
+}

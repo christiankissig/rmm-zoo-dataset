@@ -1,0 +1,16 @@
+{
+  "id": "GOS",
+  "name": "Generative Operational Semantics",
+  "abbrev": "GOS",
+  "year": 2010,
+  "authors": ["Jagadeesan", "Pitcher", "Riely"],
+  "description": "A generative operational semantics that attempts to fix the JMM by constraining speculative execution with stratification conditions to rule out thin-air values. The authors prove the external DRF theorem and verify a few program transformations (store→store reordering, load/load elimination, and roach-motel reordering), though the overall study of transformations is not systematic.",
+  "references": ["Jagadeesan2010", "Moiseenko2021"],
+  "tags": ["language", "formal", "operational"],
+  "formalism": ["operational"],
+  "hardware": [],
+  "languages": ["Java", "JVM"],
+  "properties": {"edrf": true, "no_ub": true, "in_order": false, "no_oota": true},
+  "propertyProvenance": "survey",
+  "catSupport": {"status": "not-expressible", "basis": "cited", "ref": "Jagadeesan2010", "note": "Speculative steps are constrained by a stratification over possible future executions, so legality is not a per-execution condition."}
+}

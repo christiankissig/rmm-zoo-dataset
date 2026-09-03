@@ -1,0 +1,15 @@
+{
+  "id": "AMDGPU",
+  "name": "AMD GPU Memory Model",
+  "abbrev": "AMD GPU",
+  "year": 2015,
+  "authors": ["Gaster", "Hower", "Howes"],
+  "description": "The memory model underlying AMD's GCN, CDNA and RDNA GPUs, built on the HSA heterogeneous, scoped, release-consistency framework. Memory operations carry explicit scope qualifiers (work-group, agent/device, system) and cache-control hints; ordering between threads holds only within a shared scope.",
+  "references": ["Gaster2015", "Hower2014"],
+  "tags": ["hardware", "gpu", "scoped"],
+  "hardware": ["AMD GCN", "AMD CDNA", "AMD RDNA"],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Gaster2015", "note": "HSA-style scoped release consistency, specified in prose: the scoped-DRF guarantees are per-execution conditions that herd's bell/cat scopes can express, but no cat model is published."}
+}

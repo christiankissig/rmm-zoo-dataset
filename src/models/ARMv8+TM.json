@@ -1,0 +1,16 @@
+{
+  "id": "ARMv8+TM",
+  "name": "ARMv8 + Transactional Memory (proposed)",
+  "abbrev": "ARMv8+TM",
+  "year": 2018,
+  "authors": ["Chong", "Sorensen", "Wickerson"],
+  "description": "An axiomatic extension of the ARMv8 memory model with (unofficial) transactional-memory rules based on a proposal considered within ARM Research: strong isolation, implicit transaction fences, transaction ordering, and RMW cancellation. ARM hardware did not support TM, so the model could not be tested directly, but the generated test suites revealed a TxnOrder violation in an RTL prototype. The paper's headline result is that combining any reasonable TM extension with the recommended ARMv8 spinlock makes lock elision UNSOUND (Example 1.1): a critical region can begin executing after the lock is observed free but before it is taken. No behavioural-equivalence edge to ARMv8 is asserted; the fix proposed is to append a DMB to the lock() implementation, after which lock elision becomes sound.",
+  "references": ["Chong2018"],
+  "tags": ["hardware", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": ["ARMv8", "AArch64"],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "specified", "basis": "cited", "ref": "Chong2018", "note": "The proposed transactional rules are given in cat on top of the ARMv8 model and run in the authors' transaction-aware herd7."}
+}

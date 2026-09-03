@@ -1,0 +1,8 @@
+{
+  "from": "RC11",
+  "to": "sMRD",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "machine_run",
+  "note": "Symbolic MRD interfaces with an RC11-style axiomatic model but refines its dependency relation (dp), removing false dependencies so that load→store reorderings in load-buffering shapes — e.g. the LB+UB+data outcome RC11 forbids because of a cycle in ⊑∪rf — become allowed, while genuine out-of-thin-air cycles stay forbidden. It therefore admits strictly more behaviours than RC11."
+}

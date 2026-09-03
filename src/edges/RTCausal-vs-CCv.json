@@ -1,0 +1,8 @@
+{
+  "from": "RTCausal",
+  "to": "CCv",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "RealTimeCausality = Causality ∧ RealTime (Viotti & Vukolić 2016, Eq. 28; Mahajan, Alvisi & Dahlin 2011). V-V's Causality (Eq. 26) is causal convergence, so this containment is against CCv. It adds RealTime (Eq. 9, rb ⊆ ar) — causally concurrent, real-time-non-overlapping writes must be applied in real-time order — disallowing strictly more behaviours, so CCv is strictly weaker than real-time causal consistency. Re-homed from the Causal node, where the same note had been read as a containment against causal memory."
+}

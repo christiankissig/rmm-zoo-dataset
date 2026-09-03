@@ -1,0 +1,9 @@
+{
+  "from": "ArmIF",
+  "to": "ARMv8",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "cited",
+  "fragment_restricted": true,
+  "note": "Simner et al., ESOP 2020: the instruction-fetch system-semantics model is built by extending the base Armv8-A user-mode concurrency (Flat) model with instruction-fetch and IC/DC cache-maintenance events (Sec. 4-5, 'extending previous work on user-mode concurrency'). Validation (Sec. 6) reports the model's results are identical to the base model over all 8950 non-instruction-fetch Flat regression tests, so on the fragment with no instruction fetch or cache maintenance it coincides with base ARMv8; outside that fragment (self-modifying code, IC/DC) it admits additional relaxed executions, hence the equivalence is fragment-restricted."
+}

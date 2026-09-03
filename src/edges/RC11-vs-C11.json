@@ -1,0 +1,8 @@
+{
+  "from": "RC11",
+  "to": "C11",
+  "type": "strictly_weaker",
+  "provenance": "kater",
+  "evidence": "machine_run",
+  "note": "RC11 is strictly stronger than C11: it fixes SC axioms and eliminates thin-air. All RC11 behaviours are C11 behaviours but not vice versa. Containment is machine-checked: kater derives C11's psc-acyclicity and coherence from RC11's acyclic(ar) over kater's rc11.kat and c11-old.kat (litmus/kater/queries/strictly-weaker-RC11-vs-C11.kat). Strictness is the witness in litmus/strictly-weaker/RC11-vs-C11/."
+}

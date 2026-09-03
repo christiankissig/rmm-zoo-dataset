@@ -1,0 +1,15 @@
+{
+  "id": "Coherence",
+  "name": "Cache Coherence",
+  "abbrev": "Coh",
+  "year": 1990,
+  "authors": ["Adve", "Hill"],
+  "description": "The minimal requirement that writes to a single address are seen in the same order by all processors. Implied by virtually all hardware models, and identical to Goodman's cache consistency in the Steinke–Nutt lattice. Much weaker than SC; incomparable to PRAM and causal consistency; strictly weaker than processor consistency and strictly stronger than slow consistency.",
+  "references": ["Adve1990", "Goodman1989", "SteinkeNutt2004", "AdveGharachorloo1996"],
+  "tags": ["hardware", "formal"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": false},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "specified", "basis": "cat-model", "ref": "Alglave2014", "note": "Run here as litmus/models/abstract-coherence.cat — cat's uniproc/scperloc axiom, acyclic(po-loc | com), on its own."}
+}

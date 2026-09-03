@@ -1,0 +1,16 @@
+{
+  "id": "JSMM",
+  "name": "JavaScript Memory Model",
+  "abbrev": "JSMM",
+  "year": 2020,
+  "authors": ["Watt", "Pulte", "Podkopaev", "Barbier", "Dolan", "Flur", "Pichon-Pharabod", "Guo"],
+  "description": "The memory model of JavaScript, based on the C11 model. Like C11 it suffers from the thin-air problem and so provides only the internal DRF guarantee, but — unlike C11 — it does not treat racy non-atomic accesses as undefined behaviour. Because its main shared primitive is the SharedArrayBuffer, a linear mutable byte buffer, the model naturally supports mixed-size accesses. It was repaired and mechanised by Watt et al.",
+  "references": ["Watt2020", "Moiseenko2021"],
+  "tags": ["language", "formal", "standard"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": ["JavaScript"],
+  "properties": {"comp_x86": true, "comp_power": true, "comp_armv7": true, "comp_armv8": true, "edrf": false, "coh": false, "no_ub": true, "in_order": false, "no_oota": false},
+  "propertyProvenance": "survey",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Watt2020", "note": "A C11-shaped axiomatic model (mechanised by Watt et al.): per-execution axioms over mixed-size accesses, which cat's mixed-size support (cf. x86tso-mixed.cat) already handles. No cat model has been published."}
+}

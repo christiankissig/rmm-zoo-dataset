@@ -1,0 +1,8 @@
+{
+  "from": "C11",
+  "to": "GOS",
+  "type": "incomparable",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "GOS gives a generative operational semantics with stratification constraints on speculation to rule out thin-air values and prove external DRF; it forbids thin-air reads C11 permits but is not a strict subset."
+}

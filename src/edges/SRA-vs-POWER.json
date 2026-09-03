@@ -1,0 +1,8 @@
+{
+  "from": "SRA",
+  "to": "POWER",
+  "type": "compilation",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Lahav, Giannarakis & Vafeiadis, POPL 2016: SRA compiles to POWER by the standard RA scheme (lwsync before every store, ctrl+isync after every load), and the mapping is complete as well as sound — the compiled program exhibits exactly the behaviours of the source. Lahav & Boker restate it as SRA precisely coinciding with the POWER model of Alglave et al. restricted to programs compiled from the RA fragment. Completeness is what makes SRA maximal: it cannot be strengthened further without an implementation cost on POWER."
+}

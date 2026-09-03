@@ -1,0 +1,17 @@
+{
+  "id": "RA",
+  "name": "Release-Acquire (C/C++11 RA fragment)",
+  "abbrev": "RA",
+  "year": 2011,
+  "authors": ["Batty", "Owens", "Sarkar", "Sewell", "Weber"],
+  "description": "The release-acquire fragment of the C/C++11 model: release stores, acquire loads and acquire-release RMWs, with no relaxed, non-atomic or seq_cst accesses. Lahav & Boker (Table 1) axiomatise it as irreflexivity of hb, write-coherence (mo;hb irreflexive), read-coherence (mo;hb;rf^-1 irreflexive) and RMW atomicity. Having no relaxed accesses it is free of out-of-thin-air behaviour, and unlike WRA it provides SC-per-location. It still allows the 2+2W outcome that the strengthening SRA forbids, and store buffering and IRIW, which SC forbids. This is the fragment the zoo's PSI and SI reference implementations are built over, and the source fragment whose standard POWER compilation SRA exactly characterises.",
+  "references": ["Batty2011", "LahavBoker2022"],
+  "tags": ["language", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": ["C11-fragment"],
+  "properties": {"comp_x86": true, "comp_power": true, "coh": true, "no_oota": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "LahavBoker2022", "note": "As SRA but with write-coherence (mo;hb irreflexive) in place of strong-write-coherence — the release/acquire restriction of the vendored cpp11.cat and rc11.cat, and per-execution."},
+  "katSupport": {"status": "expressible", "basis": "extrapolated", "ref": "LahavBoker2022", "note": "Same shape as SRA, with mo;hb in place of (hb | mo)+. Nothing here needs a construct outside kater's regular fragment."}
+}

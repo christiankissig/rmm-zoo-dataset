@@ -1,0 +1,8 @@
+{
+  "from": "C11+TM",
+  "to": "x86-TSO+TM",
+  "type": "compilation",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Chong, Sorensen & Wickerson (PLDI 2018) prove (up to a bound, model-checked) that C++ transactions compile soundly to x86; the mapping targets the x86-TSO transactional model."
+}

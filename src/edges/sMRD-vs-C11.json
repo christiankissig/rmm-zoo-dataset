@@ -1,0 +1,8 @@
+{
+  "from": "sMRD",
+  "to": "C11",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "machine_run",
+  "note": "Like MRD, Symbolic MRD repairs the C/C++ thin-air problem: it forbids the out-of-thin-air reads C11 permits while preserving the standard atomics compilation mappings, and it matches the ISO C/C++ semantic-dependency desiderata."
+}

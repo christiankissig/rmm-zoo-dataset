@@ -1,0 +1,16 @@
+{
+  "id": "Weakestmo",
+  "name": "Weakestmo (Event-Structure Model)",
+  "abbrev": "WMO",
+  "year": 2019,
+  "authors": ["Chakraborty", "Vafeiadis"],
+  "description": "A semantic-dependency-preserving model that grounds thin-air reads using event structures, which can simultaneously encode multiple conflicting executions in order to model speculation. It admits the optimal compilation mappings, many program transformations, and the external DRF guarantee, and — unlike the Promising semantics — it also supports sequentially consistent accesses. It descends from a formalisation of an LLVM concurrency fragment by the same authors.",
+  "references": ["Chakraborty2019", "Chakraborty2017", "Moiseenko2021"],
+  "tags": ["language", "formal"],
+  "formalism": ["event-structure"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"comp_x86": true, "comp_power": true, "comp_armv7": true, "comp_armv8": true, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "sli": true, "rm": false, "strengthen": true, "cse": false, "ti": false, "edrf": true, "coh": true, "no_ub": false, "in_order": false, "no_oota": true},
+  "propertyProvenance": "survey",
+  "catSupport": {"status": "not-expressible", "basis": "cited", "ref": "Chakraborty2019", "note": "Built on event structures that hold several conflicting executions at once so speculation can be justified; the justification is not a property of the candidate execution being checked."}
+}

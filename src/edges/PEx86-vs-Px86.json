@@ -1,0 +1,9 @@
+{
+  "from": "PEx86",
+  "to": "Px86",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "cited",
+  "fragment_restricted": true,
+  "note": "Raad, Maranget & Vafeiadis (POPL 2022): PEx86 is a conservative extension of Px86 (Px86sim) -- for programs using only regular stores on write-back memory (no non-temporal stores or non-wb memory types) their behaviours coincide. fragment_restricted because it holds only on that shared wb regular-store fragment; and even there PEx86 minorly diverges from Px86sim by dropping the flush/flushopt ordering constraint, following the updated Intel manual."
+}

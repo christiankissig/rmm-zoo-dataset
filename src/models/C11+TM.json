@@ -1,0 +1,16 @@
+{
+  "id": "C11+TM",
+  "name": "C++ Transactional Memory Extension",
+  "abbrev": "C++TM",
+  "year": 2018,
+  "authors": ["Chong", "Sorensen", "Wickerson"],
+  "description": "An axiomatic formalisation of the C++ transactional-memory technical specification (relaxed and atomic transactions) layered on the repaired C11/C++ memory model of Lahav et al. (RC11), chosen because it supports correct compilation to Power. The extension makes two amendments to the base model: the definition of a data race is unchanged, and conflicting transactions synchronise via a transaction order folded into happens-before. On programs without transactions the model coincides with its RC11 base. The authors prove atomic transactions are strongly isolated, that race-free programs with no non-SC atomics and no relaxed transactions enjoy 'transactional SC', and (up to a bound) that C++ transactions compile soundly to x86, Power, and ARMv8. Handling of programmer-invoked abort() is left to future work.",
+  "references": ["Chong2018", "Lahav2017"],
+  "tags": ["language", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": ["C++"],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": false, "edrf": true, "coh": true, "no_ub": false, "in_order": true, "no_oota": true, "mca": false},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "specified", "basis": "cited", "ref": "Chong2018", "note": "The C++ TM technical specification is formalised in cat on top of RC11 and run in the authors' transaction-aware herd7."}
+}

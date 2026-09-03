@@ -960,8 +960,8 @@
       "name": "Local Consistency",
       "abbrev": "Local",
       "year": 1997,
-      "authors": ["Bataller", "Bernab\u00e9u-Aub\u00e1n"],
-      "description": "The weakest consistency model: each process's own operations appear in its program order, with no constraint on the order in which writes by other processes become visible, and different processes may see different orders. The bottom of the Steinke\u2013Nutt lattice.",
+      "authors": ["Bataller", "Bernabéu-Aubán"],
+      "description": "The weakest consistency model: each process's own operations appear in its program order, with no constraint on the order in which writes by other processes become visible, and different processes may see different orders. The bottom of the Steinke–Nutt lattice.",
       "references": ["BatallerBernabeu1997", "SteinkeNutt2004"],
       "tags": ["theoretical", "formal"],
       "formalism": ["axiomatic"],
@@ -1361,193 +1361,28 @@
   ],
   "edges": [
     {
-      "from": "PSER",
-      "to": "PARMv8",
-      "type": "compilation",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Raad, Wickerson & Vafeiadis (OOPSLA 2019) prove that PSER (persistent serialisability) compiles correctly to PARMv8."
-    },
-    {
-      "from": "C11+TM",
-      "to": "x86-TSO+TM",
-      "type": "compilation",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Chong, Sorensen & Wickerson (PLDI 2018) prove (up to a bound, model-checked) that C++ transactions compile soundly to x86; the mapping targets the x86-TSO transactional model."
-    },
-    {
-      "from": "C11+TM",
-      "to": "POWER+TM",
-      "type": "compilation",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Chong, Sorensen & Wickerson (PLDI 2018) prove (up to a bound) that C++ transactions compile soundly to Power; the mapping targets the POWER transactional model."
-    },
-    {
-      "from": "C11+TM",
-      "to": "ARMv8+TM",
-      "type": "compilation",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Chong, Sorensen & Wickerson (PLDI 2018) state a (bounded) sound compilation of C++ transactions to ARMv8. Caveat: the ARMv8+TM target is the untested/proposed model for which naive lock elision is unsound (Example 1.1), so this edge inherits that caveat."
-    },
-    {
-      "from": "PTSO",
-      "to": "x86-TSO",
-      "type": "equivalent",
-      "provenance": "literature",
-      "evidence": "cited",
-      "fragment_restricted": true,
-      "note": "Raad & Vafeiadis (OOPSLA 2018): PTSO layers epoch persistency on TSO; on the crash-free fragment its behaviour coincides with x86-TSO. fragment_restricted because the equivalence holds only crash-free — persistency adds an orthogonal persist-order dimension the consistency model does not see."
-    },
-    {
-      "from": "Px86",
-      "to": "x86-TSO",
-      "type": "equivalent",
-      "provenance": "literature",
-      "evidence": "cited",
-      "fragment_restricted": true,
-      "note": "Raad, Wickerson, Neiger & Vafeiadis (POPL 2020): Px86's crash-free behaviour coincides with x86-TSO. fragment_restricted because the equivalence holds only on the crash-free fragment; the persist-order axiom is orthogonal."
-    },
-    {
-      "from": "PARMv8",
-      "to": "ARMv8",
-      "type": "equivalent",
-      "provenance": "literature",
-      "evidence": "cited",
-      "fragment_restricted": true,
-      "note": "Raad, Wickerson & Vafeiadis (OOPSLA 2019): PARMv8's crash-free behaviour coincides with ARMv8. fragment_restricted because the equivalence holds only on the crash-free fragment; the persist-order axiom is orthogonal."
-    },
-    {
-      "from": "PTSOsyn",
-      "to": "Px86",
-      "type": "equivalent",
-      "provenance": "literature",
-      "evidence": "cited",
-      "fragment_restricted": false,
-      "note": "Khyzha & Lahav (POPL 2021): the synchronous-persist model PTSOsyn is proven equivalent, in terms of reachable states, to Raad et al.'s asynchronous-persist Px86 (POPL 2020). Full equivalence (crashes included), so not fragment_restricted; the caveat is that it is a state-based / reachable-state equivalence rather than a full trace equivalence."
-    },
-    {
-      "from": "PSC",
-      "to": "x86-TSO",
-      "type": "compilation",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Khyzha & Lahav (POPL 2021) develop a sound mapping from the stronger SC-based persistency model PSC down to x86; the mapping targets the x86-TSO consistency model."
-    },
-    {
-      "from": "Px86view",
-      "to": "Px86axiom",
-      "type": "equivalent",
-      "provenance": "literature",
-      "evidence": "cited",
-      "fragment_restricted": false,
-      "note": "Cho, Lee, Raad & Kang (PLDI 2021), Theorem 5.3: a behaviour is allowed under Px86axiom iff it is allowed under the operational Px86view. Full equivalence (mechanised in Coq), covering the persistency dimension, hence not fragment_restricted."
-    },
-    {
-      "from": "PArmv8view",
-      "to": "PArmv8axiom",
-      "type": "equivalent",
-      "provenance": "literature",
-      "evidence": "cited",
-      "fragment_restricted": false,
-      "note": "Cho, Lee, Raad & Kang (PLDI 2021), Theorem 6.2: a behaviour is allowed under PArmv8axiom iff it is allowed under the operational PArmv8view. Full equivalence (mechanised in Coq), covering the persistency dimension, hence not fragment_restricted."
-    },
-    {
-      "from": "Px86axiom",
-      "to": "Px86",
-      "type": "equivalent",
-      "provenance": "literature",
-      "evidence": "cited",
-      "fragment_restricted": true,
-      "note": "Equivalent modulo Cho's fix. Cho, Lee, Raad & Kang (PLDI 2021), Theorem 4.3, prove Px86axiom equivalent to SPx86 -- a *strengthened* Px86 whose clflush executes synchronously -- which repairs documented flaws in Raad et al.'s original Px86. So this is an equivalence to the fixed model, not literally the original Px86; fragment_restricted because the two coincide only on the fragment where those flaws do not manifest."
-    },
-    {
-      "from": "PEx86",
-      "to": "Px86",
-      "type": "equivalent",
-      "provenance": "literature",
-      "evidence": "cited",
-      "fragment_restricted": true,
-      "note": "Raad, Maranget & Vafeiadis (POPL 2022): PEx86 is a conservative extension of Px86 (Px86sim) -- for programs using only regular stores on write-back memory (no non-temporal stores or non-wb memory types) their behaviours coincide. fragment_restricted because it holds only on that shared wb regular-store fragment; and even there PEx86 minorly diverges from Px86sim by dropping the flush/flushopt ordering constraint, following the updated Intel manual."
-    },
-    {
-      "from": "SC",
-      "to": "OD-LSO",
+      "from": "ARM",
+      "to": "Coherence",
       "type": "strictly_weaker",
       "provenance": "literature",
-      "evidence": "cited",
-      "note": "Ou & Demsky 2018, §6: 'the constraints we impose in general are much weaker than the sequential consistency memory model.' The load-store-ordering criterion permits relaxed-atomics reorderings SC forbids while ruling out OOTA."
-    },
-    {
-      "from": "OD-LSO",
-      "to": "OD-Dep",
-      "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Ou & Demsky 2018, §1.3.2: preserving syntactic dependency (dependency ∪ reads-from acyclic) is explicitly 'a strictly weaker guarantee than the previous approach' of forbidding load-store reordering (sequence-before ∪ reads-from acyclic); dependency ⊆ sequence-before, so LSO-permitted executions are a subset of dependency-permitted ones."
-    },
-    {
-      "from": "OD-Dep",
-      "to": "C11",
-      "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Ou & Demsky 2018, §6: both approaches 'explore stronger memory models than the existing C/C++ memory model' — they forbid the OOTA/thin-air executions C11 permits while retaining ordinary relaxed-atomics reordering."
-    },
-    {
-      "from": "SC",
-      "to": "TSO",
-      "type": "strictly_weaker",
-      "provenance": "kater",
       "evidence": "machine_run",
-      "note": "TSO allows store-load reordering; SC does not. Containment is machine-checked: kater decides tso ⊆ sc⁺ over kater's sc.kat and tso.kat, so every SC-consistent execution is TSO-consistent — unbounded, not up to a bound (litmus/kater/queries/strictly-weaker-SC-vs-TSO.kat). Strictness is the SB witness in litmus/strictly-weaker/SC-vs-TSO/."
+      "note": "ARM enforces coherence (per-address total order) as a baseline."
     },
     {
-      "from": "x86-TSO",
-      "to": "x86-TSO+TM",
-      "type": "equivalent",
+      "from": "ARM",
+      "to": "POWER",
+      "type": "incomparable",
       "provenance": "literature",
-      "evidence": "by_construction",
-      "fragment_restricted": true,
-      "note": "Chong, Sorensen & Wickerson (PLDI 2018) present the TM model as a set of rules added on top of the x86-TSO consistency axioms (their Fig. 5) that only constrain transactional events. On the non-transactional fragment (programs with no transactions) it coincides with x86-TSO by construction. The extension was validated against four Intel TSX implementations (no forbidden test observed)."
+      "evidence": "machine_run",
+      "note": "Over the common instruction set ARMv7 and POWER coincide on every standard litmus family (verified against herd7's arm.cat and ppc.cat). Their incomparability is instruction-level: POWER's lightweight cumulative barrier lwsync (which allows SB) has no ARMv7 counterpart. See litmus/incomparable/ARM-vs-POWER."
     },
     {
-      "from": "POWER",
-      "to": "POWER+TM",
-      "type": "equivalent",
+      "from": "ARMv8",
+      "to": "ARM",
+      "type": "strictly_weaker",
       "provenance": "literature",
-      "evidence": "by_construction",
-      "fragment_restricted": true,
-      "note": "Chong, Sorensen & Wickerson (PLDI 2018) add TM rules on top of the POWER consistency axioms (their Fig. 6) that only constrain transactional events; on the non-transactional fragment it coincides with POWER by construction. Validated on a POWER8 machine (no forbidden test observed)."
-    },
-    {
-      "from": "RC11",
-      "to": "C11+TM",
-      "type": "equivalent",
-      "provenance": "literature",
-      "evidence": "by_construction",
-      "fragment_restricted": true,
-      "note": "Chong, Sorensen & Wickerson (PLDI 2018, §7) build the C++ TM model on the baseline C++ model of Lahav et al. (RC11), making only two amendments (an unchanged race definition and transactional synchronisation folded into happens-before) that vanish when there are no transactions. On the non-transactional fragment it coincides with RC11 by construction."
-    },
-    {
-      "from": "SC",
-      "to": "DJR-SC",
-      "type": "equivalent",
-      "provenance": "literature",
-      "evidence": "by_construction",
-      "fragment_restricted": true,
-      "note": "Dongol, Jagadeesan & Riely (POPL 2018) give a transactional framework parametric in the base architecture and instantiate it at SC; its added transactional axioms only constrain transactional events, so on programs with no transactions the SC instance coincides with SC by construction. fragment_restricted: they coincide only on the non-transactional fragment — the framework adds an orthogonal transactional layer with observable-serializability guarantees."
-    },
-    {
-      "from": "x86-TSO",
-      "to": "DJR-TSO",
-      "type": "equivalent",
-      "provenance": "literature",
-      "evidence": "by_construction",
-      "fragment_restricted": true,
-      "note": "Dongol, Jagadeesan & Riely (POPL 2018) instantiate their transactional framework at TSO; the added transactional axioms only constrain transactional events, so on programs with no transactions the TSO instance coincides with (x86-)TSO by construction. fragment_restricted: the coincidence holds only on the non-transactional fragment."
+      "evidence": "machine_run",
+      "note": "ARMv7 is non-MCA and weaker than ARMv8."
     },
     {
       "from": "ARMv8",
@@ -1559,151 +1394,12 @@
       "note": "Dongol, Jagadeesan & Riely (POPL 2018) instantiate their transactional framework at ARMv8; the added transactional axioms only constrain transactional events, so on programs with no transactions the ARMv8 instance coincides with ARMv8 by construction. fragment_restricted: the coincidence holds only on the non-transactional fragment."
     },
     {
-      "from": "POWER",
-      "to": "DJR-POWER",
-      "type": "equivalent",
-      "provenance": "literature",
-      "evidence": "by_construction",
-      "fragment_restricted": true,
-      "note": "Dongol, Jagadeesan & Riely (POPL 2018) also instantiate their transactional framework at PPC (POWER); the added transactional axioms only constrain transactional events, so on programs with no transactions the POWER instance coincides with POWER by construction. fragment_restricted: the coincidence holds only on the non-transactional fragment."
-    },
-    {
-      "from": "SI",
-      "to": "PSI",
-      "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Raad, Lahav & Vafeiadis: PSI is a weakening of Snapshot Isolation — the 'long fork' anomaly (IRIW-with-transactions) is allowed under PSI but disallowed under SI (ESOP 2018, §1), while SI permits only the write-skew anomaly and otherwise coincides with serializability (VMCAI 2019). So SI admits strictly fewer transactional behaviours than PSI."
-    },
-    {
-      "from": "PSI",
-      "to": "RA",
-      "type": "compilation",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Raad, Lahav & Vafeiadis (ESOP 2018) give PSI a lock-based reference implementation built on the release-acquire (RA) fragment of the C/C++11 memory model, proved sound and complete against the declarative PSI specification (and likewise Robust PSI). Retargeted from RC11 onto RA in 1.4.1: the target has always been the release-acquire fragment, as this note already said, and RA became a node in 1.4.0."
-    },
-    {
-      "from": "SI",
-      "to": "RA",
-      "type": "compilation",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Raad, Lahav & Vafeiadis (VMCAI 2019) give SI two timestamp-free lock-based (MRSW) reference implementations built on the release-acquire (RA) fragment of C/C++11, proved sound and complete against the declarative SI specification (and likewise Robust SI). Retargeted from RC11 onto RA in 1.4.1: the target has always been the release-acquire fragment, as this note already said, and RA became a node in 1.4.0."
-    },
-    {
-      "from": "SC",
-      "to": "x86-TSO",
-      "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "machine_run",
-      "note": "x86-TSO is the formal model equivalent of TSO for x86."
-    },
-    {
-      "from": "SC",
-      "to": "C11",
-      "type": "strictly_weaker",
-      "provenance": "kater",
-      "evidence": "machine_run",
-      "note": "DRF-SC: SC-annotated programs behave as SC, but C11 allows weaker behaviours for non-SC atomics. Containment is machine-checked: kater derives both of C11's global axioms — acyclic(psc) and coherence — from acyclic(sc) over kater's sc.kat and c11-old.kat (litmus/kater/queries/strictly-weaker-SC-vs-C11.kat). Strictness is the relaxed-SB witness in litmus/strictly-weaker/SC-vs-C11/."
-    },
-    {
-      "from": "SC",
-      "to": "Java",
-      "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "machine_run",
-      "note": "JMM guarantees SC for data-race-free programs but allows reordering for racy accesses."
-    },
-    {
-      "from": "TSO",
-      "to": "x86-TSO",
-      "type": "equivalent",
-      "provenance": "literature",
-      "evidence": "by_construction",
-      "fragment_restricted": false,
-      "note": "x86-TSO formalises TSO for x86; behaviourally equivalent for standard operations."
-    },
-    {
-      "from": "x86-TSO",
-      "to": "ClightTSO",
-      "type": "equivalent",
-      "provenance": "literature",
-      "evidence": "by_construction",
-      "fragment_restricted": false,
-      "note": "Ševčík et al. 2013 §1.2, §4.4: ClightTSO is defined to mirror the x86-TSO model at the language level (loads, stores, compare-and-swap, barriers with TSO behaviour), with a single TSO abstract machine shared across all compiler levels — the same store→load relaxation by construction, not a restricted fragment."
-    },
-    {
-      "from": "TSO",
-      "to": "PSO",
-      "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "machine_run",
-      "note": "PSO additionally allows store-store reordering to different addresses."
-    },
-    {
-      "from": "TSO",
-      "to": "ARMv8",
-      "type": "strictly_weaker",
-      "provenance": "memalloy",
-      "evidence": "machine_run",
-      "note": "Both halves decided by memalloy over the common Basic_HW fragment — the vocabulary the two ISAs share, with no fences and no acquire/release annotations, where every arch-specific term of the shipped models is empty rather than dropped (litmus/memalloy/derive-hw-fragment.sh derives the operands and records the restriction exactly). Witness: a 4-event MP, ARMv8-allowed and TSO-forbidden. Containment: no execution ARMv8 forbids and TSO allows, exhaustively to 7 events; the search does find witnesses at those bounds, so it is not vacuously clean. Bounded evidence, not a theorem: the Mador-Haim small-model result would need arguing for this pair rather than assuming it. The earlier reading — a one-sided witness plus a cross-ISA monotonicity argument — is superseded, but the fragment is the scope: this decides the edge over the common vocabulary, not over the full ISAs."
-    },
-    {
-      "from": "PSO",
-      "to": "RMO",
-      "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "machine_run",
-      "note": "RMO allows all four reordering types including load-load and load-store."
-    },
-    {
-      "from": "PSO",
-      "to": "POWER",
-      "type": "strictly_weaker",
-      "provenance": "litmus",
-      "evidence": "machine_run",
-      "note": "Empirically PSO is a subset of POWER: every PSO-allowed behaviour is also POWER-allowed, while POWER additionally allows load-load reordering (e.g. MP+sync+po) and non-MCA behaviour that PSO forbids. No PSO-allowed/POWER-forbidden witness exists on the standard litmus families, so the earlier 'incomparable' classification was too generous. See litmus/strictly-weaker/PSO-vs-POWER."
-    },
-    {
       "from": "ARMv8",
-      "to": "ARM",
-      "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "machine_run",
-      "note": "ARMv7 is non-MCA and weaker than ARMv8."
-    },
-    {
-      "from": "ARM",
-      "to": "POWER",
+      "to": "RVWMO",
       "type": "incomparable",
       "provenance": "literature",
       "evidence": "machine_run",
-      "note": "Over the common instruction set ARMv7 and POWER coincide on every standard litmus family (verified against herd7's arm.cat and ppc.cat). Their incomparability is instruction-level: POWER's lightweight cumulative barrier lwsync (which allows SB) has no ARMv7 counterpart. See litmus/incomparable/ARM-vs-POWER."
-    },
-    {
-      "from": "RMO",
-      "to": "Coherence",
-      "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "machine_run",
-      "note": "RMO still enforces per-address coherence; weaker models could violate it."
-    },
-    {
-      "from": "ARM",
-      "to": "Coherence",
-      "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "machine_run",
-      "note": "ARM enforces coherence (per-address total order) as a baseline."
-    },
-    {
-      "from": "POWER",
-      "to": "Coherence",
-      "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "machine_run",
-      "note": "POWER enforces coherence as a baseline."
+      "note": "Both are multi-copy atomic and coincide on every standard litmus family over the common instruction set (verified against herd7's aarch64.cat and riscv.cat). The incomparability is instruction-level: RISC-V's fence.tso (which allows SB) and the RCsc/RCpc atomics differ from ARMv8's. See litmus/incomparable/ARMv8-vs-RVWMO."
     },
     {
       "from": "Alpha",
@@ -1712,48 +1408,6 @@
       "provenance": "literature",
       "evidence": "cited",
       "note": "Alpha guarantees per-location (SC-per-location) coherence and enforces cross-location ordering only via mb/wmb fences (Alpha Architecture Reference Manual; Alglave, Maranget & Tautschnig, Herding Cats, TOPLAS 2014, p.4); bare coherence has neither. Separating outcome: MP+mb+mb, forbidden by Alpha, allowed by Coherence. Cited (Alpha has no herd7 cat model), not machine-run."
-    },
-    {
-      "from": "RMO",
-      "to": "Alpha",
-      "type": "strictly_weaker",
-      "provenance": "litmus",
-      "evidence": "machine_run",
-      "note": "SPARC RMO preserves address/data/control dependencies; DEC Alpha uniquely relaxes dependent-load ordering (Alglave, Maranget & Tautschnig, Herding Cats, TOPLAS 2014, p.18) and is non-multi-copy-atomic. Separating outcome: MP+dmb+addr, forbidden by RMO (address dependency preserved), allowed by Alpha (dependent loads not ordered) — machine-run under herd7 against a portable abstract-alpha.cat (RMO Never 0 3, Alpha Sometimes 1 3). Containment is the litmus-tier monotonicity argument: Alpha relaxes strictly more than RMO (dependencies; store atomicity) and no less on any axis, so Alpha ⊆ RMO, strict by the witness. See litmus/strictly-weaker/RMO-vs-Alpha."
-    },
-    {
-      "from": "Itanium",
-      "to": "Coherence",
-      "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Itanium guarantees cache coherence (a per-location total order on writes; Intel Itanium SDM, memory-ordering rules) and adds cross-location ordering via ld.acq/st.rel/mf; bare coherence has neither. Separating outcome: MP with acquire/release or mf on both sides, forbidden by Itanium, allowed by Coherence. Cited (no herd7 cat model for IA-64), not machine-run."
-    },
-    {
-      "from": "RC11",
-      "to": "C11",
-      "type": "strictly_weaker",
-      "provenance": "kater",
-      "evidence": "machine_run",
-      "note": "RC11 is strictly stronger than C11: it fixes SC axioms and eliminates thin-air. All RC11 behaviours are C11 behaviours but not vice versa. Containment is machine-checked: kater derives C11's psc-acyclicity and coherence from RC11's acyclic(ar) over kater's rc11.kat and c11-old.kat (litmus/kater/queries/strictly-weaker-RC11-vs-C11.kat). Strictness is the witness in litmus/strictly-weaker/RC11-vs-C11/."
-    },
-    {
-      "from": "RC11",
-      "to": "RC11z",
-      "type": "equivalent",
-      "provenance": "literature",
-      "evidence": "by_construction",
-      "fragment_restricted": true,
-      "note": "RC11z extends the operational RC11-RAR semantics so that allocation and deallocation are explicit write events; a read taking its value from such an event surfaces as a read-from-uninitialised or use-after-free error. On the concurrency behaviours of well-allocated programs it coincides with RC11 — the added allocation layer exists to verify safe memory reclamation (RCU)."
-    },
-    {
-      "from": "ArmVM",
-      "to": "ARMv8",
-      "type": "equivalent",
-      "provenance": "literature",
-      "evidence": "cited",
-      "fragment_restricted": true,
-      "note": "Simner et al., ESOP 2022, Sec. 6 (metatheorems 1–2): for programs with stable, injectively-mapped address spaces the relaxed virtual-memory model collapses exactly to the base Armv8-A user-mode concurrency model. The model is built as an extension of that base model; outside this fragment (translation-table manipulation, TLBI) it admits additional executions not expressible in base ARMv8, so the equivalence is fragment-restricted to static/injective mappings."
     },
     {
       "from": "ArmIF",
@@ -1765,36 +1419,13 @@
       "note": "Simner et al., ESOP 2020: the instruction-fetch system-semantics model is built by extending the base Armv8-A user-mode concurrency (Flat) model with instruction-fetch and IC/DC cache-maintenance events (Sec. 4-5, 'extending previous work on user-mode concurrency'). Validation (Sec. 6) reports the model's results are identical to the base model over all 8950 non-instruction-fetch Flat regression tests, so on the fragment with no instruction fetch or cache maintenance it coincides with base ARMv8; outside that fragment (self-modifying code, IC/DC) it admits additional relaxed executions, hence the equivalence is fragment-restricted."
     },
     {
-      "from": "RC11",
-      "to": "C++20",
-      "type": "strictly_weaker",
+      "from": "ArmVM",
+      "to": "ARMv8",
+      "type": "equivalent",
       "provenance": "literature",
-      "evidence": "machine_run",
-      "note": "C++20 adopts RC11's repaired SC (P0668) but, unlike RC11, does not adopt the no-thin-air axiom acyclic(po ∪ rf): it still permits out-of-thin-air / plain load-buffering reads that RC11 forbids. So RC11 is strictly stronger."
-    },
-    {
-      "from": "C11",
-      "to": "C++17",
-      "type": "strictly_weaker",
-      "provenance": "litmus",
-      "evidence": "machine_run",
-      "note": "C++17 narrows release sequences relative to C++11/14: only RMWs continue a release sequence, no longer later same-thread relaxed stores. That removes happens-before edges, so C++17 admits a non-synchronising message-passing outcome C++11 forbids and forbids nothing C++11 allows (the narrowing is monotone by construction). Mechanised: the all-atomic mp-rs-st-eadd-atomics is Never under cpp11.cat (C++11) and Sometimes under cpp17.cat (C++17). Models vendored from gonzalobg/cpp_memory_model; see litmus/strictly-weaker/C11-vs-C++17."
-    },
-    {
-      "from": "RC11",
-      "to": "RC17",
-      "type": "strictly_weaker",
-      "provenance": "litmus",
-      "evidence": "machine_run",
-      "note": "RC17 is RC11 with the C++17 release-sequence narrowing (RMWs only). Like the C11→C++17 case the narrowing is monotone — it only removes synchronisation — so RC17 admits an outcome RC11 forbids and forbids nothing RC11 allows. Mechanised: mp-rs-add-est-atomic is Never under rc11.cat and Sometimes under rc17.cat. Models vendored from gonzalobg/cpp_memory_model; see litmus/strictly-weaker/RC11-vs-RC17."
-    },
-    {
-      "from": "RC17",
-      "to": "C++17",
-      "type": "strictly_weaker",
-      "provenance": "litmus",
-      "evidence": "machine_run",
-      "note": "RC17 and C++17 share the C++17 release sequences but RC17 additionally keeps RC11's no-thin-air axiom acyclic(po ∪ rf), which C++17 lacks. So C++17 permits plain load-buffering / out-of-thin-air reads RC17 forbids, and forbids nothing RC17 allows (RC17 = C++17 plus one axiom, by construction). Mechanised: the relaxed LB shape is Never under rc17.cat and Sometimes under cpp17.cat. Parallels the existing RC11→C11 edge. See litmus/strictly-weaker/RC17-vs-C++17."
+      "evidence": "cited",
+      "fragment_restricted": true,
+      "note": "Simner et al., ESOP 2022, Sec. 6 (metatheorems 1–2): for programs with stable, injectively-mapped address spaces the relaxed virtual-memory model collapses exactly to the base Armv8-A user-mode concurrency model. The model is built as an extension of that base model; outside this fragment (translation-table manipulation, TLBI) it admits additional executions not expressible in base ARMv8, so the equivalence is fragment-restricted to static/injective mappings."
     },
     {
       "from": "C++20",
@@ -1805,12 +1436,84 @@
       "note": "Two-sided, both directions mechanised under herd7. C++20's repaired seq_cst (P0668) forbids the IRIW/SC-fence behaviour C11/C++11/14/17 allow (rc11.cat Never vs c11_orig.cat Sometimes). C++20's weakened release sequences (P0982 — only RMWs continue a release sequence) make the models incomparable on the release axis too: the all-atomic mp-rs-add-est-atomic is allowed under C++11/17 but forbidden under C++20 (cpp11/cpp17 Sometimes vs cpp2w Never), while the original RS pattern flips the other way (cpp11 Never vs cpp2w Sometimes, the C++20 outcome now a data race). Checked against the cpp11/cpp17/cpp2w cat models in litmus/models/cpp, vendored from gonzalobg/cpp_memory_model. Neither contains the other."
     },
     {
-      "from": "RC11",
-      "to": "IMM",
+      "from": "C11+TM",
+      "to": "ARMv8+TM",
+      "type": "compilation",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Chong, Sorensen & Wickerson (PLDI 2018) state a (bounded) sound compilation of C++ transactions to ARMv8. Caveat: the ARMv8+TM target is the untested/proposed model for which naive lock elision is unsound (Example 1.1), so this edge inherits that caveat."
+    },
+    {
+      "from": "C11+TM",
+      "to": "POWER+TM",
+      "type": "compilation",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Chong, Sorensen & Wickerson (PLDI 2018) prove (up to a bound) that C++ transactions compile soundly to Power; the mapping targets the POWER transactional model."
+    },
+    {
+      "from": "C11+TM",
+      "to": "x86-TSO+TM",
+      "type": "compilation",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Chong, Sorensen & Wickerson (PLDI 2018) prove (up to a bound, model-checked) that C++ transactions compile soundly to x86; the mapping targets the x86-TSO transactional model."
+    },
+    {
+      "from": "C11",
+      "to": "C++17",
+      "type": "strictly_weaker",
+      "provenance": "litmus",
+      "evidence": "machine_run",
+      "note": "C++17 narrows release sequences relative to C++11/14: only RMWs continue a release sequence, no longer later same-thread relaxed stores. That removes happens-before edges, so C++17 admits a non-synchronising message-passing outcome C++11 forbids and forbids nothing C++11 allows (the narrowing is monotone by construction). Mechanised: the all-atomic mp-rs-st-eadd-atomics is Never under cpp11.cat (C++11) and Sometimes under cpp17.cat (C++17). Models vendored from gonzalobg/cpp_memory_model; see litmus/strictly-weaker/C11-vs-C++17."
+    },
+    {
+      "from": "C11",
+      "to": "CUDA",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "machine_run",
+      "note": "CUDA's cuda::atomic mirrors C++11 atomics but adds thread scopes (block, device, system); sub-system scopes admit behaviours C11 forbids."
+    },
+    {
+      "from": "C11",
+      "to": "GOS",
       "type": "incomparable",
       "provenance": "literature",
       "evidence": "cited",
-      "note": "IMM is designed to compile correctly to hardware; it is related to RC11 but targets a different point in the design space."
+      "note": "GOS gives a generative operational semantics with stratification constraints on speculation to rule out thin-air values and prove external DRF; it forbids thin-air reads C11 permits but is not a strict subset."
+    },
+    {
+      "from": "C11",
+      "to": "HRF",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "machine_run",
+      "note": "HRF generalises DRF to a scope hierarchy; restricted to a single global scope it matches C11's DRF-SC guarantee, while sub-global scopes admit additional weak behaviours."
+    },
+    {
+      "from": "C11",
+      "to": "JSMM",
+      "type": "incomparable",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "The JavaScript model is based on C11 and shares its thin-air problem (only internal DRF), but — unlike C11 — it does not treat racy non-atomic accesses as undefined behaviour and it natively supports mixed-size accesses over SharedArrayBuffer. Neither contains the other."
+    },
+    {
+      "from": "C11",
+      "to": "LKMM",
+      "type": "incomparable",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Neither contains the other: LKMM provides RCU grace-period ordering and the smp_* barrier family with no C11 counterpart, while C11 offers per-object seq_cst atomics LKMM does not model. The incomparability is at the level of primitives, not reorderings of shared operations. See litmus/incomparable/C11-vs-LKMM."
+    },
+    {
+      "from": "C11",
+      "to": "OpenCL",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "machine_run",
+      "note": "OpenCL 2.0 extends C11 with memory scopes; at all-SVM-devices scope it coincides with C11, but narrower scopes (work-group, device) permit synchronisation-free weak behaviours that flat C11 forbids. See Batty, Donaldson & Wickerson (POPL 2016)."
     },
     {
       "from": "C11",
@@ -1821,68 +1524,172 @@
       "note": "Promising Semantics is an alternative to C11 at a similar level, not a direct subset/superset."
     },
     {
-      "from": "RC11",
-      "to": "MRD",
+      "from": "C11",
+      "to": "RAO",
+      "type": "incomparable",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "RAO explains relaxed behaviour via transformations over an SC execution. Its authors claim external DRF while still permitting thin-air values — two properties known to be incompatible in general (Batty et al., ESOP 2015) — which the survey attributes to restrictions on the input language (no general conditionals). Incomparable with C11."
+    },
+    {
+      "from": "C11",
+      "to": "RMC",
+      "type": "incomparable",
+      "provenance": "literature",
+      "evidence": "machine_run",
+      "note": "The Relaxed Memory Calculus specifies ordering constraints directly in source code rather than deriving them from access annotations. It is very weak and permits thin-air values (only internal DRF is proved); its primitives differ from C11's, so the two are incomparable."
+    },
+    {
+      "from": "C11",
+      "to": "TSC",
+      "type": "incomparable",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "TSC is a general framework for the effects of speculative execution. Under unrestricted speculation the external DRF theorem fails (only internal DRF holds) and thin-air values appear; it studies speculation abstractly rather than refining C11, so the two are incomparable."
+    },
+    {
+      "from": "C11",
+      "to": "WJES",
+      "type": "incomparable",
+      "provenance": "litmus",
+      "evidence": "machine_run",
+      "note": "WJES uses a game-semantics-inspired notion of well-justification to forbid thin-air and prove external DRF. A load→load reordering counterexample shows its mappings to ARMv7/ARMv8/POWER are not optimal, so it is incomparable with C11."
+    },
+    {
+      "from": "C11",
+      "to": "Wasm",
+      "type": "compilation",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Watt et al. 2019 §7.2 / Fig. 20 give the compilation of C/C++11 accesses to Wasm memory accesses, mapping all C/C++ atomics (relaxed, acquire/release, seq_cst) onto Wasm seqcst atomics; the sketch shows the compiled program is SC-DRF and thus behaviourally correct at the level of memory accesses."
+    },
+    {
+      "from": "CCv",
+      "to": "CC",
       "type": "strictly_weaker",
       "provenance": "literature",
       "evidence": "cited",
-      "note": "Paviotti et al. (Modular Relaxed Dependencies in Weak Memory Concurrency, ESOP 2020) relax the RC11 axiomatic model with their MRD dependency model to form MRD-C11. Lemma 3 (Implementability of MRD-C11): for all programs P, ⟦P⟧MRD-C11 ⊇ ⟦P⟧RC11 — MRD-C11 is strictly weaker than RC11, admitting the false-dependency-eliminating load→store reorderings RC11 forbids while still forbidding out-of-thin-air. (The MRD+IMM instantiation of Theorem 3, ⟦P⟧MRD+IMM ⊇ ⟦P⟧IMM, is a distinct model and is not represented by this node.)"
+      "note": "Bouajjani et al., POPL 2017, Lemma 2 (after Perrin et al.): every CCv history is CC, since AxArb gives co subset of arb and hence AxCausalArb implies AxCausalValue. Strictness is the same Fig. 2 history (2c), which is CC but not CCv."
     },
     {
-      "from": "MRD",
+      "from": "CCv",
+      "to": "POCausal",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Burckhardt, Gotsman, Yang & Zawirski, POPL 2014, §7: (cross-object) causal consistency imposes the ordering axioms COCV/COCA, while per-object causal consistency imposes only the weaker per-object axioms POCV/POCA over the per-object happens-before order (Viotti & Vukolić 2016, §3.9). COCV/COCA disallow strictly more anomalies, so cross-object causal consistency is strictly stronger than per-object causal consistency. Re-homed from the Causal node: Burckhardt's cross-object causal consistency is the visibility/arbitration one, i.e. CCv, not causal memory."
+    },
+    {
+      "from": "CCv",
+      "to": "WFR",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "by_construction",
+      "note": "Unlike the Causal edge to the same node, this one is a derivation rather than a citation. CCv is CausalVisibility ∧ CausalArbitration ∧ RVal (Viotti & Vukolić 2016, Eq. 26), where CausalArbitration is hb ⊆ ar and hb = (so ∪ vis)+. WritesFollowReads is (vis; so|rd→wr) ⊆ ar (Eq. 25). Since vis ⊆ hb and so ⊆ hb, the composite vis;so|rd→wr lies in hb+ = hb ⊆ ar, so CCv satisfies WFR by construction. The converse fails — WFR constrains only write-after-read within a session and says nothing about visibility or the arbitration of anything else — so writes-follow-reads is strictly weaker."
+    },
+    {
+      "from": "CRC",
       "to": "C11",
       "type": "strictly_weaker",
       "provenance": "literature",
       "evidence": "machine_run",
-      "note": "MRD is a proposed replacement for C11 relaxed atomics, forbidding thin-air reads that C11 allows."
+      "note": "CRC is a compositional semantics for a thin-air-free fragment of C11 (non-atomics with catch-fire, release-acquire, SC fences); by omitting relaxed atomics it forbids the out-of-thin-air behaviours plain C11 permits."
     },
     {
-      "from": "MRD",
-      "to": "sMRD",
-      "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "machine_run",
-      "note": "Symbolic MRD extends MRD: it keeps the modular semantic-dependency approach and thin-air freedom, but additionally admits aggressive optimisations MRD forbids — those exploiting alias analysis, undefined-behaviour freedom, and extrinsic choices such as over-alignment — and handles dynamic memory rather than only concrete locations. Admitting more transformations, it permits strictly more behaviours."
-    },
-    {
-      "from": "sMRD",
+      "from": "CSRA",
       "to": "C11",
       "type": "strictly_weaker",
       "provenance": "literature",
       "evidence": "machine_run",
-      "note": "Like MRD, Symbolic MRD repairs the C/C++ thin-air problem: it forbids the out-of-thin-air reads C11 permits while preserving the standard atomics compilation mappings, and it matches the ISO C/C++ semantic-dependency desiderata."
+      "note": "CSRA pairs a POWER-inspired memory subsystem with per-thread event structures and permits optimisation while avoiding thin-air. Its authors state CSRA is a subset of C/C++11 by design ('the converse is not to be expected ... the point of our model is to exclude the thin-air executions that C/C++11 allows'): only out-of-thin-air outcomes separate them, all allowed by C11 and forbidden by CSRA. So C11 is strictly weaker. (Reclassified from incomparable; see litmus/strictly-weaker/CSRA-vs-C11.)"
     },
     {
-      "from": "RC11",
-      "to": "sMRD",
+      "from": "CUDA",
+      "to": "PTX",
+      "type": "compilation",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "CUDA C++ atomics lower to PTX; the CUDA model is layered directly on the PTX memory model."
+    },
+    {
+      "from": "Causal",
+      "to": "CC",
       "type": "strictly_weaker",
       "provenance": "literature",
-      "evidence": "machine_run",
-      "note": "Symbolic MRD interfaces with an RC11-style axiomatic model but refines its dependency relation (dp), removing false dependencies so that load→store reorderings in load-buffering shapes — e.g. the LB+UB+data outcome RC11 forbids because of a cycle in ⊑∪rf — become allowed, while genuine out-of-thin-air cycles stay forbidden. It therefore admits strictly more behaviours than RC11."
+      "evidence": "cited",
+      "note": "Bouajjani et al., POPL 2017, §4 and Fig. 1: CM and CCv 'are both strictly stronger than CC'. Witness: Fig. 2 history (2c) — pa: wr(x,1) || pb: wr(x,2); rd(x)▷1; rd(x)▷2 — is CC but neither CM nor CCv, since pb revises its ordering of the two writes after already having read one of them."
     },
     {
-      "from": "Java",
-      "to": "OCaml",
+      "from": "Causal",
+      "to": "CCv",
       "type": "incomparable",
       "provenance": "literature",
-      "evidence": "machine_run",
-      "note": "Both are language-level models providing DRF-SC but with different treatments of racy accesses."
+      "evidence": "cited",
+      "note": "Causal memory and causal convergence are incomparable (Perrin, Mostéfaoui & Jard, PPoPP 2016; Bouajjani et al., POPL 2017, §1 and Fig. 1). Both witnesses are in Bouajjani et al. Fig. 2. History (2a) — pa: wr(x,1); rd(x)▷2 || pb: wr(x,2); rd(x)▷1 — is CM but not CCv, because arbitration would have to place wr(x,2) both after and before wr(x,1) (Ex. 5). History (2b) — pa: wr(z,1); wr(x,1); wr(y,1) || pb: wr(x,2); rd(z)▷0; rd(y)▷1; rd(x)▷2 — is CCv but not CM: reading y=1 drags wr(z,1) into pb's causal past behind wr(x,2), which the earlier rd(z)▷0 contradicts (Ex. 6)."
     },
     {
-      "from": "ARMv8",
-      "to": "RVWMO",
+      "from": "Causal",
+      "to": "Coherence",
       "type": "incomparable",
       "provenance": "literature",
-      "evidence": "machine_run",
-      "note": "Both are multi-copy atomic and coincide on every standard litmus family over the common instruction set (verified against herd7's aarch64.cat and riscv.cat). The incomparability is instruction-level: RISC-V's fence.tso (which allows SB) and the RCsc/RCpc atomics differ from ARMv8's. See litmus/incomparable/ARMv8-vs-RVWMO."
+      "evidence": "cited",
+      "note": "Causal and cache consistency are incomparable (Steinke & Nutt 2004)."
     },
     {
-      "from": "TSO",
-      "to": "RVWMO",
+      "from": "Causal",
+      "to": "PRAM",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Causal memory is strictly stronger than PRAM consistency (Steinke & Nutt 2004)."
+    },
+    {
+      "from": "Causal",
+      "to": "WFR",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Brzezinski, Sobaniec & Wawrzyniak (PDP 2004) show that causal consistency requires all four session guarantees — read-your-writes, monotonic reads, monotonic writes and writes-follow-reads. Their data-centric models are the classical shared-memory taxonomy (atomic, sequential, causal, processor, PRAM, weak, release, scope, entry), so their causal consistency is causal memory, and this edge is correctly against the Causal node rather than CCv. Causal memory therefore implies writes-follow-reads while the converse fails — one session guarantee constrains far less than a per-site serialisation over the causal order — so writes-follow-reads is strictly weaker. Note this is an implication, not an equality: neither Brzezinski et al. nor Viotti & Vukolić state the converse here (see issue #11), and the earlier gloss 'causal = PRAM ∧ writes-follow-reads, Eq. 25' was wrong twice over — Eq. 25 is the definition of WritesFollowReads, not a theorem about causal consistency, and the sources assert only that causal consistency 'requires and includes them all'."
+    },
+    {
+      "from": "CausalPlus",
+      "to": "CCv",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Causal+ = Causality ∧ StrongConvergence (Viotti & Vukolić 2016, Eq. 27; Lloyd et al., COPS, SOSP 2011). V-V's Causality (Eq. 26) is the visibility/arbitration causal consistency that Bouajjani et al. name CCv, so this containment is against CCv. Adding strong convergence disallows strictly more behaviours, so CCv is strictly weaker than causal+. Re-homed from the Causal node, where the same note had been read as a containment against causal memory."
+    },
+    {
+      "from": "CausalPlus",
+      "to": "Causal",
+      "type": "incomparable",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Causal+ = CCv ∧ StrongConvergence, and CCv is incomparable to causal memory, so the two are incomparable rather than ordered. This replaces a strictly_weaker edge that read the Viotti-Vukolić containment (Eq. 27) as being against causal memory; it is against CCv. Witnesses, both Bouajjani et al. POPL 2017 Fig. 2: history (2a) is CM but not CCv, hence not causal+; history (2b) is CCv and not CM, and reads each of x, y and z exactly once, so StrongConvergence (V-V Eq. 17, constraining only reads with equal visible-write sets) is vacuous on it — it is causal+ but not CM."
+    },
+    {
+      "from": "CausalPlus",
+      "to": "RTCausal",
+      "type": "incomparable",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Causal+ and real-time causal consistency are incomparable (Viotti & Vukolić 2016, §3.5): real-time causality does not imply strong convergence, and causal+ does not impose real-time ordering — each forbids a behaviour the other allows. (V-V correct Lloyd et al.'s original claim that real-time causal is stronger than causal+.)"
+    },
+    {
+      "from": "Coherence",
+      "to": "Slow",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Slow consistency is strictly weaker than cache consistency (Hutto & Ahamad 1990; Steinke & Nutt 2004)."
+    },
+    {
+      "from": "HRF",
+      "to": "ScopedC11",
       "type": "strictly_weaker",
       "provenance": "memalloy",
       "evidence": "machine_run",
-      "note": "Both halves decided by memalloy over the common Basic_HW fragment, as for TSO → ARMv8. memalloy ships no RISC-V model, so the operand is litmus/memalloy/models/zoo_hw_rvwmo.cat, authored here directly from the thirteen ppo rules of the RVWMO chapter of the RISC-V unprivileged spec; the file annotates each rule it renders and each that is empty on the fragment. Witness at 4 events; containment clean exhaustively to 7. Independent check on the rendering: over the same fragment it is contained in the ARMv8 operand and ARMv8 is not contained in it, which is the direction the same-address ppo rules predict. Bounded evidence about that rendering, not a theorem about RVWMO."
+      "note": "Gaster et al.'s HRF-Relaxed loosens HRF-direct/indirect's exact scope-matching, admitting more programs and behaviours than the original HRF models."
     },
     {
       "from": "IMM",
@@ -1894,14 +1701,6 @@
     },
     {
       "from": "IMM",
-      "to": "x86-TSO",
-      "type": "compilation",
-      "provenance": "kater",
-      "evidence": "machine_run",
-      "note": "IMM compiles correctly to x86-TSO. Machine-checked with kater: imm::psc ⊆ tso::tso* over kater's imm.kat and tso.kat (litmus/kater/queries/compilation-IMM-vs-x86-TSO.kat). kater's tso.kat is the TSO rendering; it carries to the x86-TSO node along the by-construction TSO ≡ x86-TSO equivalence edge."
-    },
-    {
-      "from": "IMM",
       "to": "POWER",
       "type": "compilation",
       "provenance": "literature",
@@ -1909,44 +1708,44 @@
       "note": "IMM compiles correctly to POWER."
     },
     {
-      "from": "SC",
-      "to": "LKMM",
-      "type": "strictly_weaker",
+      "from": "IMM",
+      "to": "x86-TSO",
+      "type": "compilation",
       "provenance": "kater",
       "evidence": "machine_run",
-      "note": "Containment proved by kater, unbounded: each of LKMM's three global ordering axioms — acyclic(hb), the prop;ppo* work-around, and coherence — follows from SC's acyclic(sc). The operand is not kater's kat/lkmm2.kat, which is written over internal (-imm) relations and does not load in any mode; it is the mechanical restatement over kater's builtin theory that litmus/kater/derive-lkmm.sh generates, so the proof is about that rendering. Query: litmus/kater/queries/strictly-weaker-SC-vs-LKMM.kat. Strictness stays with the witness: LKMM permits reorderings of plain and *_ONCE accesses (e.g. store-buffering, SB) that SC forbids; DRF-style synchronisation must be requested explicitly with smp_mb() and friends. See litmus/strictly-weaker/SC-vs-LKMM."
+      "note": "IMM compiles correctly to x86-TSO. Machine-checked with kater: imm::psc ⊆ tso::tso* over kater's imm.kat and tso.kat (litmus/kater/queries/compilation-IMM-vs-x86-TSO.kat). kater's tso.kat is the TSO rendering; it carries to the x86-TSO node along the by-construction TSO ≡ x86-TSO equivalence edge."
     },
     {
-      "from": "C11",
-      "to": "LKMM",
+      "from": "Itanium",
+      "to": "Coherence",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Itanium guarantees cache coherence (a per-location total order on writes; Intel Itanium SDM, memory-ordering rules) and adds cross-location ordering via ld.acq/st.rel/mf; bare coherence has neither. Separating outcome: MP with acquire/release or mf on both sides, forbidden by Itanium, allowed by Coherence. Cited (no herd7 cat model for IA-64), not machine-run."
+    },
+    {
+      "from": "Java",
+      "to": "JAM",
+      "type": "incomparable",
+      "provenance": "litmus",
+      "evidence": "cited",
+      "note": "JAM is a proposed revision of the JMM built on VarHandle access modes (plain/opaque/release-acquire/volatile); it strengthens the treatment of atomics via RC11 while differing from the original JMM's causality machinery, so neither contains the other."
+    },
+    {
+      "from": "Java",
+      "to": "OCaml",
+      "type": "incomparable",
+      "provenance": "literature",
+      "evidence": "machine_run",
+      "note": "Both are language-level models providing DRF-SC but with different treatments of racy accesses."
+    },
+    {
+      "from": "Java",
+      "to": "OHMM",
       "type": "incomparable",
       "provenance": "literature",
       "evidence": "cited",
-      "note": "Neither contains the other: LKMM provides RCU grace-period ordering and the smp_* barrier family with no C11 counterpart, while C11 offers per-object seq_cst atomics LKMM does not model. The incomparability is at the level of primitives, not reorderings of shared operations. See litmus/incomparable/C11-vs-LKMM."
-    },
-    {
-      "from": "SRA",
-      "to": "x86-TSO",
-      "type": "compilation",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Lahav, Giannarakis & Vafeiadis, POPL 2016: SRA has exactly the same compilation scheme to x86-TSO as the RA fragment it strengthens — plain loads and stores, no fences — so the strengthening carries no implementation cost on x86."
-    },
-    {
-      "from": "SRA",
-      "to": "POWER",
-      "type": "compilation",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Lahav, Giannarakis & Vafeiadis, POPL 2016: SRA compiles to POWER by the standard RA scheme (lwsync before every store, ctrl+isync after every load), and the mapping is complete as well as sound — the compiled program exhibits exactly the behaviours of the source. Lahav & Boker restate it as SRA precisely coinciding with the POWER model of Alglave et al. restricted to programs compiled from the RA fragment. Completeness is what makes SRA maximal: it cannot be strengthened further without an implementation cost on POWER."
-    },
-    {
-      "from": "LKMM",
-      "to": "x86-TSO",
-      "type": "compilation",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Linux kernel primitives compile correctly to x86; LKMM is designed to be no stronger than the hardware it runs on."
+      "note": "OHMM is an operational attempt to repair the JMM — a global event buffer with a replay mechanism, tracking syntactic dependencies to forbid thin-air. It restructures the JMM's semantics rather than strictly refining it, so the two are incomparable."
     },
     {
       "from": "LKMM",
@@ -1955,6 +1754,14 @@
       "provenance": "literature",
       "evidence": "cited",
       "note": "Linux kernel primitives compile correctly to ARMv8/AArch64."
+    },
+    {
+      "from": "LKMM",
+      "to": "OHMM",
+      "type": "incomparable",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Both are syntactic-dependency-preserving models that forbid thin-air by respecting syntactic dependencies, but over different primitives (Linux-kernel barriers vs a JMM-style happens-before machine); neither subsumes the other."
     },
     {
       "from": "LKMM",
@@ -1973,36 +1780,276 @@
       "note": "Linux kernel primitives compile correctly to RISC-V (RVWMO)."
     },
     {
-      "from": "C11",
-      "to": "OpenCL",
+      "from": "LKMM",
+      "to": "x86-TSO",
+      "type": "compilation",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Linux kernel primitives compile correctly to x86; LKMM is designed to be no stronger than the hardware it runs on."
+    },
+    {
+      "from": "LeakySemi",
+      "to": "Promising",
+      "type": "incomparable",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Leaky Semicolon §9: 'PwT-mca is incomparable to both RC11 ... and the promising semantics [Kang et al. 2017] ... PwT-mca has a weaker notion of coherence than the promising semantics.'"
+    },
+    {
+      "from": "LeakySemi",
+      "to": "RC11",
+      "type": "incomparable",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Leaky Semicolon §9: 'PwT-mca is incomparable to both RC11 ... and the promising semantics'. RC11 allows non-multi-copy-atomic behaviours that PwT-mca disallows, while PwT-mca allows optimisations that RC11's No-Thin-Air axiom forbids."
+    },
+    {
+      "from": "MRD",
+      "to": "C11",
       "type": "strictly_weaker",
       "provenance": "literature",
       "evidence": "machine_run",
-      "note": "OpenCL 2.0 extends C11 with memory scopes; at all-SVM-devices scope it coincides with C11, but narrower scopes (work-group, device) permit synchronisation-free weak behaviours that flat C11 forbids. See Batty, Donaldson & Wickerson (POPL 2016)."
+      "note": "MRD is a proposed replacement for C11 relaxed atomics, forbidding thin-air reads that C11 allows."
     },
     {
-      "from": "C11",
-      "to": "CUDA",
+      "from": "MRD",
+      "to": "sMRD",
       "type": "strictly_weaker",
       "provenance": "literature",
       "evidence": "machine_run",
-      "note": "CUDA's cuda::atomic mirrors C++11 atomics but adds thread scopes (block, device, system); sub-system scopes admit behaviours C11 forbids."
+      "note": "Symbolic MRD extends MRD: it keeps the modular semantic-dependency approach and thin-air freedom, but additionally admits aggressive optimisations MRD forbids — those exploiting alias analysis, undefined-behaviour freedom, and extrinsic choices such as over-alignment — and handles dynamic memory rather than only concrete locations. Admitting more transformations, it permits strictly more behaviours."
     },
     {
-      "from": "C11",
-      "to": "HRF",
+      "from": "OD-Dep",
+      "to": "C11",
       "type": "strictly_weaker",
       "provenance": "literature",
-      "evidence": "machine_run",
-      "note": "HRF generalises DRF to a scope hierarchy; restricted to a single global scope it matches C11's DRF-SC guarantee, while sub-global scopes admit additional weak behaviours."
+      "evidence": "cited",
+      "note": "Ou & Demsky 2018, §6: both approaches 'explore stronger memory models than the existing C/C++ memory model' — they forbid the OOTA/thin-air executions C11 permits while retaining ordinary relaxed-atomics reordering."
     },
     {
-      "from": "HRF",
-      "to": "ScopedC11",
+      "from": "OD-LSO",
+      "to": "OD-Dep",
       "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Ou & Demsky 2018, §1.3.2: preserving syntactic dependency (dependency ∪ reads-from acyclic) is explicitly 'a strictly weaker guarantee than the previous approach' of forbidding load-store reordering (sequence-before ∪ reads-from acyclic); dependency ⊆ sequence-before, so LSO-permitted executions are a subset of dependency-permitted ones."
+    },
+    {
+      "from": "OpenCL",
+      "to": "AMDGPU",
+      "type": "compilation",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "OpenCL kernels compile to AMD's GPU ISA via the HSA-based model."
+    },
+    {
+      "from": "OpenCL",
+      "to": "PTX",
+      "type": "compilation",
       "provenance": "memalloy",
       "evidence": "machine_run",
-      "note": "Gaster et al.'s HRF-Relaxed loosens HRF-direct/indirect's exact scope-matching, admitting more programs and behaviours than the original HRF models."
+      "note": "OpenCL kernels compile to PTX on NVIDIA GPUs. Verified sound by memalloy: no execution where the compiled PTX behaviour violates the source OpenCL semantics, up to 4 OpenCL / 6 PTX events (opencl_scoped -> ptx_orig via the opencl_ptx mapping); the known-buggy mapping variant yields a counterexample at 5 events, confirming the check discriminates. Reproduced via litmus/memalloy/ (Docker)."
+    },
+    {
+      "from": "OpenCL",
+      "to": "Vulkan",
+      "type": "incomparable",
+      "provenance": "memalloy",
+      "evidence": "machine_run",
+      "note": "Both are scoped GPU API models, but differ in scope sets and synchronisation primitives — Vulkan adds explicit availability/visibility operations that OpenCL lacks; neither contains the other."
+    },
+    {
+      "from": "PARMv8",
+      "to": "ARMv8",
+      "type": "equivalent",
+      "provenance": "literature",
+      "evidence": "cited",
+      "fragment_restricted": true,
+      "note": "Raad, Wickerson & Vafeiadis (OOPSLA 2019): PARMv8's crash-free behaviour coincides with ARMv8. fragment_restricted because the equivalence holds only on the crash-free fragment; the persist-order axiom is orthogonal."
+    },
+    {
+      "from": "PArmv8view",
+      "to": "PArmv8axiom",
+      "type": "equivalent",
+      "provenance": "literature",
+      "evidence": "cited",
+      "fragment_restricted": false,
+      "note": "Cho, Lee, Raad & Kang (PLDI 2021), Theorem 6.2: a behaviour is allowed under PArmv8axiom iff it is allowed under the operational PArmv8view. Full equivalence (mechanised in Coq), covering the persistency dimension, hence not fragment_restricted."
+    },
+    {
+      "from": "PC",
+      "to": "Causal",
+      "type": "incomparable",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Processor and causal consistency are incomparable: each forbids a behaviour the other allows (Steinke & Nutt 2004)."
+    },
+    {
+      "from": "PC",
+      "to": "Coherence",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Processor consistency is strictly stronger than cache consistency (Goodman 1989; Steinke & Nutt 2004). The Coherence node is Goodman's cache consistency."
+    },
+    {
+      "from": "PC",
+      "to": "PRAM",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Processor consistency is strictly stronger than PRAM consistency (Goodman 1989; Steinke & Nutt 2004)."
+    },
+    {
+      "from": "PEx86",
+      "to": "Px86",
+      "type": "equivalent",
+      "provenance": "literature",
+      "evidence": "cited",
+      "fragment_restricted": true,
+      "note": "Raad, Maranget & Vafeiadis (POPL 2022): PEx86 is a conservative extension of Px86 (Px86sim) -- for programs using only regular stores on write-back memory (no non-temporal stores or non-wb memory types) their behaviours coincide. fragment_restricted because it holds only on that shared wb regular-store fragment; and even there PEx86 minorly diverges from Px86sim by dropping the flush/flushopt ordering constraint, following the updated Intel manual."
+    },
+    {
+      "from": "POCausal",
+      "to": "EC",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Burckhardt, Gotsman, Yang & Zawirski, POPL 2014, §7: an execution is per-object causally consistent iff it is eventually consistent (EVENTUAL+THINAIR) AND satisfies the per-object ordering axioms POCV/POCA. Adding those axioms disallows strictly more anomalies (e.g. Fig. 14(b), §3.1), so eventual consistency is strictly weaker than per-object causal consistency."
+    },
+    {
+      "from": "POWER",
+      "to": "Coherence",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "machine_run",
+      "note": "POWER enforces coherence as a baseline."
+    },
+    {
+      "from": "POWER",
+      "to": "DJR-POWER",
+      "type": "equivalent",
+      "provenance": "literature",
+      "evidence": "by_construction",
+      "fragment_restricted": true,
+      "note": "Dongol, Jagadeesan & Riely (POPL 2018) also instantiate their transactional framework at PPC (POWER); the added transactional axioms only constrain transactional events, so on programs with no transactions the POWER instance coincides with POWER by construction. fragment_restricted: the coincidence holds only on the non-transactional fragment."
+    },
+    {
+      "from": "POWER",
+      "to": "POWER+TM",
+      "type": "equivalent",
+      "provenance": "literature",
+      "evidence": "by_construction",
+      "fragment_restricted": true,
+      "note": "Chong, Sorensen & Wickerson (PLDI 2018) add TM rules on top of the POWER consistency axioms (their Fig. 6) that only constrain transactional events; on the non-transactional fragment it coincides with POWER by construction. Validated on a POWER8 machine (no forbidden test observed)."
+    },
+    {
+      "from": "PRAM",
+      "to": "Coherence",
+      "type": "incomparable",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "PRAM and cache consistency are incomparable: PRAM orders a process's own writes globally but not per-location, cache consistency the converse (Goodman 1989; Steinke & Nutt 2004)."
+    },
+    {
+      "from": "PRAM",
+      "to": "MR",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Brzezinski et al. (2003) proved PRAM = read-your-writes ∧ monotonic reads ∧ monotonic writes (Viotti & Vukolić 2016, Eq. 20). PRAM implies monotonic reads while the converse fails, so monotonic reads is strictly weaker than PRAM."
+    },
+    {
+      "from": "PRAM",
+      "to": "MW",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Brzezinski et al. (2003) proved PRAM = read-your-writes ∧ monotonic reads ∧ monotonic writes (Viotti & Vukolić 2016, Eq. 20). PRAM implies monotonic writes while the converse fails, so monotonic writes is strictly weaker than PRAM."
+    },
+    {
+      "from": "PRAM",
+      "to": "RYW",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Brzezinski et al. (2003) proved PRAM consistency holds iff a system provides read-your-writes, monotonic reads and monotonic writes (Viotti & Vukolić 2016, Eq. 20). PRAM is the conjunction of the three, so it implies read-your-writes while the converse fails: read-your-writes is strictly weaker than PRAM."
+    },
+    {
+      "from": "PRAM",
+      "to": "Slow",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Slow consistency is strictly weaker than PRAM consistency (Hutto & Ahamad 1990; Steinke & Nutt 2004)."
+    },
+    {
+      "from": "PSC",
+      "to": "x86-TSO",
+      "type": "compilation",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Khyzha & Lahav (POPL 2021) develop a sound mapping from the stronger SC-based persistency model PSC down to x86; the mapping targets the x86-TSO consistency model."
+    },
+    {
+      "from": "PSER",
+      "to": "PARMv8",
+      "type": "compilation",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Raad, Wickerson & Vafeiadis (OOPSLA 2019) prove that PSER (persistent serialisability) compiles correctly to PARMv8."
+    },
+    {
+      "from": "PSI",
+      "to": "RA",
+      "type": "compilation",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Raad, Lahav & Vafeiadis (ESOP 2018) give PSI a lock-based reference implementation built on the release-acquire (RA) fragment of the C/C++11 memory model, proved sound and complete against the declarative PSI specification (and likewise Robust PSI). Retargeted from RC11 onto RA in 1.4.1: the target has always been the release-acquire fragment, as this note already said, and RA became a node in 1.4.0."
+    },
+    {
+      "from": "PSO",
+      "to": "POWER",
+      "type": "strictly_weaker",
+      "provenance": "litmus",
+      "evidence": "machine_run",
+      "note": "Empirically PSO is a subset of POWER: every PSO-allowed behaviour is also POWER-allowed, while POWER additionally allows load-load reordering (e.g. MP+sync+po) and non-MCA behaviour that PSO forbids. No PSO-allowed/POWER-forbidden witness exists on the standard litmus families, so the earlier 'incomparable' classification was too generous. See litmus/strictly-weaker/PSO-vs-POWER."
+    },
+    {
+      "from": "PSO",
+      "to": "RMMOA",
+      "type": "equivalent",
+      "provenance": "literature",
+      "evidence": "by_construction",
+      "fragment_restricted": false,
+      "note": "RMMOA is an operational model whose out-of-order propagation of writes to different locations matches PSO's store→store relaxation."
+    },
+    {
+      "from": "PSO",
+      "to": "RMO",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "machine_run",
+      "note": "RMO allows all four reordering types including load-load and load-store."
+    },
+    {
+      "from": "PTSO",
+      "to": "x86-TSO",
+      "type": "equivalent",
+      "provenance": "literature",
+      "evidence": "cited",
+      "fragment_restricted": true,
+      "note": "Raad & Vafeiadis (OOPSLA 2018): PTSO layers epoch persistency on TSO; on the crash-free fragment its behaviour coincides with x86-TSO. fragment_restricted because the equivalence holds only crash-free — persistency adds an orthogonal persist-order dimension the consistency model does not see."
+    },
+    {
+      "from": "PTSOsyn",
+      "to": "Px86",
+      "type": "equivalent",
+      "provenance": "literature",
+      "evidence": "cited",
+      "fragment_restricted": false,
+      "note": "Khyzha & Lahav (POPL 2021): the synchronous-persist model PTSOsyn is proven equivalent, in terms of reachable states, to Raad et al.'s asynchronous-persist Px86 (POPL 2020). Full equivalence (crashes included), so not fragment_restricted; the caveat is that it is a state-based / reachable-state equivalence rather than a full trace equivalence."
     },
     {
       "from": "PTX",
@@ -2021,111 +2068,139 @@
       "note": "NVIDIA Tile IR docs §7: 'The axioms and relations of the Tile IR memory model are intended to be a strict weakening of the PTX memory model.' Vendor-asserted (note the hedged 'intended to be' language); not independently proven or machine-checked."
     },
     {
-      "from": "OpenCL",
-      "to": "Vulkan",
+      "from": "Promising",
+      "to": "CSRA",
       "type": "incomparable",
-      "provenance": "memalloy",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Both are semantic-dependency-preserving models avoiding thin-air; CSRA's compilation to x86 and POWER is sound, but unlike Promising its mappings to ARMv7/ARMv8 were later shown non-optimal. Neither contains the other."
+    },
+    {
+      "from": "Promising",
+      "to": "Weakestmo",
+      "type": "incomparable",
+      "provenance": "litmus",
+      "evidence": "cited",
+      "note": "Both are semantic-dependency-preserving models that forbid out-of-thin-air, admit the optimal compilation mappings, and give external DRF. Weakestmo is built on event structures (vs Promising's promises/certification) and, unlike the Promising semantics, supports sequentially consistent accesses; neither is a subset of the other."
+    },
+    {
+      "from": "PromisingARM",
+      "to": "ARMv8",
+      "type": "equivalent",
+      "provenance": "literature",
+      "evidence": "cited",
+      "fragment_restricted": true,
+      "note": "Pulte et al. (PLDI 2019), Appendix D, Theorem D.1: the operational Promising-ARM model is proven equivalent in Coq to the axiomatic ARMv8 model for finite executions."
+    },
+    {
+      "from": "PromisingARM",
+      "to": "RVWMO",
+      "type": "equivalent",
+      "provenance": "literature",
+      "evidence": "cited",
+      "fragment_restricted": true,
+      "note": "Pulte et al. (PLDI 2019), Appendix D, Theorem D.2: the operational Promising-RISC-V model is proven equivalent in Coq to the axiomatic RVWMO model for finite executions."
+    },
+    {
+      "from": "PwP",
+      "to": "LeakySemi",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Leaky Semicolon §9/App. E: 'PwT-mca generalizes PwP to account for sequential composition'; PwP imposes m7c (reads-from implies pomset order) and 'is similar to PwT-mca1', whereas 'PwT-mca2 ... drops ... m7c' and 'is a weaker model new to this paper' (§4.2). Dropping m7c admits behaviours PwP forbids: the Arm8 execution of §4.2 is allowed by PwT-mca2 but 'disallowed by PwT-mca1', witnessing that the LeakySemi/PwT-mca model is strictly weaker (more permissive) than PwP. Since PwP is roughly PwT-mca1 rather than exactly it (§9: 'PwT is based on PwP, [but] there are many differences'), no equivalence is claimed."
+    },
+    {
+      "from": "Px86",
+      "to": "x86-TSO",
+      "type": "equivalent",
+      "provenance": "literature",
+      "evidence": "cited",
+      "fragment_restricted": true,
+      "note": "Raad, Wickerson, Neiger & Vafeiadis (POPL 2020): Px86's crash-free behaviour coincides with x86-TSO. fragment_restricted because the equivalence holds only on the crash-free fragment; the persist-order axiom is orthogonal."
+    },
+    {
+      "from": "Px86axiom",
+      "to": "Px86",
+      "type": "equivalent",
+      "provenance": "literature",
+      "evidence": "cited",
+      "fragment_restricted": true,
+      "note": "Equivalent modulo Cho's fix. Cho, Lee, Raad & Kang (PLDI 2021), Theorem 4.3, prove Px86axiom equivalent to SPx86 -- a *strengthened* Px86 whose clflush executes synchronously -- which repairs documented flaws in Raad et al.'s original Px86. So this is an equivalence to the fixed model, not literally the original Px86; fragment_restricted because the two coincide only on the fragment where those flaws do not manifest."
+    },
+    {
+      "from": "Px86view",
+      "to": "Px86axiom",
+      "type": "equivalent",
+      "provenance": "literature",
+      "evidence": "cited",
+      "fragment_restricted": false,
+      "note": "Cho, Lee, Raad & Kang (PLDI 2021), Theorem 5.3: a behaviour is allowed under Px86axiom iff it is allowed under the operational Px86view. Full equivalence (mechanised in Coq), covering the persistency dimension, hence not fragment_restricted."
+    },
+    {
+      "from": "RA",
+      "to": "WRA",
+      "type": "strictly_weaker",
+      "provenance": "litmus",
       "evidence": "machine_run",
-      "note": "Both are scoped GPU API models, but differ in scope sets and synchronisation primitives — Vulkan adds explicit availability/visibility operations that OpenCL lacks; neither contains the other."
+      "note": "WRA drops modification order entirely, replacing RA's write-coherence and read-coherence with weak-read-coherence over hb|loc; Lahav & Boker note that write-coherence implies [W];hb|loc;[W] subset of mo, so read-coherence implies weak-read-coherence and RA contains WRA (Prop. 3.2). Strictness is Ex. 3.7, three single-location programs (WW, Oscillating, SF) allowed by WRA and forbidden by RA: WRA does not provide SC-per-location, so even one-location programs may behave non-sequentially. Machine-checked: litmus/models/wra.cat against ra.cat, with all three witnesses in litmus/strictly-weaker/RA-vs-WRA/ (Never 0 4 / 0 20 / 0 4 under RA, Sometimes under WRA), and sra.cat run alongside to show it agrees with RA on all three — this axis is orthogonal to the 2+2W one. Containment remains the cited Prop. 3.2 argument; herd7 decides strictness only."
     },
     {
-      "from": "CUDA",
-      "to": "PTX",
-      "type": "compilation",
+      "from": "RC11",
+      "to": "C++20",
+      "type": "strictly_weaker",
       "provenance": "literature",
-      "evidence": "cited",
-      "note": "CUDA C++ atomics lower to PTX; the CUDA model is layered directly on the PTX memory model."
-    },
-    {
-      "from": "OpenCL",
-      "to": "PTX",
-      "type": "compilation",
-      "provenance": "memalloy",
       "evidence": "machine_run",
-      "note": "OpenCL kernels compile to PTX on NVIDIA GPUs. Verified sound by memalloy: no execution where the compiled PTX behaviour violates the source OpenCL semantics, up to 4 OpenCL / 6 PTX events (opencl_scoped -> ptx_orig via the opencl_ptx mapping); the known-buggy mapping variant yields a counterexample at 5 events, confirming the check discriminates. Reproduced via litmus/memalloy/ (Docker)."
+      "note": "C++20 adopts RC11's repaired SC (P0668) but, unlike RC11, does not adopt the no-thin-air axiom acyclic(po ∪ rf): it still permits out-of-thin-air / plain load-buffering reads that RC11 forbids. So RC11 is strictly stronger."
     },
     {
-      "from": "OpenCL",
-      "to": "AMDGPU",
-      "type": "compilation",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "OpenCL kernels compile to AMD's GPU ISA via the HSA-based model."
-    },
-    {
-      "from": "Vulkan",
-      "to": "PTX",
-      "type": "compilation",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Vulkan/SPIR-V compute shaders compile to PTX on NVIDIA GPUs."
-    },
-    {
-      "from": "Vulkan",
-      "to": "AMDGPU",
-      "type": "compilation",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Vulkan/SPIR-V compute shaders compile to AMD's GPU ISA."
-    },
-    {
-      "from": "WebGPU",
-      "to": "Vulkan",
-      "type": "compilation",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Browser WebGPU implementations lower WGSL to Vulkan (and to Metal/Direct3D 12); the WGSL model is derived from Vulkan's."
-    },
-    {
-      "from": "WebGPU",
-      "to": "Metal",
-      "type": "compilation",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "On Apple platforms WebGPU implementations lower WGSL to Metal."
-    },
-    {
-      "from": "SC",
-      "to": "DRFx",
+      "from": "RC11",
+      "to": "C11+TM",
       "type": "equivalent",
       "provenance": "literature",
       "evidence": "by_construction",
       "fragment_restricted": true,
-      "note": "Both yield only sequentially consistent outcomes for data-race-free programs. DRFx additionally gives racy programs catch-fire semantics — a runtime raises an exception when it detects a region-bounded data race — so the survey groups it with SC rather than weakening the behaviour of well-synchronised code."
+      "note": "Chong, Sorensen & Wickerson (PLDI 2018, §7) build the C++ TM model on the baseline C++ model of Lahav et al. (RC11), making only two amendments (an unchanged race definition and transactional synchronisation folded into happens-before) that vanish when there are no transactions. On the non-transactional fragment it coincides with RC11 by construction."
     },
     {
-      "from": "SC",
-      "to": "BMM",
+      "from": "RC11",
+      "to": "C11",
+      "type": "strictly_weaker",
+      "provenance": "kater",
+      "evidence": "machine_run",
+      "note": "RC11 is strictly stronger than C11: it fixes SC axioms and eliminates thin-air. All RC11 behaviours are C11 behaviours but not vice versa. Containment is machine-checked: kater derives C11's psc-acyclicity and coherence from RC11's acyclic(ar) over kater's rc11.kat and c11-old.kat (litmus/kater/queries/strictly-weaker-RC11-vs-C11.kat). Strictness is the witness in litmus/strictly-weaker/RC11-vs-C11/."
+    },
+    {
+      "from": "RC11",
+      "to": "IMM",
+      "type": "incomparable",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "IMM is designed to compile correctly to hardware; it is related to RC11 but targets a different point in the design space."
+    },
+    {
+      "from": "RC11",
+      "to": "JAM",
       "type": "strictly_weaker",
       "provenance": "literature",
-      "evidence": "machine_run",
-      "note": "BMM equips each thread with a store buffer, so the store→load (SB) outcome becomes observable; SC forbids it."
+      "evidence": "cited",
+      "note": "JAM borrows RC11's OOTA fix for opaque and stronger accesses, but unlike RC11 it does not tackle thin-air for plain (non-atomic) accesses, so it permits more behaviours."
     },
     {
-      "from": "TSO",
-      "to": "BMM",
-      "type": "equivalent",
-      "provenance": "literature",
-      "evidence": "by_construction",
-      "fragment_restricted": true,
-      "note": "BMM is a pragmatic TSO-style buffered model proposed as a candidate Java memory model; on the store-buffer relaxations it coincides with TSO."
-    },
-    {
-      "from": "TSO",
-      "to": "RMMOA",
+      "from": "RC11",
+      "to": "MRD",
       "type": "strictly_weaker",
       "provenance": "literature",
-      "evidence": "machine_run",
-      "note": "Like PSO, RMMOA's hierarchical store buffers additionally permit store→store reordering to distinct addresses, which TSO forbids."
+      "evidence": "cited",
+      "note": "Paviotti et al. (Modular Relaxed Dependencies in Weak Memory Concurrency, ESOP 2020) relax the RC11 axiomatic model with their MRD dependency model to form MRD-C11. Lemma 3 (Implementability of MRD-C11): for all programs P, ⟦P⟧MRD-C11 ⊇ ⟦P⟧RC11 — MRD-C11 is strictly weaker than RC11, admitting the false-dependency-eliminating load→store reorderings RC11 forbids while still forbidding out-of-thin-air. (The MRD+IMM instantiation of Theorem 3, ⟦P⟧MRD+IMM ⊇ ⟦P⟧IMM, is a distinct model and is not represented by this node.)"
     },
     {
-      "from": "PSO",
-      "to": "RMMOA",
+      "from": "RC11",
+      "to": "ORC11",
       "type": "equivalent",
       "provenance": "literature",
       "evidence": "by_construction",
       "fragment_restricted": false,
-      "note": "RMMOA is an operational model whose out-of-order propagation of writes to different locations matches PSO's store→store relaxation."
+      "note": "ORC11 is an operational version of RC11 developed for RustBelt to verify Rust standard-library synchronisation primitives against a program logic."
     },
     {
       "from": "RC11",
@@ -2147,224 +2222,118 @@
     },
     {
       "from": "RC11",
-      "to": "ORC11",
+      "to": "RC11z",
       "type": "equivalent",
       "provenance": "literature",
       "evidence": "by_construction",
-      "fragment_restricted": false,
-      "note": "ORC11 is an operational version of RC11 developed for RustBelt to verify Rust standard-library synchronisation primitives against a program logic."
-    },
-    {
-      "from": "CRC",
-      "to": "C11",
-      "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "machine_run",
-      "note": "CRC is a compositional semantics for a thin-air-free fragment of C11 (non-atomics with catch-fire, release-acquire, SC fences); by omitting relaxed atomics it forbids the out-of-thin-air behaviours plain C11 permits."
+      "fragment_restricted": true,
+      "note": "RC11z extends the operational RC11-RAR semantics so that allocation and deallocation are explicit write events; a read taking its value from such an event surfaces as a read-from-uninitialised or use-after-free error. On the concurrency behaviours of well-allocated programs it coincides with RC11 — the added allocation layer exists to verify safe memory reclamation (RCU)."
     },
     {
       "from": "RC11",
-      "to": "JAM",
+      "to": "RC17",
       "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "JAM borrows RC11's OOTA fix for opaque and stronger accesses, but unlike RC11 it does not tackle thin-air for plain (non-atomic) accesses, so it permits more behaviours."
-    },
-    {
-      "from": "Java",
-      "to": "JAM",
-      "type": "incomparable",
       "provenance": "litmus",
-      "evidence": "cited",
-      "note": "JAM is a proposed revision of the JMM built on VarHandle access modes (plain/opaque/release-acquire/volatile); it strengthens the treatment of atomics via RC11 while differing from the original JMM's causality machinery, so neither contains the other."
+      "evidence": "machine_run",
+      "note": "RC17 is RC11 with the C++17 release-sequence narrowing (RMWs only). Like the C11→C++17 case the narrowing is monotone — it only removes synchronisation — so RC17 admits an outcome RC11 forbids and forbids nothing RC11 allows. Mechanised: mp-rs-add-est-atomic is Never under rc11.cat and Sometimes under rc17.cat. Models vendored from gonzalobg/cpp_memory_model; see litmus/strictly-weaker/RC11-vs-RC17."
     },
     {
-      "from": "Java",
-      "to": "OHMM",
-      "type": "incomparable",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "OHMM is an operational attempt to repair the JMM — a global event buffer with a replay mechanism, tracking syntactic dependencies to forbid thin-air. It restructures the JMM's semantics rather than strictly refining it, so the two are incomparable."
-    },
-    {
-      "from": "LKMM",
-      "to": "OHMM",
-      "type": "incomparable",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Both are syntactic-dependency-preserving models that forbid thin-air by respecting syntactic dependencies, but over different primitives (Linux-kernel barriers vs a JMM-style happens-before machine); neither subsumes the other."
-    },
-    {
-      "from": "Weakestmo",
-      "to": "C11",
-      "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Weakestmo grounds thin-air reads with event structures and is, in the authors' words, 'stronger than C11 (which allows OOTA) and weaker than RC11': every separating outcome (the OOTA load-buffering test and the 'RNG' bogus-value example) is allowed by C11 and forbidden by Weakestmo, with no behaviour Weakestmo allows that C11 forbids. So C11 is strictly weaker. (Reclassified from incomparable; see litmus/strictly-weaker/Weakestmo-vs-C11.)"
-    },
-    {
-      "from": "Promising",
-      "to": "Weakestmo",
-      "type": "incomparable",
-      "provenance": "litmus",
-      "evidence": "cited",
-      "note": "Both are semantic-dependency-preserving models that forbid out-of-thin-air, admit the optimal compilation mappings, and give external DRF. Weakestmo is built on event structures (vs Promising's promises/certification) and, unlike the Promising semantics, supports sequentially consistent accesses; neither is a subset of the other."
-    },
-    {
-      "from": "CSRA",
-      "to": "C11",
+      "from": "RC11",
+      "to": "sMRD",
       "type": "strictly_weaker",
       "provenance": "literature",
       "evidence": "machine_run",
-      "note": "CSRA pairs a POWER-inspired memory subsystem with per-thread event structures and permits optimisation while avoiding thin-air. Its authors state CSRA is a subset of C/C++11 by design ('the converse is not to be expected ... the point of our model is to exclude the thin-air executions that C/C++11 allows'): only out-of-thin-air outcomes separate them, all allowed by C11 and forbidden by CSRA. So C11 is strictly weaker. (Reclassified from incomparable; see litmus/strictly-weaker/CSRA-vs-C11.)"
+      "note": "Symbolic MRD interfaces with an RC11-style axiomatic model but refines its dependency relation (dp), removing false dependencies so that load→store reorderings in load-buffering shapes — e.g. the LB+UB+data outcome RC11 forbids because of a cycle in ⊑∪rf — become allowed, while genuine out-of-thin-air cycles stay forbidden. It therefore admits strictly more behaviours than RC11."
     },
     {
-      "from": "Promising",
-      "to": "CSRA",
-      "type": "incomparable",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Both are semantic-dependency-preserving models avoiding thin-air; CSRA's compilation to x86 and POWER is sound, but unlike Promising its mappings to ARMv7/ARMv8 were later shown non-optimal. Neither contains the other."
-    },
-    {
-      "from": "C11",
-      "to": "WJES",
-      "type": "incomparable",
+      "from": "RC17",
+      "to": "C++17",
+      "type": "strictly_weaker",
       "provenance": "litmus",
       "evidence": "machine_run",
-      "note": "WJES uses a game-semantics-inspired notion of well-justification to forbid thin-air and prove external DRF. A load→load reordering counterexample shows its mappings to ARMv7/ARMv8/POWER are not optimal, so it is incomparable with C11."
+      "note": "RC17 and C++17 share the C++17 release sequences but RC17 additionally keeps RC11's no-thin-air axiom acyclic(po ∪ rf), which C++17 lacks. So C++17 permits plain load-buffering / out-of-thin-air reads RC17 forbids, and forbids nothing RC17 allows (RC17 = C++17 plus one axiom, by construction). Mechanised: the relaxed LB shape is Never under rc17.cat and Sometimes under cpp17.cat. Parallels the existing RC11→C11 edge. See litmus/strictly-weaker/RC17-vs-C++17."
     },
     {
-      "from": "LeakySemi",
-      "to": "RC11",
-      "type": "incomparable",
+      "from": "RMO",
+      "to": "Alpha",
+      "type": "strictly_weaker",
+      "provenance": "litmus",
+      "evidence": "machine_run",
+      "note": "SPARC RMO preserves address/data/control dependencies; DEC Alpha uniquely relaxes dependent-load ordering (Alglave, Maranget & Tautschnig, Herding Cats, TOPLAS 2014, p.18) and is non-multi-copy-atomic. Separating outcome: MP+dmb+addr, forbidden by RMO (address dependency preserved), allowed by Alpha (dependent loads not ordered) — machine-run under herd7 against a portable abstract-alpha.cat (RMO Never 0 3, Alpha Sometimes 1 3). Containment is the litmus-tier monotonicity argument: Alpha relaxes strictly more than RMO (dependencies; store atomicity) and no less on any axis, so Alpha ⊆ RMO, strict by the witness. See litmus/strictly-weaker/RMO-vs-Alpha."
+    },
+    {
+      "from": "RMO",
+      "to": "Coherence",
+      "type": "strictly_weaker",
       "provenance": "literature",
-      "evidence": "cited",
-      "note": "Leaky Semicolon §9: 'PwT-mca is incomparable to both RC11 ... and the promising semantics'. RC11 allows non-multi-copy-atomic behaviours that PwT-mca disallows, while PwT-mca allows optimisations that RC11's No-Thin-Air axiom forbids."
+      "evidence": "machine_run",
+      "note": "RMO still enforces per-address coherence; weaker models could violate it."
     },
     {
-      "from": "LeakySemi",
-      "to": "Promising",
-      "type": "incomparable",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Leaky Semicolon §9: 'PwT-mca is incomparable to both RC11 ... and the promising semantics [Kang et al. 2017] ... PwT-mca has a weaker notion of coherence than the promising semantics.'"
-    },
-    {
-      "from": "PwP",
-      "to": "LeakySemi",
+      "from": "RTCausal",
+      "to": "CCv",
       "type": "strictly_weaker",
       "provenance": "literature",
       "evidence": "cited",
-      "note": "Leaky Semicolon §9/App. E: 'PwT-mca generalizes PwP to account for sequential composition'; PwP imposes m7c (reads-from implies pomset order) and 'is similar to PwT-mca1', whereas 'PwT-mca2 ... drops ... m7c' and 'is a weaker model new to this paper' (§4.2). Dropping m7c admits behaviours PwP forbids: the Arm8 execution of §4.2 is allowed by PwT-mca2 but 'disallowed by PwT-mca1', witnessing that the LeakySemi/PwT-mca model is strictly weaker (more permissive) than PwP. Since PwP is roughly PwT-mca1 rather than exactly it (§9: 'PwT is based on PwP, [but] there are many differences'), no equivalence is claimed."
+      "note": "RealTimeCausality = Causality ∧ RealTime (Viotti & Vukolić 2016, Eq. 28; Mahajan, Alvisi & Dahlin 2011). V-V's Causality (Eq. 26) is causal convergence, so this containment is against CCv. It adds RealTime (Eq. 9, rb ⊆ ar) — causally concurrent, real-time-non-overlapping writes must be applied in real-time order — disallowing strictly more behaviours, so CCv is strictly weaker than real-time causal consistency. Re-homed from the Causal node, where the same note had been read as a containment against causal memory."
     },
     {
-      "from": "C11",
-      "to": "GOS",
+      "from": "RTCausal",
+      "to": "Causal",
       "type": "incomparable",
       "provenance": "literature",
       "evidence": "cited",
-      "note": "GOS gives a generative operational semantics with stratification constraints on speculation to rule out thin-air values and prove external DRF; it forbids thin-air reads C11 permits but is not a strict subset."
+      "note": "RealTimeCausality = CCv ∧ RealTime, and CCv is incomparable to causal memory. This replaces a strictly_weaker edge that read the Viotti-Vukolić containment (Eq. 28) as being against causal memory; it is against CCv. Witnesses, both Bouajjani et al. POPL 2017 Fig. 2: history (2a) is CM but not CCv, hence not real-time causal; history (2b) is CCv and not CM, and admits a real-time schedule — pa's writes all completing before pb starts — whose arbitration order (pa's writes before wr(x,2)) extends rb, so RealTime (V-V Eq. 9, rb ⊆ ar) holds. RealTime constrains arbitration only, not visibility, so rd(z)▷0 may still miss wr(z,1): it is real-time causal but not CM."
     },
     {
-      "from": "C11",
-      "to": "JSMM",
-      "type": "incomparable",
+      "from": "SC",
+      "to": "BMM",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "machine_run",
+      "note": "BMM equips each thread with a store buffer, so the store→load (SB) outcome becomes observable; SC forbids it."
+    },
+    {
+      "from": "SC",
+      "to": "C11",
+      "type": "strictly_weaker",
+      "provenance": "kater",
+      "evidence": "machine_run",
+      "note": "DRF-SC: SC-annotated programs behave as SC, but C11 allows weaker behaviours for non-SC atomics. Containment is machine-checked: kater derives both of C11's global axioms — acyclic(psc) and coherence — from acyclic(sc) over kater's sc.kat and c11-old.kat (litmus/kater/queries/strictly-weaker-SC-vs-C11.kat). Strictness is the relaxed-SB witness in litmus/strictly-weaker/SC-vs-C11/."
+    },
+    {
+      "from": "SC",
+      "to": "CCv",
+      "type": "strictly_weaker",
       "provenance": "literature",
       "evidence": "cited",
-      "note": "The JavaScript model is based on C11 and shares its thin-air problem (only internal DRF), but — unlike C11 — it does not treat racy non-atomic accesses as undefined behaviour and it natively supports mixed-size accesses over SharedArrayBuffer. Neither contains the other."
+      "note": "Bouajjani et al., POPL 2017, Example 7: history (2d) satisfies CC, CM and CCv, yet admits no total order over all its operations, so it is not sequentially consistent."
     },
     {
-      "from": "C11",
-      "to": "Wasm",
-      "type": "compilation",
+      "from": "SC",
+      "to": "Causal",
+      "type": "strictly_weaker",
       "provenance": "literature",
       "evidence": "cited",
-      "note": "Watt et al. 2019 §7.2 / Fig. 20 give the compilation of C/C++11 accesses to Wasm memory accesses, mapping all C/C++ atomics (relaxed, acquire/release, seq_cst) onto Wasm seqcst atomics; the sketch shows the compiled program is SC-DRF and thus behaviourally correct at the level of memory accesses."
+      "note": "Causal memory is strictly weaker than sequential consistency (Ahamad et al. 1995; Steinke & Nutt 2004)."
     },
     {
-      "from": "Wasm",
-      "to": "JSMM",
+      "from": "SC",
+      "to": "DJR-SC",
       "type": "equivalent",
       "provenance": "literature",
-      "evidence": "cited",
+      "evidence": "by_construction",
       "fragment_restricted": true,
-      "note": "Watt et al. 2019 §6.3 (Prop. 6.2): dropping Wasm's two strengthening conditions (†,‡) yields exactly the consistency behaviours of the (uncorrected) JavaScript model on shared array buffers. The paper proposes adding (†,‡) to JavaScript as a strict strengthening; TC39 adopted them, and the repaired model is this dataset's JSMM — so full Wasm and JSMM agree on the shared-memory data-access (SharedArrayBuffer) fragment (excluding traps, memory growth, and mixed-size beyond the shared subset)."
-    },
-    {
-      "from": "Wasm",
-      "to": "TSO",
-      "type": "compilation",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Watt et al. 2019 Fig. 19 tabulates the compilation of Wasm memory accesses to x86 (whose ISA model is TSO), following the established C/C++11 SC-atomic schemes [Sewell & Sevcik 2016]; full mixed-size correctness is flagged as an open problem (§7.1.1)."
-    },
-    {
-      "from": "Wasm",
-      "to": "ARM",
-      "type": "compilation",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Watt et al. 2019 Fig. 19 gives the compilation of Wasm memory accesses to ARMv7, following the established C/C++11 SC-atomic schemes [Sewell & Sevcik 2016]; full mixed-size correctness is flagged as an open problem (§7.1.1)."
-    },
-    {
-      "from": "Wasm",
-      "to": "ARMv8",
-      "type": "compilation",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Watt et al. 2019 Fig. 19 gives the compilation of Wasm memory accesses to AArch64/ARMv8 (LDR/STR, LDAR/STLR), following the established C/C++11 SC-atomic schemes [Sewell & Sevcik 2016]; full mixed-size correctness is flagged as an open problem (§7.1.1)."
-    },
-    {
-      "from": "C11",
-      "to": "RMC",
-      "type": "incomparable",
-      "provenance": "literature",
-      "evidence": "machine_run",
-      "note": "The Relaxed Memory Calculus specifies ordering constraints directly in source code rather than deriving them from access annotations. It is very weak and permits thin-air values (only internal DRF is proved); its primitives differ from C11's, so the two are incomparable."
-    },
-    {
-      "from": "C11",
-      "to": "RAO",
-      "type": "incomparable",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "RAO explains relaxed behaviour via transformations over an SC execution. Its authors claim external DRF while still permitting thin-air values — two properties known to be incompatible in general (Batty et al., ESOP 2015) — which the survey attributes to restrictions on the input language (no general conditionals). Incomparable with C11."
-    },
-    {
-      "from": "C11",
-      "to": "TSC",
-      "type": "incomparable",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "TSC is a general framework for the effects of speculative execution. Under unrestricted speculation the external DRF theorem fails (only internal DRF holds) and thin-air values appear; it studies speculation abstractly rather than refining C11, so the two are incomparable."
+      "note": "Dongol, Jagadeesan & Riely (POPL 2018) give a transactional framework parametric in the base architecture and instantiate it at SC; its added transactional axioms only constrain transactional events, so on programs with no transactions the SC instance coincides with SC by construction. fragment_restricted: they coincide only on the non-transactional fragment — the framework adds an orthogonal transactional layer with observable-serializability guarantees."
     },
     {
       "from": "SC",
-      "to": "EtE-SC",
+      "to": "DRFx",
       "type": "equivalent",
       "provenance": "literature",
       "evidence": "by_construction",
-      "fragment_restricted": false,
-      "note": "EtE-SC restores end-to-end sequential consistency via an SC-preserving LLVM compiler and modified x86 hardware; it admits exactly the SC outcomes, differing from SC only in enforcement mechanism and performance, not in allowed behaviours."
-    },
-    {
-      "from": "SC",
-      "to": "VbD",
-      "type": "equivalent",
-      "provenance": "literature",
-      "evidence": "by_construction",
-      "fragment_restricted": false,
-      "note": "Volatile-by-default makes every Java access sequentially consistent, so it admits exactly the SC outcomes; it differs from SC only in enforcement mechanism (speculative JIT recompilation) and performance."
-    },
-    {
-      "from": "SC",
-      "to": "SC-Haskell",
-      "type": "equivalent",
-      "provenance": "literature",
-      "evidence": "by_construction",
-      "fragment_restricted": false,
-      "note": "SC-Haskell preserves sequential consistency using Haskell's type system to separate thread-local from shared mutable state; it admits exactly the SC outcomes, differing from SC only in mechanism and performance."
+      "fragment_restricted": true,
+      "note": "Both yield only sequentially consistent outcomes for data-race-free programs. DRFx additionally gives racy programs catch-fire semantics — a runtime raises an exception when it detects a region-bounded data race — so the survey groups it with SC rather than weakening the behaviour of well-synchronised code."
     },
     {
       "from": "SC",
@@ -2395,12 +2364,36 @@
     },
     {
       "from": "SC",
-      "to": "Spandex",
+      "to": "EtE-SC",
       "type": "equivalent",
       "provenance": "literature",
+      "evidence": "by_construction",
+      "fragment_restricted": false,
+      "note": "EtE-SC restores end-to-end sequential consistency via an SC-preserving LLVM compiler and modified x86 hardware; it admits exactly the SC outcomes, differing from SC only in enforcement mechanism and performance, not in allowed behaviours."
+    },
+    {
+      "from": "SC",
+      "to": "Java",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "machine_run",
+      "note": "JMM guarantees SC for data-race-free programs but allows reordering for racy accesses."
+    },
+    {
+      "from": "SC",
+      "to": "LKMM",
+      "type": "strictly_weaker",
+      "provenance": "kater",
+      "evidence": "machine_run",
+      "note": "Containment proved by kater, unbounded: each of LKMM's three global ordering axioms — acyclic(hb), the prop;ppo* work-around, and coherence — follows from SC's acyclic(sc). The operand is not kater's kat/lkmm2.kat, which is written over internal (-imm) relations and does not load in any mode; it is the mechanical restatement over kater's builtin theory that litmus/kater/derive-lkmm.sh generates, so the proof is about that rendering. Query: litmus/kater/queries/strictly-weaker-SC-vs-LKMM.kat. Strictness stays with the witness: LKMM permits reorderings of plain and *_ONCE accesses (e.g. store-buffering, SB) that SC forbids; DRF-style synchronisation must be requested explicitly with smp_mb() and friends. See litmus/strictly-weaker/SC-vs-LKMM."
+    },
+    {
+      "from": "SC",
+      "to": "OD-LSO",
+      "type": "strictly_weaker",
+      "provenance": "literature",
       "evidence": "cited",
-      "fragment_restricted": true,
-      "note": "Alsop, Sinclair & Adve (Spandex, ISCA 2018) state they assume a sequential-consistency-for-data-race-free (SC-for-DRF) model, so on the race-free fragment it admits exactly the SC outcomes; the flexible coherence request types affect only performance, not the consistency guarantee."
+      "note": "Ou & Demsky 2018, §6: 'the constraints we impose in general are much weaker than the sequential consistency memory model.' The load-store-ordering criterion permits relaxed-atomics reorderings SC forbids while ruling out OOTA."
     },
     {
       "from": "SC",
@@ -2412,11 +2405,12 @@
     },
     {
       "from": "SC",
-      "to": "Causal",
-      "type": "strictly_weaker",
+      "to": "SC-Haskell",
+      "type": "equivalent",
       "provenance": "literature",
-      "evidence": "cited",
-      "note": "Causal memory is strictly weaker than sequential consistency (Ahamad et al. 1995; Steinke & Nutt 2004)."
+      "evidence": "by_construction",
+      "fragment_restricted": false,
+      "note": "SC-Haskell preserves sequential consistency using Haskell's type system to separate thread-local from shared mutable state; it admits exactly the SC outcomes, differing from SC only in mechanism and performance."
     },
     {
       "from": "SC",
@@ -2427,20 +2421,54 @@
       "note": "SRA is the strongest of the release-acquire family and is still strictly weaker than SC: Lahav & Boker Ex. 3.5 marks the IRIW outcome allowed under WRA, RA and SRA alike, and SC forbids it. Store buffering is likewise allowed — SRA's compilation to x86-TSO uses plain accesses. The SRA paper supplies fences that restore sequential consistency, which is only meaningful because the model without them is weaker. Machine-checked: litmus/strictly-weaker/SC-vs-SRA/IRIW.litmus under litmus/models/abstract-sc.cat (Never 0 15) and litmus/models/sra.cat (Sometimes 1 15) — both admit 15 executions and differ on exactly the witness."
     },
     {
-      "from": "SRA",
-      "to": "RA",
-      "type": "strictly_weaker",
-      "provenance": "litmus",
-      "evidence": "machine_run",
-      "note": "SRA replaces RA's write-coherence (mo;hb irreflexive — a local agreement between modification order and happens-before) with strong-write-coherence ((hb ∪ mo)+ irreflexive — a global one), keeping RA's other axioms (Lahav & Boker, Table 1); containment is immediate. Strictness is the 2+2W program of Lahav et al. 2016, Lahav & Boker Ex. 3.6: x:=1; y:=2; a:=y || y:=1; x:=2; b:=x with a=b=1. The outcome forces mo edges W(y,2) -> W(y,1) and W(x,2) -> W(x,1), closing an (hb ∪ mo) cycle that SRA forbids while each mo;hb step alone satisfies write-coherence, so RA allows it. Machine-checked: litmus/models/ra.cat and litmus/models/sra.cat are authored for this dataset and differ in that one axiom, and litmus/strictly-weaker/SRA-vs-RA/ runs 2+2W under both (Sometimes 1 8 vs Never 0 5). Because both cat models are hand-written rather than vendored, the directory also carries controls run by run.sh: MP+relacq must be forbidden by both, and IRIW must be allowed by both — the latter checked against Lahav & Boker Ex. 3.5, which marks IRIW allowed under RA and SRA alike. Containment remains the cited one-axiom argument; herd7 decides the strictness half only."
+      "from": "SC",
+      "to": "Spandex",
+      "type": "equivalent",
+      "provenance": "literature",
+      "evidence": "cited",
+      "fragment_restricted": true,
+      "note": "Alsop, Sinclair & Adve (Spandex, ISCA 2018) state they assume a sequential-consistency-for-data-race-free (SC-for-DRF) model, so on the race-free fragment it admits exactly the SC outcomes; the flexible coherence request types affect only performance, not the consistency guarantee."
     },
     {
-      "from": "RA",
-      "to": "WRA",
+      "from": "SC",
+      "to": "TSO",
       "type": "strictly_weaker",
-      "provenance": "litmus",
+      "provenance": "kater",
       "evidence": "machine_run",
-      "note": "WRA drops modification order entirely, replacing RA's write-coherence and read-coherence with weak-read-coherence over hb|loc; Lahav & Boker note that write-coherence implies [W];hb|loc;[W] subset of mo, so read-coherence implies weak-read-coherence and RA contains WRA (Prop. 3.2). Strictness is Ex. 3.7, three single-location programs (WW, Oscillating, SF) allowed by WRA and forbidden by RA: WRA does not provide SC-per-location, so even one-location programs may behave non-sequentially. Machine-checked: litmus/models/wra.cat against ra.cat, with all three witnesses in litmus/strictly-weaker/RA-vs-WRA/ (Never 0 4 / 0 20 / 0 4 under RA, Sometimes under WRA), and sra.cat run alongside to show it agrees with RA on all three — this axis is orthogonal to the 2+2W one. Containment remains the cited Prop. 3.2 argument; herd7 decides strictness only."
+      "note": "TSO allows store-load reordering; SC does not. Containment is machine-checked: kater decides tso ⊆ sc⁺ over kater's sc.kat and tso.kat, so every SC-consistent execution is TSO-consistent — unbounded, not up to a bound (litmus/kater/queries/strictly-weaker-SC-vs-TSO.kat). Strictness is the SB witness in litmus/strictly-weaker/SC-vs-TSO/."
+    },
+    {
+      "from": "SC",
+      "to": "VbD",
+      "type": "equivalent",
+      "provenance": "literature",
+      "evidence": "by_construction",
+      "fragment_restricted": false,
+      "note": "Volatile-by-default makes every Java access sequentially consistent, so it admits exactly the SC outcomes; it differs from SC only in enforcement mechanism (speculative JIT recompilation) and performance."
+    },
+    {
+      "from": "SC",
+      "to": "x86-TSO",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "machine_run",
+      "note": "x86-TSO is the formal model equivalent of TSO for x86."
+    },
+    {
+      "from": "SI",
+      "to": "PSI",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Raad, Lahav & Vafeiadis: PSI is a weakening of Snapshot Isolation — the 'long fork' anomaly (IRIW-with-transactions) is allowed under PSI but disallowed under SI (ESOP 2018, §1), while SI permits only the write-skew anomaly and otherwise coincides with serializability (VMCAI 2019). So SI admits strictly fewer transactional behaviours than PSI."
+    },
+    {
+      "from": "SI",
+      "to": "RA",
+      "type": "compilation",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Raad, Lahav & Vafeiadis (VMCAI 2019) give SI two timestamp-free lock-based (MRSW) reference implementations built on the release-acquire (RA) fragment of C/C++11, proved sound and complete against the declarative SI specification (and likewise Robust SI). Retargeted from RC11 onto RA in 1.4.1: the target has always been the release-acquire fragment, as this note already said, and RA became a node in 1.4.0."
     },
     {
       "from": "SRA",
@@ -2452,85 +2480,28 @@
       "note": "Lahav & Boker, §3.1: ignoring RMWs, SRA is equivalent to the causal convergence model CCv of Bouajjani et al., applied to the standard sequential specification of a read/write key-value store (and to the causal consistency of Cerone et al. restricted to single-instruction transactions). fragment_restricted because the equivalence is stated modulo RMWs: SRA's atomicity axiom has no counterpart in a model over a sequential key-value specification. This edge is the bridge between the C11 family and the distributed causal-consistency cluster."
     },
     {
-      "from": "WRA",
-      "to": "CC",
-      "type": "equivalent",
+      "from": "SRA",
+      "to": "POWER",
+      "type": "compilation",
       "provenance": "literature",
       "evidence": "cited",
-      "fragment_restricted": false,
-      "note": "Lahav & Boker: WRA 'provides the most minimal guarantees required from a model to satisfy causal consistency; it is equivalent to the model called CC studied in' Bouajjani et al. (POPL 2017)."
+      "note": "Lahav, Giannarakis & Vafeiadis, POPL 2016: SRA compiles to POWER by the standard RA scheme (lwsync before every store, ctrl+isync after every load), and the mapping is complete as well as sound — the compiled program exhibits exactly the behaviours of the source. Lahav & Boker restate it as SRA precisely coinciding with the POWER model of Alglave et al. restricted to programs compiled from the RA fragment. Completeness is what makes SRA maximal: it cannot be strengthened further without an implementation cost on POWER."
     },
     {
-      "from": "Causal",
-      "to": "CC",
+      "from": "SRA",
+      "to": "RA",
       "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Bouajjani et al., POPL 2017, §4 and Fig. 1: CM and CCv 'are both strictly stronger than CC'. Witness: Fig. 2 history (2c) — pa: wr(x,1) || pb: wr(x,2); rd(x)▷1; rd(x)▷2 — is CC but neither CM nor CCv, since pb revises its ordering of the two writes after already having read one of them."
+      "provenance": "litmus",
+      "evidence": "machine_run",
+      "note": "SRA replaces RA's write-coherence (mo;hb irreflexive — a local agreement between modification order and happens-before) with strong-write-coherence ((hb ∪ mo)+ irreflexive — a global one), keeping RA's other axioms (Lahav & Boker, Table 1); containment is immediate. Strictness is the 2+2W program of Lahav et al. 2016, Lahav & Boker Ex. 3.6: x:=1; y:=2; a:=y || y:=1; x:=2; b:=x with a=b=1. The outcome forces mo edges W(y,2) -> W(y,1) and W(x,2) -> W(x,1), closing an (hb ∪ mo) cycle that SRA forbids while each mo;hb step alone satisfies write-coherence, so RA allows it. Machine-checked: litmus/models/ra.cat and litmus/models/sra.cat are authored for this dataset and differ in that one axiom, and litmus/strictly-weaker/SRA-vs-RA/ runs 2+2W under both (Sometimes 1 8 vs Never 0 5). Because both cat models are hand-written rather than vendored, the directory also carries controls run by run.sh: MP+relacq must be forbidden by both, and IRIW must be allowed by both — the latter checked against Lahav & Boker Ex. 3.5, which marks IRIW allowed under RA and SRA alike. Containment remains the cited one-axiom argument; herd7 decides the strictness half only."
     },
     {
-      "from": "CCv",
-      "to": "CC",
-      "type": "strictly_weaker",
+      "from": "SRA",
+      "to": "x86-TSO",
+      "type": "compilation",
       "provenance": "literature",
       "evidence": "cited",
-      "note": "Bouajjani et al., POPL 2017, Lemma 2 (after Perrin et al.): every CCv history is CC, since AxArb gives co subset of arb and hence AxCausalArb implies AxCausalValue. Strictness is the same Fig. 2 history (2c), which is CC but not CCv."
-    },
-    {
-      "from": "SC",
-      "to": "CCv",
-      "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Bouajjani et al., POPL 2017, Example 7: history (2d) satisfies CC, CM and CCv, yet admits no total order over all its operations, so it is not sequentially consistent."
-    },
-    {
-      "from": "Causal",
-      "to": "CCv",
-      "type": "incomparable",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Causal memory and causal convergence are incomparable (Perrin, Mostéfaoui & Jard, PPoPP 2016; Bouajjani et al., POPL 2017, §1 and Fig. 1). Both witnesses are in Bouajjani et al. Fig. 2. History (2a) — pa: wr(x,1); rd(x)▷2 || pb: wr(x,2); rd(x)▷1 — is CM but not CCv, because arbitration would have to place wr(x,2) both after and before wr(x,1) (Ex. 5). History (2b) — pa: wr(z,1); wr(x,1); wr(y,1) || pb: wr(x,2); rd(z)▷0; rd(y)▷1; rd(x)▷2 — is CCv but not CM: reading y=1 drags wr(z,1) into pb's causal past behind wr(x,2), which the earlier rd(z)▷0 contradicts (Ex. 6)."
-    },
-    {
-      "from": "PC",
-      "to": "PRAM",
-      "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Processor consistency is strictly stronger than PRAM consistency (Goodman 1989; Steinke & Nutt 2004)."
-    },
-    {
-      "from": "PC",
-      "to": "Coherence",
-      "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Processor consistency is strictly stronger than cache consistency (Goodman 1989; Steinke & Nutt 2004). The Coherence node is Goodman's cache consistency."
-    },
-    {
-      "from": "Causal",
-      "to": "PRAM",
-      "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Causal memory is strictly stronger than PRAM consistency (Steinke & Nutt 2004)."
-    },
-    {
-      "from": "PRAM",
-      "to": "Slow",
-      "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Slow consistency is strictly weaker than PRAM consistency (Hutto & Ahamad 1990; Steinke & Nutt 2004)."
-    },
-    {
-      "from": "Coherence",
-      "to": "Slow",
-      "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Slow consistency is strictly weaker than cache consistency (Hutto & Ahamad 1990; Steinke & Nutt 2004)."
+      "note": "Lahav, Giannarakis & Vafeiadis, POPL 2016: SRA has exactly the same compilation scheme to x86-TSO as the RA fragment it strengthens — plain loads and stores, no fences — so the strengthening carries no implementation cost on x86."
     },
     {
       "from": "Slow",
@@ -2541,146 +2512,181 @@
       "note": "Local consistency is the weakest model, strictly weaker than slow consistency (Bataller & Bernabeu-Auban 1997; Steinke & Nutt 2004)."
     },
     {
-      "from": "CCv",
-      "to": "POCausal",
+      "from": "TSO",
+      "to": "ARMv8",
       "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Burckhardt, Gotsman, Yang & Zawirski, POPL 2014, §7: (cross-object) causal consistency imposes the ordering axioms COCV/COCA, while per-object causal consistency imposes only the weaker per-object axioms POCV/POCA over the per-object happens-before order (Viotti & Vukolić 2016, §3.9). COCV/COCA disallow strictly more anomalies, so cross-object causal consistency is strictly stronger than per-object causal consistency. Re-homed from the Causal node: Burckhardt's cross-object causal consistency is the visibility/arbitration one, i.e. CCv, not causal memory."
+      "provenance": "memalloy",
+      "evidence": "machine_run",
+      "note": "Both halves decided by memalloy over the common Basic_HW fragment — the vocabulary the two ISAs share, with no fences and no acquire/release annotations, where every arch-specific term of the shipped models is empty rather than dropped (litmus/memalloy/derive-hw-fragment.sh derives the operands and records the restriction exactly). Witness: a 4-event MP, ARMv8-allowed and TSO-forbidden. Containment: no execution ARMv8 forbids and TSO allows, exhaustively to 7 events; the search does find witnesses at those bounds, so it is not vacuously clean. Bounded evidence, not a theorem: the Mador-Haim small-model result would need arguing for this pair rather than assuming it. The earlier reading — a one-sided witness plus a cross-ISA monotonicity argument — is superseded, but the fragment is the scope: this decides the edge over the common vocabulary, not over the full ISAs."
     },
     {
-      "from": "POCausal",
-      "to": "EC",
-      "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Burckhardt, Gotsman, Yang & Zawirski, POPL 2014, §7: an execution is per-object causally consistent iff it is eventually consistent (EVENTUAL+THINAIR) AND satisfies the per-object ordering axioms POCV/POCA. Adding those axioms disallows strictly more anomalies (e.g. Fig. 14(b), §3.1), so eventual consistency is strictly weaker than per-object causal consistency."
-    },
-    {
-      "from": "CausalPlus",
-      "to": "CCv",
-      "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Causal+ = Causality ∧ StrongConvergence (Viotti & Vukolić 2016, Eq. 27; Lloyd et al., COPS, SOSP 2011). V-V's Causality (Eq. 26) is the visibility/arbitration causal consistency that Bouajjani et al. name CCv, so this containment is against CCv. Adding strong convergence disallows strictly more behaviours, so CCv is strictly weaker than causal+. Re-homed from the Causal node, where the same note had been read as a containment against causal memory."
-    },
-    {
-      "from": "RTCausal",
-      "to": "CCv",
-      "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "RealTimeCausality = Causality ∧ RealTime (Viotti & Vukolić 2016, Eq. 28; Mahajan, Alvisi & Dahlin 2011). V-V's Causality (Eq. 26) is causal convergence, so this containment is against CCv. It adds RealTime (Eq. 9, rb ⊆ ar) — causally concurrent, real-time-non-overlapping writes must be applied in real-time order — disallowing strictly more behaviours, so CCv is strictly weaker than real-time causal consistency. Re-homed from the Causal node, where the same note had been read as a containment against causal memory."
-    },
-    {
-      "from": "CausalPlus",
-      "to": "Causal",
-      "type": "incomparable",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Causal+ = CCv ∧ StrongConvergence, and CCv is incomparable to causal memory, so the two are incomparable rather than ordered. This replaces a strictly_weaker edge that read the Viotti-Vukolić containment (Eq. 27) as being against causal memory; it is against CCv. Witnesses, both Bouajjani et al. POPL 2017 Fig. 2: history (2a) is CM but not CCv, hence not causal+; history (2b) is CCv and not CM, and reads each of x, y and z exactly once, so StrongConvergence (V-V Eq. 17, constraining only reads with equal visible-write sets) is vacuous on it — it is causal+ but not CM."
-    },
-    {
-      "from": "RTCausal",
-      "to": "Causal",
-      "type": "incomparable",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "RealTimeCausality = CCv ∧ RealTime, and CCv is incomparable to causal memory. This replaces a strictly_weaker edge that read the Viotti-Vukolić containment (Eq. 28) as being against causal memory; it is against CCv. Witnesses, both Bouajjani et al. POPL 2017 Fig. 2: history (2a) is CM but not CCv, hence not real-time causal; history (2b) is CCv and not CM, and admits a real-time schedule — pa's writes all completing before pb starts — whose arbitration order (pa's writes before wr(x,2)) extends rb, so RealTime (V-V Eq. 9, rb ⊆ ar) holds. RealTime constrains arbitration only, not visibility, so rd(z)▷0 may still miss wr(z,1): it is real-time causal but not CM."
-    },
-    {
-      "from": "CausalPlus",
-      "to": "RTCausal",
-      "type": "incomparable",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Causal+ and real-time causal consistency are incomparable (Viotti & Vukolić 2016, §3.5): real-time causality does not imply strong convergence, and causal+ does not impose real-time ordering — each forbids a behaviour the other allows. (V-V correct Lloyd et al.'s original claim that real-time causal is stronger than causal+.)"
-    },
-    {
-      "from": "CCv",
-      "to": "WFR",
-      "type": "strictly_weaker",
+      "from": "TSO",
+      "to": "BMM",
+      "type": "equivalent",
       "provenance": "literature",
       "evidence": "by_construction",
-      "note": "Unlike the Causal edge to the same node, this one is a derivation rather than a citation. CCv is CausalVisibility ∧ CausalArbitration ∧ RVal (Viotti & Vukolić 2016, Eq. 26), where CausalArbitration is hb ⊆ ar and hb = (so ∪ vis)+. WritesFollowReads is (vis; so|rd→wr) ⊆ ar (Eq. 25). Since vis ⊆ hb and so ⊆ hb, the composite vis;so|rd→wr lies in hb+ = hb ⊆ ar, so CCv satisfies WFR by construction. The converse fails — WFR constrains only write-after-read within a session and says nothing about visibility or the arbitration of anything else — so writes-follow-reads is strictly weaker."
-    },
-    {
-      "from": "Causal",
-      "to": "WFR",
-      "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Brzezinski, Sobaniec & Wawrzyniak (PDP 2004) show that causal consistency requires all four session guarantees — read-your-writes, monotonic reads, monotonic writes and writes-follow-reads. Their data-centric models are the classical shared-memory taxonomy (atomic, sequential, causal, processor, PRAM, weak, release, scope, entry), so their causal consistency is causal memory, and this edge is correctly against the Causal node rather than CCv. Causal memory therefore implies writes-follow-reads while the converse fails — one session guarantee constrains far less than a per-site serialisation over the causal order — so writes-follow-reads is strictly weaker. Note this is an implication, not an equality: neither Brzezinski et al. nor Viotti & Vukolić state the converse here (see issue #11), and the earlier gloss 'causal = PRAM ∧ writes-follow-reads, Eq. 25' was wrong twice over — Eq. 25 is the definition of WritesFollowReads, not a theorem about causal consistency, and the sources assert only that causal consistency 'requires and includes them all'."
-    },
-    {
-      "from": "PRAM",
-      "to": "RYW",
-      "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Brzezinski et al. (2003) proved PRAM consistency holds iff a system provides read-your-writes, monotonic reads and monotonic writes (Viotti & Vukolić 2016, Eq. 20). PRAM is the conjunction of the three, so it implies read-your-writes while the converse fails: read-your-writes is strictly weaker than PRAM."
-    },
-    {
-      "from": "PRAM",
-      "to": "MR",
-      "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Brzezinski et al. (2003) proved PRAM = read-your-writes ∧ monotonic reads ∧ monotonic writes (Viotti & Vukolić 2016, Eq. 20). PRAM implies monotonic reads while the converse fails, so monotonic reads is strictly weaker than PRAM."
-    },
-    {
-      "from": "PRAM",
-      "to": "MW",
-      "type": "strictly_weaker",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Brzezinski et al. (2003) proved PRAM = read-your-writes ∧ monotonic reads ∧ monotonic writes (Viotti & Vukolić 2016, Eq. 20). PRAM implies monotonic writes while the converse fails, so monotonic writes is strictly weaker than PRAM."
-    },
-    {
-      "from": "PC",
-      "to": "Causal",
-      "type": "incomparable",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Processor and causal consistency are incomparable: each forbids a behaviour the other allows (Steinke & Nutt 2004)."
-    },
-    {
-      "from": "PRAM",
-      "to": "Coherence",
-      "type": "incomparable",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "PRAM and cache consistency are incomparable: PRAM orders a process's own writes globally but not per-location, cache consistency the converse (Goodman 1989; Steinke & Nutt 2004)."
-    },
-    {
-      "from": "Causal",
-      "to": "Coherence",
-      "type": "incomparable",
-      "provenance": "literature",
-      "evidence": "cited",
-      "note": "Causal and cache consistency are incomparable (Steinke & Nutt 2004)."
-    },
-    {
-      "from": "PromisingARM",
-      "to": "ARMv8",
-      "type": "equivalent",
-      "provenance": "literature",
-      "evidence": "cited",
       "fragment_restricted": true,
-      "note": "Pulte et al. (PLDI 2019), Appendix D, Theorem D.1: the operational Promising-ARM model is proven equivalent in Coq to the axiomatic ARMv8 model for finite executions."
+      "note": "BMM is a pragmatic TSO-style buffered model proposed as a candidate Java memory model; on the store-buffer relaxations it coincides with TSO."
     },
     {
-      "from": "PromisingARM",
+      "from": "TSO",
+      "to": "PSO",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "machine_run",
+      "note": "PSO additionally allows store-store reordering to different addresses."
+    },
+    {
+      "from": "TSO",
+      "to": "RMMOA",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "machine_run",
+      "note": "Like PSO, RMMOA's hierarchical store buffers additionally permit store→store reordering to distinct addresses, which TSO forbids."
+    },
+    {
+      "from": "TSO",
       "to": "RVWMO",
+      "type": "strictly_weaker",
+      "provenance": "memalloy",
+      "evidence": "machine_run",
+      "note": "Both halves decided by memalloy over the common Basic_HW fragment, as for TSO → ARMv8. memalloy ships no RISC-V model, so the operand is litmus/memalloy/models/zoo_hw_rvwmo.cat, authored here directly from the thirteen ppo rules of the RVWMO chapter of the RISC-V unprivileged spec; the file annotates each rule it renders and each that is empty on the fragment. Witness at 4 events; containment clean exhaustively to 7. Independent check on the rendering: over the same fragment it is contained in the ARMv8 operand and ARMv8 is not contained in it, which is the direction the same-address ppo rules predict. Bounded evidence about that rendering, not a theorem about RVWMO."
+    },
+    {
+      "from": "TSO",
+      "to": "x86-TSO",
+      "type": "equivalent",
+      "provenance": "literature",
+      "evidence": "by_construction",
+      "fragment_restricted": false,
+      "note": "x86-TSO formalises TSO for x86; behaviourally equivalent for standard operations."
+    },
+    {
+      "from": "Vulkan",
+      "to": "AMDGPU",
+      "type": "compilation",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Vulkan/SPIR-V compute shaders compile to AMD's GPU ISA."
+    },
+    {
+      "from": "Vulkan",
+      "to": "PTX",
+      "type": "compilation",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Vulkan/SPIR-V compute shaders compile to PTX on NVIDIA GPUs."
+    },
+    {
+      "from": "WRA",
+      "to": "CC",
+      "type": "equivalent",
+      "provenance": "literature",
+      "evidence": "cited",
+      "fragment_restricted": false,
+      "note": "Lahav & Boker: WRA 'provides the most minimal guarantees required from a model to satisfy causal consistency; it is equivalent to the model called CC studied in' Bouajjani et al. (POPL 2017)."
+    },
+    {
+      "from": "Wasm",
+      "to": "ARM",
+      "type": "compilation",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Watt et al. 2019 Fig. 19 gives the compilation of Wasm memory accesses to ARMv7, following the established C/C++11 SC-atomic schemes [Sewell & Sevcik 2016]; full mixed-size correctness is flagged as an open problem (§7.1.1)."
+    },
+    {
+      "from": "Wasm",
+      "to": "ARMv8",
+      "type": "compilation",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Watt et al. 2019 Fig. 19 gives the compilation of Wasm memory accesses to AArch64/ARMv8 (LDR/STR, LDAR/STLR), following the established C/C++11 SC-atomic schemes [Sewell & Sevcik 2016]; full mixed-size correctness is flagged as an open problem (§7.1.1)."
+    },
+    {
+      "from": "Wasm",
+      "to": "JSMM",
       "type": "equivalent",
       "provenance": "literature",
       "evidence": "cited",
       "fragment_restricted": true,
-      "note": "Pulte et al. (PLDI 2019), Appendix D, Theorem D.2: the operational Promising-RISC-V model is proven equivalent in Coq to the axiomatic RVWMO model for finite executions."
+      "note": "Watt et al. 2019 §6.3 (Prop. 6.2): dropping Wasm's two strengthening conditions (†,‡) yields exactly the consistency behaviours of the (uncorrected) JavaScript model on shared array buffers. The paper proposes adding (†,‡) to JavaScript as a strict strengthening; TC39 adopted them, and the repaired model is this dataset's JSMM — so full Wasm and JSMM agree on the shared-memory data-access (SharedArrayBuffer) fragment (excluding traps, memory growth, and mixed-size beyond the shared subset)."
+    },
+    {
+      "from": "Wasm",
+      "to": "TSO",
+      "type": "compilation",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Watt et al. 2019 Fig. 19 tabulates the compilation of Wasm memory accesses to x86 (whose ISA model is TSO), following the established C/C++11 SC-atomic schemes [Sewell & Sevcik 2016]; full mixed-size correctness is flagged as an open problem (§7.1.1)."
+    },
+    {
+      "from": "Weakestmo",
+      "to": "C11",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Weakestmo grounds thin-air reads with event structures and is, in the authors' words, 'stronger than C11 (which allows OOTA) and weaker than RC11': every separating outcome (the OOTA load-buffering test and the 'RNG' bogus-value example) is allowed by C11 and forbidden by Weakestmo, with no behaviour Weakestmo allows that C11 forbids. So C11 is strictly weaker. (Reclassified from incomparable; see litmus/strictly-weaker/Weakestmo-vs-C11.)"
+    },
+    {
+      "from": "WebGPU",
+      "to": "Metal",
+      "type": "compilation",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "On Apple platforms WebGPU implementations lower WGSL to Metal."
+    },
+    {
+      "from": "WebGPU",
+      "to": "Vulkan",
+      "type": "compilation",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Browser WebGPU implementations lower WGSL to Vulkan (and to Metal/Direct3D 12); the WGSL model is derived from Vulkan's."
+    },
+    {
+      "from": "sMRD",
+      "to": "C11",
+      "type": "strictly_weaker",
+      "provenance": "literature",
+      "evidence": "machine_run",
+      "note": "Like MRD, Symbolic MRD repairs the C/C++ thin-air problem: it forbids the out-of-thin-air reads C11 permits while preserving the standard atomics compilation mappings, and it matches the ISO C/C++ semantic-dependency desiderata."
+    },
+    {
+      "from": "x86-TSO",
+      "to": "ClightTSO",
+      "type": "equivalent",
+      "provenance": "literature",
+      "evidence": "by_construction",
+      "fragment_restricted": false,
+      "note": "Ševčík et al. 2013 §1.2, §4.4: ClightTSO is defined to mirror the x86-TSO model at the language level (loads, stores, compare-and-swap, barriers with TSO behaviour), with a single TSO abstract machine shared across all compiler levels — the same store→load relaxation by construction, not a restricted fragment."
+    },
+    {
+      "from": "x86-TSO",
+      "to": "DJR-TSO",
+      "type": "equivalent",
+      "provenance": "literature",
+      "evidence": "by_construction",
+      "fragment_restricted": true,
+      "note": "Dongol, Jagadeesan & Riely (POPL 2018) instantiate their transactional framework at TSO; the added transactional axioms only constrain transactional events, so on programs with no transactions the TSO instance coincides with (x86-)TSO by construction. fragment_restricted: the coincidence holds only on the non-transactional fragment."
+    },
+    {
+      "from": "x86-TSO",
+      "to": "x86-TSO+TM",
+      "type": "equivalent",
+      "provenance": "literature",
+      "evidence": "by_construction",
+      "fragment_restricted": true,
+      "note": "Chong, Sorensen & Wickerson (PLDI 2018) present the TM model as a set of rules added on top of the x86-TSO consistency axioms (their Fig. 5) that only constrain transactional events. On the non-transactional fragment (programs with no transactions) it coincides with x86-TSO by construction. The extension was validated against four Intel TSX implementations (no forbidden test observed)."
     }
   ],
   "references": {
-    "Kokologiannakis2023": {"title": "Kater: Automating Weak Memory Model Metatheory and Consistency Checking", "authors": ["Michalis Kokologiannakis", "Ori Lahav", "Viktor Vafeiadis"], "venue": "Proc. ACM Program. Lang. 7 (POPL), Article 19", "year": 2023, "doi": "10.1145/3571212"},
+    "Kokologiannakis2023": {
+      "title": "Kater: Automating Weak Memory Model Metatheory and Consistency Checking",
+      "authors": ["Michalis Kokologiannakis", "Ori Lahav", "Viktor Vafeiadis"],
+      "venue": "Proc. ACM Program. Lang. 7 (POPL), Article 19",
+      "year": 2023,
+      "doi": "10.1145/3571212"
+    },
     "Chong2018": {
       "title": "The Semantics of Transactions and Weak Memory in x86, Power, ARM, and C++",
       "authors": ["Nathan Chong", "Tyler Sorensen", "John Wickerson"],
@@ -3324,7 +3330,7 @@
     },
     "BatallerBernabeu1997": {
       "title": "Synchronized DSM Models",
-      "authors": ["Jordi Bataller", "Jos\u00e9 M. Bernab\u00e9u-Aub\u00e1n"],
+      "authors": ["Jordi Bataller", "José M. Bernabéu-Aubán"],
       "venue": "Proc. Euro-Par",
       "year": 1997
     },
@@ -3499,41 +3505,125 @@
   },
   "_propertySchemaComment": "Single source of truth for the per-model property filter columns, mirrored by both the interactive map (index.html reads data.propertySchema) and the per-model pages (tools/gen-pages.py). Each group has a display heading, a sub-label, and an ordered list of [key, label] field pairs; the key indexes into modelProperties. Grouped as in Tables 1–2 of Moiseenko et al., 'A Survey of Programming Language Memory Models' (2021), except Atomicity (Su & Colvin 2026, §2.4) and the Inverse roach motel column (Poetzl & Kroening 2015; see propertyProvenance).",
   "propertySchema": [
-    {"group": "Compilation", "sub": "optimal mapping to", "fields": [["comp_x86", "x86"], ["comp_power", "POWER"], ["comp_armv7", "Armv7"], ["comp_armv8", "Armv8"]]},
-    {"group": "Reordering", "sub": "sound", "fields": [["reorder_sl", "Store→Load"], ["reorder_ss", "Store→Store"], ["reorder_ll", "Load→Load"], ["reorder_ls", "Load→Store"]]},
-    {"group": "Elimination", "sub": "sound", "fields": [["elim_sl", "Store/Load"], ["elim_ss", "Store/Store"], ["elim_ll", "Load/Load"], ["elim_ls", "Load/Store"]]},
-    {"group": "Other local", "sub": "transformations", "fields": [["ile", "Irrelevant load elim."], ["sli", "Speculative load intro."], ["rm", "Roach motel"], ["irm", "Inverse roach motel"], ["strengthen", "Strengthening"], ["tp", "Trace preserving"], ["cse", "Common subexpr. elim."]]},
-    {"group": "Global", "sub": "transformations", "fields": [["rp", "Register promotion"], ["ti", "Thread inlining"], ["vr", "Value range"]]},
-    {"group": "Reasoning", "sub": "guarantees", "fields": [["edrf", "External DRF"], ["coh", "Coherence"], ["no_ub", "No undefined behaviour"], ["in_order", "In-order execution"], ["no_oota", "No out-of-thin-air"]]},
-    {"group": "Atomicity", "sub": "guarantees", "fields": [["mca", "Multicopy atomic"]]}
+    {
+      "group": "Compilation",
+      "sub": "optimal mapping to",
+      "fields": [
+        ["comp_x86", "x86"],
+        ["comp_power", "POWER"],
+        ["comp_armv7", "Armv7"],
+        ["comp_armv8", "Armv8"]
+      ]
+    },
+    {
+      "group": "Reordering",
+      "sub": "sound",
+      "fields": [
+        ["reorder_sl", "Store→Load"],
+        ["reorder_ss", "Store→Store"],
+        ["reorder_ll", "Load→Load"],
+        ["reorder_ls", "Load→Store"]
+      ]
+    },
+    {
+      "group": "Elimination",
+      "sub": "sound",
+      "fields": [
+        ["elim_sl", "Store/Load"],
+        ["elim_ss", "Store/Store"],
+        ["elim_ll", "Load/Load"],
+        ["elim_ls", "Load/Store"]
+      ]
+    },
+    {
+      "group": "Other local",
+      "sub": "transformations",
+      "fields": [
+        ["ile", "Irrelevant load elim."],
+        ["sli", "Speculative load intro."],
+        ["rm", "Roach motel"],
+        ["irm", "Inverse roach motel"],
+        ["strengthen", "Strengthening"],
+        ["tp", "Trace preserving"],
+        ["cse", "Common subexpr. elim."]
+      ]
+    },
+    {
+      "group": "Global",
+      "sub": "transformations",
+      "fields": [
+        ["rp", "Register promotion"],
+        ["ti", "Thread inlining"],
+        ["vr", "Value range"]
+      ]
+    },
+    {
+      "group": "Reasoning",
+      "sub": "guarantees",
+      "fields": [
+        ["edrf", "External DRF"],
+        ["coh", "Coherence"],
+        ["no_ub", "No undefined behaviour"],
+        ["in_order", "In-order execution"],
+        ["no_oota", "No out-of-thin-air"]
+      ]
+    },
+    {
+      "group": "Atomicity",
+      "sub": "guarantees",
+      "fields": [
+        ["mca", "Multicopy atomic"]
+      ]
+    }
   ],
   "modelProperties": {
-    "x86-TSO+TM": {"reorder_sl": true, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
-    "POWER+TM": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
-    "ARMv8+TM": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": true},
-    "C11+TM": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": false, "edrf": true, "coh": true, "no_ub": false, "in_order": true, "no_oota": true, "mca": false},
-    "DJR-SC": {"reorder_sl": false, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
-    "DJR-TSO": {"reorder_sl": true, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
-    "DJR-ARMv8": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": true},
-    "DJR-POWER": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
-    "PSI": {"coh": true, "no_oota": true},
-    "SI": {"coh": true, "no_oota": true},
     "SC": {"comp_x86": false, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": false, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": true, "ile": true, "sli": true, "rm": true, "irm": true, "strengthen": true, "tp": true, "cse": false, "rp": true, "ti": true, "edrf": true, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
+    "TSO": {"reorder_sl": true, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
+    "x86-TSO": {"reorder_sl": true, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
+    "PSO": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": false, "reorder_ls": false, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
+    "RMO": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": true},
+    "Alpha": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
+    "POWER": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
+    "ARM": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
+    "ARMv8": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": true},
+    "ArmVM": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "in_order": false, "no_oota": true, "mca": true},
+    "ArmIF": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "in_order": false, "no_oota": true, "mca": true},
+    "Itanium": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true},
     "C11": {"comp_x86": true, "comp_power": true, "comp_armv7": true, "comp_armv8": true, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "sli": false, "rm": true, "strengthen": true, "tp": true, "cse": false, "ti": true, "edrf": false, "coh": true, "no_ub": false, "in_order": false, "no_oota": false, "mca": false},
     "Java": {"comp_x86": true, "comp_power": false, "comp_armv7": true, "comp_armv8": true, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "elim_sl": true, "elim_ss": true, "elim_ll": false, "elim_ls": false, "ile": true, "sli": false, "rm": false, "tp": true, "cse": false, "ti": false, "edrf": true, "coh": false, "no_ub": true, "in_order": false, "no_oota": true},
     "RC11": {"comp_x86": true, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": false, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "sli": false, "rm": true, "strengthen": true, "tp": true, "cse": false, "rp": true, "ti": true, "edrf": true, "coh": true, "no_ub": false, "in_order": true, "no_oota": true, "mca": false},
     "RC11z": {"comp_x86": true, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": false, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "sli": false, "rm": true, "strengthen": true, "tp": true, "cse": false, "rp": true, "ti": true, "edrf": true, "coh": true, "no_ub": false, "in_order": true, "no_oota": true, "mca": false},
+    "C++20": {"comp_x86": true, "comp_power": true, "comp_armv7": true, "comp_armv8": true, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "sli": false, "rm": true, "strengthen": true, "tp": true, "cse": false, "ti": true, "edrf": false, "coh": true, "no_ub": false, "in_order": false, "no_oota": false, "mca": false},
+    "C++17": {"comp_x86": true, "comp_power": true, "comp_armv7": true, "comp_armv8": true, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "sli": false, "rm": true, "strengthen": true, "tp": true, "cse": false, "ti": true, "edrf": false, "coh": true, "no_ub": false, "in_order": false, "no_oota": false, "mca": false},
+    "RC17": {"comp_x86": true, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": false, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "sli": false, "rm": true, "strengthen": true, "tp": true, "cse": false, "rp": true, "ti": true, "edrf": true, "coh": true, "no_ub": false, "in_order": true, "no_oota": true, "mca": false},
+    "IMM": {"comp_x86": true, "comp_power": true, "comp_armv8": true, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "edrf": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
     "Promising": {"comp_x86": true, "comp_power": true, "comp_armv7": true, "comp_armv8": true, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": true, "ile": true, "sli": true, "rm": true, "strengthen": true, "tp": true, "cse": true, "rp": true, "ti": false, "vr": true, "edrf": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
     "MRD": {"comp_x86": true, "comp_power": true, "comp_armv7": true, "comp_armv8": true, "edrf": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true},
+    "sMRD": {"comp_x86": true, "comp_power": true, "comp_armv7": true, "comp_armv8": true, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": true, "ile": true, "strengthen": true, "tp": true, "vr": true, "coh": true, "no_ub": false, "in_order": false, "no_oota": true},
+    "OD-LSO": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": false, "coh": true, "no_oota": true},
+    "OD-Dep": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "coh": true, "no_oota": true},
     "OCaml": {"comp_x86": true, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": false, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "tp": true, "cse": true, "edrf": true, "coh": false, "no_ub": true, "in_order": true, "no_oota": true},
     "LKMM": {"comp_x86": true, "comp_power": true, "comp_armv7": true, "comp_armv8": true, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "tp": false, "cse": false, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
+    "RVWMO": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": true},
+    "PTX": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
+    "TileIR": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "in_order": false, "no_oota": true, "mca": false},
+    "AMDGPU": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true},
+    "OpenCL": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": false, "in_order": false, "no_oota": false},
+    "Vulkan": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "in_order": false},
+    "CUDA": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": false, "in_order": false, "no_oota": false},
+    "WebGPU": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "in_order": false, "no_ub": true},
+    "Metal": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "in_order": false},
+    "HRF": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true},
+    "ScopedC11": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": false, "in_order": false, "no_oota": false},
+    "Coherence": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": false},
     "DRFx": {"comp_x86": false, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": false, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": true, "ile": true, "sli": false, "rm": true, "irm": true, "strengthen": true, "tp": true, "cse": false, "rp": true, "ti": true, "edrf": true, "coh": true, "no_ub": false, "in_order": true, "no_oota": true},
     "BMM": {"comp_x86": true, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": true, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "ile": true, "sli": true, "rm": false, "tp": true, "cse": false, "ti": false, "edrf": true, "coh": true, "no_ub": true, "in_order": true, "no_oota": true},
+    "ClightTSO": {"comp_x86": true, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": true, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "coh": true, "in_order": true, "no_oota": true, "mca": true},
     "RMMOA": {"comp_x86": true, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": true, "reorder_ss": true, "reorder_ll": false, "reorder_ls": false, "edrf": true, "no_ub": true, "in_order": true, "no_oota": true},
+    "RAR": {"comp_x86": true, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": false, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "sli": false, "rm": true, "strengthen": true, "tp": true, "cse": false, "rp": true, "ti": true, "edrf": true, "coh": true, "no_ub": false, "in_order": true, "no_oota": true},
     "SRA": {"comp_x86": true, "comp_power": true, "coh": true, "no_oota": true},
     "RA": {"comp_x86": true, "comp_power": true, "coh": true, "no_oota": true},
     "WRA": {"coh": false, "no_oota": true},
-    "RAR": {"comp_x86": true, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": false, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "sli": false, "rm": true, "strengthen": true, "tp": true, "cse": false, "rp": true, "ti": true, "edrf": true, "coh": true, "no_ub": false, "in_order": true, "no_oota": true},
     "ORC11": {"comp_x86": true, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": false, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "sli": false, "rm": true, "strengthen": true, "tp": true, "cse": false, "rp": true, "ti": true, "edrf": true, "coh": true, "no_ub": false, "in_order": true, "no_oota": true},
     "CRC": {"comp_x86": true, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": false, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "sli": false, "rm": true, "strengthen": true, "tp": true, "cse": false, "rp": true, "ti": true, "edrf": true, "coh": true, "no_ub": false, "in_order": true, "no_oota": true},
     "JAM": {"comp_x86": true, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "strengthen": true, "cse": false, "edrf": true, "coh": true, "no_ub": true, "in_order": true, "no_oota": true},
@@ -3556,38 +3646,6 @@
     "DeNovoND": {"irm": true, "edrf": true, "coh": true, "in_order": true, "no_oota": true, "mca": true},
     "DeNovoSync": {"irm": true, "edrf": true, "coh": true, "in_order": true, "no_oota": true, "mca": true},
     "Spandex": {"irm": true, "edrf": true, "coh": true, "in_order": true, "no_oota": true, "mca": true},
-    "sMRD": {"comp_x86": true, "comp_power": true, "comp_armv7": true, "comp_armv8": true, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": true, "ile": true, "strengthen": true, "tp": true, "vr": true, "coh": true, "no_ub": false, "in_order": false, "no_oota": true},
-    "OD-LSO": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": false, "coh": true, "no_oota": true},
-    "OD-Dep": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "coh": true, "no_oota": true},
-    "TSO": {"reorder_sl": true, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
-    "x86-TSO": {"reorder_sl": true, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
-    "ClightTSO": {"comp_x86": true, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": true, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "coh": true, "in_order": true, "no_oota": true, "mca": true},
-    "PSO": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": false, "reorder_ls": false, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
-    "RMO": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": true},
-    "POWER": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
-    "Alpha": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
-    "ARM": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
-    "ARMv8": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": true},
-    "ArmVM": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "in_order": false, "no_oota": true, "mca": true},
-    "ArmIF": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "in_order": false, "no_oota": true, "mca": true},
-    "Itanium": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true},
-    "C++20": {"comp_x86": true, "comp_power": true, "comp_armv7": true, "comp_armv8": true, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "sli": false, "rm": true, "strengthen": true, "tp": true, "cse": false, "ti": true, "edrf": false, "coh": true, "no_ub": false, "in_order": false, "no_oota": false, "mca": false},
-    "C++17": {"comp_x86": true, "comp_power": true, "comp_armv7": true, "comp_armv8": true, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "sli": false, "rm": true, "strengthen": true, "tp": true, "cse": false, "ti": true, "edrf": false, "coh": true, "no_ub": false, "in_order": false, "no_oota": false, "mca": false},
-    "RC17": {"comp_x86": true, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": false, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "sli": false, "rm": true, "strengthen": true, "tp": true, "cse": false, "rp": true, "ti": true, "edrf": true, "coh": true, "no_ub": false, "in_order": true, "no_oota": true, "mca": false},
-    "IMM": {"comp_x86": true, "comp_power": true, "comp_armv8": true, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "edrf": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
-    "RVWMO": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": true},
-    "PromisingARM": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": true},
-    "PTX": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
-    "TileIR": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "in_order": false, "no_oota": true, "mca": false},
-    "AMDGPU": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true},
-    "OpenCL": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": false, "in_order": false, "no_oota": false},
-    "Vulkan": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "in_order": false},
-    "CUDA": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": false, "in_order": false, "no_oota": false},
-    "WebGPU": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "in_order": false, "no_ub": true},
-    "Metal": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "in_order": false},
-    "HRF": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true},
-    "ScopedC11": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": false, "in_order": false, "no_oota": false},
-    "Coherence": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": false},
     "PC": {"coh": true, "mca": false},
     "PRAM": {"coh": false, "mca": false},
     "Causal": {"coh": false, "mca": false},
@@ -3603,8 +3661,18 @@
     "MR": {"coh": false, "mca": false},
     "MW": {"coh": false, "mca": false},
     "WFR": {"coh": false, "mca": false},
+    "x86-TSO+TM": {"reorder_sl": true, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
+    "POWER+TM": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
+    "ARMv8+TM": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": true},
     "PTSO": {"reorder_sl": true, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
     "PARMv8": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": true},
+    "C11+TM": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": false, "edrf": true, "coh": true, "no_ub": false, "in_order": true, "no_oota": true, "mca": false},
+    "DJR-SC": {"reorder_sl": false, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
+    "DJR-TSO": {"reorder_sl": true, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
+    "DJR-ARMv8": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": true},
+    "DJR-POWER": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
+    "PSI": {"coh": true, "no_oota": true},
+    "SI": {"coh": true, "no_oota": true},
     "PSER": {"coh": true, "no_ub": true, "no_oota": true},
     "Px86": {"reorder_sl": true, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
     "PTSOsyn": {"reorder_sl": true, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
@@ -3613,138 +3681,59 @@
     "Px86axiom": {"reorder_sl": true, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
     "PEx86": {"reorder_sl": true, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
     "PArmv8view": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": true},
-    "PArmv8axiom": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": true}
+    "PArmv8axiom": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": true},
+    "PromisingARM": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": true}
   },
-  "modelPropertyProvenance": {
-    "x86-TSO+TM": "extrapolated",
-    "POWER+TM": "extrapolated",
-    "ARMv8+TM": "extrapolated",
-    "C11+TM": "extrapolated",
-    "DJR-SC": "extrapolated",
-    "DJR-TSO": "extrapolated",
-    "DJR-ARMv8": "extrapolated",
-    "DJR-POWER": "extrapolated",
-    "PSI": "extrapolated",
-    "SI": "extrapolated",
-    "SC": "survey",
-    "TSO": "extrapolated",
-    "x86-TSO": "extrapolated",
-    "ClightTSO": "extrapolated",
-    "PSO": "extrapolated",
-    "RMO": "extrapolated",
-    "Alpha": "extrapolated",
-    "POWER": "extrapolated",
-    "ARM": "extrapolated",
-    "ARMv8": "extrapolated",
-    "ArmVM": "extrapolated",
-    "ArmIF": "extrapolated",
-    "Itanium": "extrapolated",
-    "C11": "survey",
-    "Java": "survey",
-    "RC11": "survey",
-    "RC11z": "survey",
-    "C++20": "extrapolated",
-    "C++17": "extrapolated",
-    "RC17": "extrapolated",
-    "IMM": "extrapolated",
-    "Promising": "survey",
-    "MRD": "survey",
-    "sMRD": "survey",
-    "OD-LSO": "extrapolated",
-    "OD-Dep": "extrapolated",
-    "OCaml": "survey",
-    "LKMM": "survey",
-    "RVWMO": "extrapolated",
-    "PromisingARM": "extrapolated",
-    "PTX": "extrapolated",
-    "TileIR": "extrapolated",
-    "AMDGPU": "extrapolated",
-    "OpenCL": "extrapolated",
-    "Vulkan": "extrapolated",
-    "CUDA": "extrapolated",
-    "WebGPU": "extrapolated",
-    "Metal": "extrapolated",
-    "HRF": "extrapolated",
-    "ScopedC11": "extrapolated",
-    "Coherence": "extrapolated",
-    "DRFx": "survey",
-    "BMM": "survey",
-    "RMMOA": "survey",
-    "SRA": "extrapolated",
-    "RA": "extrapolated",
-    "WRA": "extrapolated",
-    "RAR": "survey",
-    "ORC11": "survey",
-    "CRC": "survey",
-    "JAM": "survey",
-    "OHMM": "survey",
-    "Weakestmo": "survey",
-    "CSRA": "survey",
-    "WJES": "survey",
-    "LeakySemi": "extrapolated",
-    "PwP": "extrapolated",
-    "GOS": "survey",
-    "JSMM": "survey",
-    "Wasm": "extrapolated",
-    "RMC": "survey",
-    "RAO": "survey",
-    "TSC": "survey",
-    "EtE-SC": "survey",
-    "VbD": "survey",
-    "SC-Haskell": "survey",
-    "DeNovo": "extrapolated",
-    "DeNovoND": "extrapolated",
-    "DeNovoSync": "extrapolated",
-    "Spandex": "extrapolated",
-    "PC": "extrapolated",
-    "PRAM": "extrapolated",
-    "Causal": "extrapolated",
-    "CCv": "extrapolated",
-    "CC": "extrapolated",
-    "Slow": "extrapolated",
-    "Local": "extrapolated",
-    "EC": "extrapolated",
-    "CausalPlus": "extrapolated",
-    "RTCausal": "extrapolated",
-    "POCausal": "extrapolated",
-    "RYW": "extrapolated",
-    "MR": "extrapolated",
-    "MW": "extrapolated",
-    "WFR": "extrapolated",
-    "PTSO": "extrapolated",
-    "PARMv8": "extrapolated",
-    "PSER": "extrapolated",
-    "Px86": "extrapolated",
-    "PTSOsyn": "extrapolated",
-    "PSC": "extrapolated",
-    "Px86view": "extrapolated",
-    "Px86axiom": "extrapolated",
-    "PEx86": "extrapolated",
-    "PArmv8view": "extrapolated",
-    "PArmv8axiom": "extrapolated"
-  },
+  "modelPropertyProvenance": {"SC": "survey", "TSO": "extrapolated", "x86-TSO": "extrapolated", "PSO": "extrapolated", "RMO": "extrapolated", "Alpha": "extrapolated", "POWER": "extrapolated", "ARM": "extrapolated", "ARMv8": "extrapolated", "ArmVM": "extrapolated", "ArmIF": "extrapolated", "Itanium": "extrapolated", "C11": "survey", "Java": "survey", "RC11": "survey", "RC11z": "survey", "C++20": "extrapolated", "C++17": "extrapolated", "RC17": "extrapolated", "IMM": "extrapolated", "Promising": "survey", "MRD": "survey", "sMRD": "survey", "OD-LSO": "extrapolated", "OD-Dep": "extrapolated", "OCaml": "survey", "LKMM": "survey", "RVWMO": "extrapolated", "PTX": "extrapolated", "TileIR": "extrapolated", "AMDGPU": "extrapolated", "OpenCL": "extrapolated", "Vulkan": "extrapolated", "CUDA": "extrapolated", "WebGPU": "extrapolated", "Metal": "extrapolated", "HRF": "extrapolated", "ScopedC11": "extrapolated", "Coherence": "extrapolated", "DRFx": "survey", "BMM": "survey", "ClightTSO": "extrapolated", "RMMOA": "survey", "RAR": "survey", "SRA": "extrapolated", "RA": "extrapolated", "WRA": "extrapolated", "ORC11": "survey", "CRC": "survey", "JAM": "survey", "OHMM": "survey", "Weakestmo": "survey", "CSRA": "survey", "WJES": "survey", "LeakySemi": "extrapolated", "PwP": "extrapolated", "GOS": "survey", "JSMM": "survey", "Wasm": "extrapolated", "RMC": "survey", "RAO": "survey", "TSC": "survey", "EtE-SC": "survey", "VbD": "survey", "SC-Haskell": "survey", "DeNovo": "extrapolated", "DeNovoND": "extrapolated", "DeNovoSync": "extrapolated", "Spandex": "extrapolated", "PC": "extrapolated", "PRAM": "extrapolated", "Causal": "extrapolated", "CCv": "extrapolated", "CC": "extrapolated", "Slow": "extrapolated", "Local": "extrapolated", "EC": "extrapolated", "CausalPlus": "extrapolated", "RTCausal": "extrapolated", "POCausal": "extrapolated", "RYW": "extrapolated", "MR": "extrapolated", "MW": "extrapolated", "WFR": "extrapolated", "x86-TSO+TM": "extrapolated", "POWER+TM": "extrapolated", "ARMv8+TM": "extrapolated", "PTSO": "extrapolated", "PARMv8": "extrapolated", "C11+TM": "extrapolated", "DJR-SC": "extrapolated", "DJR-TSO": "extrapolated", "DJR-ARMv8": "extrapolated", "DJR-POWER": "extrapolated", "PSI": "extrapolated", "SI": "extrapolated", "PSER": "extrapolated", "Px86": "extrapolated", "PTSOsyn": "extrapolated", "PSC": "extrapolated", "Px86view": "extrapolated", "Px86axiom": "extrapolated", "PEx86": "extrapolated", "PArmv8view": "extrapolated", "PArmv8axiom": "extrapolated", "PromisingARM": "extrapolated"},
   "_propertyProvenanceComment": "Per-property (column) provenance. The default source for the property columns is the Moiseenko–Podkopaev–Koznov survey (Tables 1–2); this map records only the columns whose definition/data come from a different source, so a reader knows a given cell is not survey-tabulated even when the per-model modelPropertyProvenance says 'survey'. Absence here = the survey default.",
-  "propertyProvenance": {
-    "irm": "Inverse (reversed) roach motel reordering — moving a shared access out of a critical section. Not tabulated by the Moiseenko et al. survey; the transformation and its soundness for the SC-for-DRF execution model were introduced by Poetzl & Kroening, 'Formalizing and Checking Thread Refinement for Data-Race-Free Execution Models' (arXiv:1510.07171, 2015), §4. The 'yes' cells are therefore author-assigned to the SC-preserving / SC-for-DRF models on the strength of that result, not taken from the survey.",
-    "mca": "Multicopy atomicity — not from the Moiseenko et al. survey but from Su & Colvin, 'Weak Memory Model Formalisms: Introduction and Survey' (Concurrency Comput. Pract. Exper. 38(2), 2026), §2.4."
-  },
+  "propertyProvenance": {"irm": "Inverse (reversed) roach motel reordering — moving a shared access out of a critical section. Not tabulated by the Moiseenko et al. survey; the transformation and its soundness for the SC-for-DRF execution model were introduced by Poetzl & Kroening, 'Formalizing and Checking Thread Refinement for Data-Race-Free Execution Models' (arXiv:1510.07171, 2015), §4. The 'yes' cells are therefore author-assigned to the SC-preserving / SC-for-DRF models on the strength of that result, not taken from the survey.", "mca": "Multicopy atomicity — not from the Moiseenko et al. survey but from Su & Colvin, 'Weak Memory Model Formalisms: Introduction and Survey' (Concurrency Comput. Pract. Exper. 38(2), 2026), §2.4."},
   "_modelPropertyCitationsComment": "Per-(model, property) provenance: cites the specific piece of literature that establishes a given property value for a given model, overriding the coarser per-model modelPropertyProvenance and per-column propertyProvenance. Keyed model id -> property key -> { ref (a key into references), note (optional) }. Absent cells fall back to the column/model provenance.",
   "modelPropertyCitations": {
-    "SC": {"irm": {"ref": "PoetzlKroening2015", "note": "Poetzl & Kroening §4 prove inverse roach motel sound for the SC-for-DRF execution model, of which plain SC is the race-free contract."}},
-    "DRFx": {"irm": {"ref": "PoetzlKroening2015", "note": "DRFx is an SC-for-DRF (catch-fire) model; inverse roach motel is sound for SC-for-DRF per Poetzl & Kroening §4."}},
-    "EtE-SC": {"irm": {"ref": "PoetzlKroening2015", "note": "SC-for-DRF compiler/runtime; inverse roach motel sound for SC-for-DRF per Poetzl & Kroening §4."}},
-    "VbD": {"irm": {"ref": "PoetzlKroening2015", "note": "SC-for-DRF model; inverse roach motel sound for SC-for-DRF per Poetzl & Kroening §4."}},
-    "SC-Haskell": {"irm": {"ref": "PoetzlKroening2015", "note": "SC-for-DRF model; inverse roach motel sound for SC-for-DRF per Poetzl & Kroening §4."}},
-    "DeNovo": {"irm": {"ref": "PoetzlKroening2015", "note": "Assumes SC-for-DRF; inverse roach motel sound for SC-for-DRF per Poetzl & Kroening §4."}},
-    "DeNovoND": {"irm": {"ref": "PoetzlKroening2015", "note": "Assumes SC-for-DRF; inverse roach motel sound for SC-for-DRF per Poetzl & Kroening §4."}},
-    "DeNovoSync": {"irm": {"ref": "PoetzlKroening2015", "note": "Assumes SC-for-DRF; inverse roach motel sound for SC-for-DRF per Poetzl & Kroening §4."}},
-    "Spandex": {"irm": {"ref": "PoetzlKroening2015", "note": "Assumes SC-for-DRF; inverse roach motel sound for SC-for-DRF per Poetzl & Kroening §4."}},
-    "ARMv8": {"mca": {"ref": "Pulte2018", "note": "Pulte et al. give ARMv8 an explicitly multicopy-atomic semantics — the revised architecture (and this paper's title) fixes each write to become visible to all other threads at a single point."}},
-    "ARM": {"mca": {"ref": "Pulte2018", "note": "Pre-v8 ARM is non-multicopy-atomic; Pulte et al. adopt multicopy atomicity for ARMv8, explicitly departing from the earlier non-MCA ARM model."}},
-    "POWER": {"mca": {"ref": "Sarkar2011", "note": "POWER is the canonical non-multicopy-atomic architecture; Sarkar et al.'s operational storage-subsystem model lets a write propagate to different threads at different times."}},
-    "x86-TSO": {"mca": {"ref": "Sewell2010", "note": "x86-TSO places a single shared memory behind per-thread FIFO store buffers, so a store becomes visible to all other threads at once — multicopy atomic."}},
-    "TSO": {"mca": {"ref": "Owens2009", "note": "TSO's shared-memory-plus-store-buffer structure makes writes multicopy atomic (Owens et al., x86-TSO extended version)."}},
-    "RVWMO": {"mca": {"ref": "RISCV2019", "note": "The RISC-V RVWMO chapter specifies the model to be multicopy atomic — a store's visibility to all other harts is a single global event."}}
+    "SC": {
+      "irm": {"ref": "PoetzlKroening2015", "note": "Poetzl & Kroening §4 prove inverse roach motel sound for the SC-for-DRF execution model, of which plain SC is the race-free contract."}
+    },
+    "TSO": {
+      "mca": {"ref": "Owens2009", "note": "TSO's shared-memory-plus-store-buffer structure makes writes multicopy atomic (Owens et al., x86-TSO extended version)."}
+    },
+    "x86-TSO": {
+      "mca": {"ref": "Sewell2010", "note": "x86-TSO places a single shared memory behind per-thread FIFO store buffers, so a store becomes visible to all other threads at once — multicopy atomic."}
+    },
+    "POWER": {
+      "mca": {"ref": "Sarkar2011", "note": "POWER is the canonical non-multicopy-atomic architecture; Sarkar et al.'s operational storage-subsystem model lets a write propagate to different threads at different times."}
+    },
+    "ARM": {
+      "mca": {"ref": "Pulte2018", "note": "Pre-v8 ARM is non-multicopy-atomic; Pulte et al. adopt multicopy atomicity for ARMv8, explicitly departing from the earlier non-MCA ARM model."}
+    },
+    "ARMv8": {
+      "mca": {"ref": "Pulte2018", "note": "Pulte et al. give ARMv8 an explicitly multicopy-atomic semantics — the revised architecture (and this paper's title) fixes each write to become visible to all other threads at a single point."}
+    },
+    "RVWMO": {
+      "mca": {"ref": "RISCV2019", "note": "The RISC-V RVWMO chapter specifies the model to be multicopy atomic — a store's visibility to all other harts is a single global event."}
+    },
+    "DRFx": {
+      "irm": {"ref": "PoetzlKroening2015", "note": "DRFx is an SC-for-DRF (catch-fire) model; inverse roach motel is sound for SC-for-DRF per Poetzl & Kroening §4."}
+    },
+    "EtE-SC": {
+      "irm": {"ref": "PoetzlKroening2015", "note": "SC-for-DRF compiler/runtime; inverse roach motel sound for SC-for-DRF per Poetzl & Kroening §4."}
+    },
+    "VbD": {
+      "irm": {"ref": "PoetzlKroening2015", "note": "SC-for-DRF model; inverse roach motel sound for SC-for-DRF per Poetzl & Kroening §4."}
+    },
+    "SC-Haskell": {
+      "irm": {"ref": "PoetzlKroening2015", "note": "SC-for-DRF model; inverse roach motel sound for SC-for-DRF per Poetzl & Kroening §4."}
+    },
+    "DeNovo": {
+      "irm": {"ref": "PoetzlKroening2015", "note": "Assumes SC-for-DRF; inverse roach motel sound for SC-for-DRF per Poetzl & Kroening §4."}
+    },
+    "DeNovoND": {
+      "irm": {"ref": "PoetzlKroening2015", "note": "Assumes SC-for-DRF; inverse roach motel sound for SC-for-DRF per Poetzl & Kroening §4."}
+    },
+    "DeNovoSync": {
+      "irm": {"ref": "PoetzlKroening2015", "note": "Assumes SC-for-DRF; inverse roach motel sound for SC-for-DRF per Poetzl & Kroening §4."}
+    },
+    "Spandex": {
+      "irm": {"ref": "PoetzlKroening2015", "note": "Assumes SC-for-DRF; inverse roach motel sound for SC-for-DRF per Poetzl & Kroening §4."}
+    }
   },
   "_catSupportComment": "Whether each model is, can be, or cannot be specified in the cat language of herd7 (Alglave, Maranget & Tautschnig, 'Herding cats', TOPLAS 2014) — the de-facto lingua franca for machine-readable memory models. 'specified' = a cat model of this model exists (named in the note): one written for it, or one proved to define exactly its behaviours. 'expressible' = no cat model is published, but the model's allowed behaviours are a predicate on a single candidate execution over po/rf/co-derived relations, so a cat model could state it. 'not-expressible' = the model's verdict is not such a predicate — it quantifies over other executions (commit sequences, promise certificates, event-structure justifications), is computed denotationally over program syntax, or appeals to notions cat lacks (real time, liveness/eventual delivery). 'basis' records how the cell was decided: 'cat-model' = a concrete cat file was identified, 'cited' = the primary literature states the claim (an equivalence theorem, an authors' cat mechanisation, or the obstacle), 'extrapolated' = author judgement from the model's definitional style. Note the axis is expressiveness of the specification language, not model strength: 'not-expressible' is a statement about cat, not a defect of the model.",
   "catSupport": {
@@ -3791,10 +3780,10 @@
     "BMM": {"status": "expressible", "basis": "extrapolated", "ref": "Demange2013", "note": "A TSO-style buffered abstract machine for Java; machines of this shape have equivalent per-execution axiomatic forms (as x86-TSO does with x86tso.cat), but none is published for BMM."},
     "ClightTSO": {"status": "expressible", "basis": "cited", "ref": "Sevcik2013", "note": "Its consistency dimension is exactly TSO, which tso.cat/x86tso.cat state; the rest of the model (allocation, pointer arithmetic, undefined behaviour) is outside cat's event vocabulary, so no single cat model covers it."},
     "RMMOA": {"status": "expressible", "basis": "extrapolated", "ref": "Boudol2009", "note": "A hierarchy of write buffers; the buffer discipline corresponds to a per-execution preserved-program-order plus coherence condition of PSO shape, but the model is presented purely operationally."},
+    "RAR": {"status": "expressible", "basis": "cited", "ref": "Doherty2019", "note": "An operational reformulation of the RC11 release-acquire/relaxed fragment, proved to match it — and that fragment is what rc11.cat states."},
     "SRA": {"status": "expressible", "basis": "extrapolated", "ref": "Lahav2016", "note": "Four irreflexivity constraints over hb, mo and rf (irr-hb, strong-write-coherence, read-coherence, atomicity), all per-execution and all in cat's relational vocabulary; strong-write-coherence is just acyclic(hb | mo)."},
     "RA": {"status": "expressible", "basis": "extrapolated", "ref": "LahavBoker2022", "note": "As SRA but with write-coherence (mo;hb irreflexive) in place of strong-write-coherence — the release/acquire restriction of the vendored cpp11.cat and rc11.cat, and per-execution."},
     "WRA": {"status": "expressible", "basis": "extrapolated", "ref": "LahavBoker2022", "note": "irr-hb, weak-read-coherence over hb|loc — cat states the per-location restriction of a relation directly — and the weakened RMW condition. Per-execution; mo is not used at all."},
-    "RAR": {"status": "expressible", "basis": "cited", "ref": "Doherty2019", "note": "An operational reformulation of the RC11 release-acquire/relaxed fragment, proved to match it — and that fragment is what rc11.cat states."},
     "ORC11": {"status": "expressible", "basis": "cited", "ref": "Dang2019", "note": "An operational presentation of RC11 built for RustBelt; the declarative RC11 it tracks is rc11.cat."},
     "CRC": {"status": "expressible", "basis": "extrapolated", "ref": "Dodds2018", "note": "The underlying consistency model is a C11 fragment (release-acquire, SC fences, catch-fire non-atomics) that cat expresses; the compositional denotational layer is a reasoning device on top of it, not extra behaviour."},
     "JAM": {"status": "expressible", "basis": "extrapolated", "ref": "Bender2019", "note": "RC11-shaped acyclicity axioms over Java's access modes — essentially a relabelling of the fragment rc11.cat already states."},
@@ -3820,8 +3809,8 @@
     "PC": {"status": "expressible", "basis": "extrapolated", "ref": "SteinkeNutt2004", "note": "Processor consistency is PRAM plus per-location coherence: both conjuncts are per-execution acyclicity conditions that cat states directly (cat's own scperloc axiom is the coherence half)."},
     "PRAM": {"status": "expressible", "basis": "extrapolated", "ref": "SteinkeNutt2004", "note": "Each process must see every other process's writes in issue order — a per-execution condition, with the per-process serialisations enumerable by cat's linearisations construct."},
     "Causal": {"status": "expressible", "basis": "extrapolated", "ref": "Ahamad1995", "note": "Causal memory is an acyclicity condition over the causal order (po union rf, transitively closed) together with per-process serialisations — all per-execution."},
-    "CC": {"status": "expressible", "basis": "extrapolated", "ref": "Bouajjani2017", "note": "AxCausal and AxCausalValue over an existentially quantified causal order, with a per-operation serialisation of that operation's causal past — the same shape as the Causal and CCv entries, and per-execution."},
     "CCv": {"status": "expressible", "basis": "extrapolated", "ref": "BurckhardtGotsmanYang2013", "note": "Causality plus a total arbitration order over all operations: an acyclicity condition on a single execution, and cat's co already supplies a per-location total order to carry the arbitration."},
+    "CC": {"status": "expressible", "basis": "extrapolated", "ref": "Bouajjani2017", "note": "AxCausal and AxCausalValue over an existentially quantified causal order, with a per-operation serialisation of that operation's causal past — the same shape as the Causal and CCv entries, and per-execution."},
     "Slow": {"status": "expressible", "basis": "extrapolated", "ref": "HuttoAhamad1990", "note": "A per-execution constraint on which writes a read may return (own writes immediately, no earlier write by the same writer after a later one), directly statable as cat irreflexivity axioms."},
     "Local": {"status": "expressible", "basis": "extrapolated", "ref": "BatallerBernabeu1997", "note": "Only each process's own operations are constrained to appear in program order — a single per-execution axiom, weaker than cat's usual scperloc."},
     "EC": {"status": "not-expressible", "basis": "extrapolated", "ref": "BurckhardtRDT2014", "note": "Eventual delivery is a liveness property over infinite executions ('all but finitely many operations see a given write'). cat checks safety conditions on one finite candidate execution and has no way to state it."},
@@ -3857,16 +3846,16 @@
   },
   "_katSupportComment": "Whether each model can be written in kater's input language (Kokologiannakis, Lahav & Vafeiadis, 'Kater', POPL 2023) — the fragment in which model comparison is decidable. Narrower than cat, and deliberately a separate axis from catSupport: kater requires consistency to be a conjunction of irreflexivity/emptiness constraints over regular expressions of base relations, so constructs cat states freely (notably intersections like po ∩ sameloc, which kater must first push into a regular form by an incomplete procedure) can put a cat-specified model outside it. 'specified' = a .kat definition exists (named in the note). 'expressible' = no .kat is published, but the model's axioms already have that shape. 'not-expressible' = they do not — the model quantifies over other executions, or needs constructs the fragment cannot state. 'basis': 'kat-model' = a concrete .kat file was identified, 'cited' = the primary literature states the claim, 'extrapolated' = author judgement from the model's definitional style. This map is partial by design: absence means not yet assessed, not 'no'. A model at either end of a 'kater'-provenance edge must appear here as 'specified' — check-consistency enforces it. Anything catSupport marks 'not-expressible' is outside this fragment too, since a per-execution predicate is a precondition for both.",
   "katSupport": {
-    "SRA": {"status": "expressible", "basis": "extrapolated", "ref": "Lahav2016", "note": "Consistency is a conjunction of irreflexivity constraints over regular expressions of base relations — strong-write-coherence is irreflexive((hb | mo)+) — which is exactly kater's fragment. No .kat file is published, so it is expressible rather than specified."},
-    "RA": {"status": "expressible", "basis": "extrapolated", "ref": "LahavBoker2022", "note": "Same shape as SRA, with mo;hb in place of (hb | mo)+. Nothing here needs a construct outside kater's regular fragment."},
     "SC": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "kater's kat/sc.kat: the single relation sc = po | rf | mo | fr, constrained acyclic."},
     "TSO": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "kater's kat/tso.kat, with kat/tso-fm.kat as the Herding-cats-style flavour the two are proved equivalent to (paper Table 1, TSO ↔ TSOFM)."},
     "x86-TSO": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "Covered by kater's kat/tso.kat, which is the same rendering the zoo's by-construction TSO ≡ x86-TSO edge identifies. kat/pex86.kat is the persistency-extended Px86, not this node."},
-    "ARMv8": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "kater's kat/arm8.kat: dob/aob/bob ordering and acyclic(ob), with ISB and DMB.ST introduced as extra fence predicates."},
     "POWER": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "kater ships kat/power-fm.kat and the simplified kat/power-fm-simpl.kat, kat/power-weak.kat and kat/power-fm-orig.kat. Three of them are unusable as comparison targets: power-weak, power-fm-simpl and power-fm-simpl-full carry the term eco*;po?;eco* in ar, and eco* contains the identity, so ar contains po and every containment into ar+ holds vacuously (checked: po <= power-weak::ar+ holds, where po <= tso::tso+ and po <= arm8::ob+ are both refuted). Only power-fm and power-fm-orig are non-degenerate, and against those the IMM compilation query is refuted on a fence-vocabulary gap. The paper notes the full model needs manual rotations to check within reasonable time (§3.7). See litmus/kater/open/compilation-IMM-vs-POWER.kat."},
+    "ARMv8": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "kater's kat/arm8.kat: dob/aob/bob ordering and acyclic(ob), with ISB and DMB.ST introduced as extra fence predicates."},
     "C11": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "kater's kat/c11-old.kat is the original C11 model of Batty et al. — the same node this row names."},
     "RC11": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "kater's kat/rc11.kat (with kat/rc112.kat, an alternative formulation proved equivalent, and kat/rc11-genmc.kat for code export)."},
     "IMM": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "kater's kat/imm.kat (kat/imm-genmc.kat is the code-export variant)."},
-    "LKMM": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "kater's kat/lkmm2.kat states LKMM's axioms in the fragment but is written over internal (-imm) relations, which kater rejects in every mode — including when that file is the one it was handed — so as shipped it is neither a comparison operand nor a checking target. The relations it redefines from their -imm counterparts (po, po-loc, mo, fr, rmw, ctrl, addr, data) are all in kater's builtin theory, so litmus/kater/derive-lkmm.sh restates it over those at run time; comparisons run against that derived file, not the shipped one. Its endpoints are untyped where IMM's are ([ACQ];po, not [R];(deps)+;[W]), which is what still blocks the LKMM compilation edges — see litmus/kater/open/compilation-LKMM-vs-x86-TSO.kat."}
+    "LKMM": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "kater's kat/lkmm2.kat states LKMM's axioms in the fragment but is written over internal (-imm) relations, which kater rejects in every mode — including when that file is the one it was handed — so as shipped it is neither a comparison operand nor a checking target. The relations it redefines from their -imm counterparts (po, po-loc, mo, fr, rmw, ctrl, addr, data) are all in kater's builtin theory, so litmus/kater/derive-lkmm.sh restates it over those at run time; comparisons run against that derived file, not the shipped one. Its endpoints are untyped where IMM's are ([ACQ];po, not [R];(deps)+;[W]), which is what still blocks the LKMM compilation edges — see litmus/kater/open/compilation-LKMM-vs-x86-TSO.kat."},
+    "SRA": {"status": "expressible", "basis": "extrapolated", "ref": "Lahav2016", "note": "Consistency is a conjunction of irreflexivity constraints over regular expressions of base relations — strong-write-coherence is irreflexive((hb | mo)+) — which is exactly kater's fragment. No .kat file is published, so it is expressible rather than specified."},
+    "RA": {"status": "expressible", "basis": "extrapolated", "ref": "LahavBoker2022", "note": "Same shape as SRA, with mo;hb in place of (hb | mo)+. Nothing here needs a construct outside kater's regular fragment."}
   }
 }

@@ -1,0 +1,18 @@
+{
+  "id": "VbD",
+  "name": "Volatile-by-Default",
+  "abbrev": "VbD",
+  "year": 2017,
+  "authors": ["Liu", "Millstein", "Musuvathi"],
+  "description": "A volatile-by-default semantics for Java in which every memory access is treated as volatile (sequentially consistent) by default. Bare VbD carries a considerable penalty (28% average / 81% maximum on x86; 57% / 157% on Armv8), so the authors add a just-in-time technique that speculatively treats each object as thread-local and compiles its accesses without fences, recompiling to insert fences once concurrent access is detected — bringing the Armv8 overhead down to 37% average / 73% maximum. It admits exactly the SC behaviours.",
+  "references": ["Liu2017", "Liu2019", "Moiseenko2021"],
+  "tags": ["language", "formal"],
+  "hardware": [],
+  "languages": ["Java", "JVM"],
+  "properties": {"comp_x86": false, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": false, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": true, "ile": true, "sli": true, "rm": true, "irm": true, "strengthen": true, "tp": true, "cse": false, "rp": true, "ti": true, "edrf": true, "coh": true, "no_ub": true, "in_order": true, "no_oota": true},
+  "propertyProvenance": "survey",
+  "propertyCitations": {
+    "irm": {"ref": "PoetzlKroening2015", "note": "SC-for-DRF model; inverse roach motel sound for SC-for-DRF per Poetzl & Kroening §4."}
+  },
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Liu2017", "note": "Every access is volatile, so the model is SC over all accesses — sc.cat, with the interest lying in the implementation cost rather than the axioms."}
+}

@@ -1,0 +1,16 @@
+{
+  "id": "RC11z",
+  "name": "RC11z (Allocation-Aware RC11)",
+  "abbrev": "RC11z",
+  "year": 2023,
+  "authors": ["Semenyuk", "Batty", "Dongol"],
+  "description": "A variant of RC11 — the operational RC11-RAR fragment with relaxed and release-acquire accesses — extended with an explicit model of pointers and memory allocation, developed to verify safe memory reclamation (Read-Copy-Update, RCU) under weak memory. Allocation and deallocation are modelled as ordinary write events in the same memory state; a read that takes its value from an allocation or deallocation event therefore surfaces as a read-from-uninitialised or use-after-free error, making the ABA / reclamation hazards of lock-free code visible to the model. Combined with an ownership discipline and an Owicki-Gries logic, and mechanised in Isabelle/HOL. Locally dubbed RC11z, the 'z' standing for the zeroing allocation/deallocation events.",
+  "references": ["Semenyuk2023", "Lahav2017"],
+  "tags": ["language", "formal"],
+  "formalism": ["operational"],
+  "hardware": [],
+  "languages": ["C", "C++"],
+  "properties": {"comp_x86": true, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": false, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "sli": false, "rm": true, "strengthen": true, "tp": true, "cse": false, "rp": true, "ti": true, "edrf": true, "coh": true, "no_ub": false, "in_order": true, "no_oota": true, "mca": false},
+  "propertyProvenance": "survey",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Semenyuk2023", "note": "Consistency is the RC11 release-acquire/relaxed fragment that rc11.cat already states; the added allocation and free events are ordinary labelled events whose axioms stay per-execution."}
+}

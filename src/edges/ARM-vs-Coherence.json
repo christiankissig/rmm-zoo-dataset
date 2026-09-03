@@ -1,0 +1,8 @@
+{
+  "from": "ARM",
+  "to": "Coherence",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "machine_run",
+  "note": "ARM enforces coherence (per-address total order) as a baseline."
+}

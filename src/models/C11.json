@@ -1,0 +1,17 @@
+{
+  "id": "C11",
+  "name": "C11/C++11 Memory Model",
+  "abbrev": "C11",
+  "year": 2011,
+  "authors": ["Boehm", "Adve", "Batty", "Owens", "Sarkar", "Sewell", "Weber"],
+  "description": "The first standardised memory model for C and C++. Introduces a hierarchy of atomic operations (relaxed, acquire, release, acq_rel, seq_cst) and defines data-race-free (DRF) programs. Formally specified by Batty et al. Contains the notorious 'thin-air' problem for relaxed atomics.",
+  "references": ["Boehm2008", "Batty2011", "ISO2011"],
+  "tags": ["language", "formal", "standard"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": ["C11", "C++11", "C++14", "C++17"],
+  "properties": {"comp_x86": true, "comp_power": true, "comp_armv7": true, "comp_armv8": true, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "sli": false, "rm": true, "strengthen": true, "tp": true, "cse": false, "ti": true, "edrf": false, "coh": true, "no_ub": false, "in_order": false, "no_oota": false, "mca": false},
+  "propertyProvenance": "survey",
+  "catSupport": {"status": "specified", "basis": "cat-model", "ref": "Batty2011", "note": "herd7 ships c11_orig.cat with the c11.bell event/label declarations; the zoo also runs the vendored litmus/models/cpp/cpp11.cat."},
+  "katSupport": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "kater's kat/c11-old.kat is the original C11 model of Batty et al. — the same node this row names."}
+}

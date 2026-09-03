@@ -1,0 +1,9 @@
+{
+  "from": "SC",
+  "to": "SC-Haskell",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "by_construction",
+  "fragment_restricted": false,
+  "note": "SC-Haskell preserves sequential consistency using Haskell's type system to separate thread-local from shared mutable state; it admits exactly the SC outcomes, differing from SC only in mechanism and performance."
+}

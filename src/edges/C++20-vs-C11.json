@@ -1,0 +1,8 @@
+{
+  "from": "C++20",
+  "to": "C11",
+  "type": "incomparable",
+  "provenance": "litmus",
+  "evidence": "machine_run",
+  "note": "Two-sided, both directions mechanised under herd7. C++20's repaired seq_cst (P0668) forbids the IRIW/SC-fence behaviour C11/C++11/14/17 allow (rc11.cat Never vs c11_orig.cat Sometimes). C++20's weakened release sequences (P0982 — only RMWs continue a release sequence) make the models incomparable on the release axis too: the all-atomic mp-rs-add-est-atomic is allowed under C++11/17 but forbidden under C++20 (cpp11/cpp17 Sometimes vs cpp2w Never), while the original RS pattern flips the other way (cpp11 Never vs cpp2w Sometimes, the C++20 outcome now a data race). Checked against the cpp11/cpp17/cpp2w cat models in litmus/models/cpp, vendored from gonzalobg/cpp_memory_model. Neither contains the other."
+}

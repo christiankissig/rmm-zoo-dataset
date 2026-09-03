@@ -1,0 +1,9 @@
+{
+  "from": "x86-TSO",
+  "to": "x86-TSO+TM",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "by_construction",
+  "fragment_restricted": true,
+  "note": "Chong, Sorensen & Wickerson (PLDI 2018) present the TM model as a set of rules added on top of the x86-TSO consistency axioms (their Fig. 5) that only constrain transactional events. On the non-transactional fragment (programs with no transactions) it coincides with x86-TSO by construction. The extension was validated against four Intel TSX implementations (no forbidden test observed)."
+}

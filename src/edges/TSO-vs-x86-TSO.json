@@ -1,0 +1,9 @@
+{
+  "from": "TSO",
+  "to": "x86-TSO",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "by_construction",
+  "fragment_restricted": false,
+  "note": "x86-TSO formalises TSO for x86; behaviourally equivalent for standard operations."
+}

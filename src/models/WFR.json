@@ -1,0 +1,16 @@
+{
+  "id": "WFR",
+  "name": "Writes-Follow-Reads (Session Guarantee)",
+  "abbrev": "WFR",
+  "year": 1994,
+  "authors": ["Terry", "Demers", "Petersen", "Spreitzer", "Theimer", "Welch"],
+  "description": "Writes-follow-reads session guarantee of Terry et al. (PDIS 1994), sometimes called session causality: writes issued in a session are ordered after any writes whose effects were observed by earlier reads in that session (Viotti & Vukolić 2016, Eq. 25). One of the four session guarantees. Brzezinski, Sobaniec & Wawrzyniak (PDP 2004) show that causal memory requires all four, so it is strictly weaker than causal memory; and it follows by construction from causal convergence, whose CausalArbitration axiom (hb ⊆ ar) already contains it. Both sources state an implication only — whether the four session guarantees are jointly sufficient for causal consistency is open, see issue #11.",
+  "references": ["TerryDS1994", "Brzezinski2004", "ViottiVukolic2016"],
+  "tags": ["theoretical", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"coh": false, "mca": false},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "TerryDS1994", "note": "Session causality: writes of a session follow the writes their earlier reads observed — an acyclicity condition over po, rf and co on one execution."}
+}

@@ -1,0 +1,16 @@
+{
+  "id": "POWER+TM",
+  "name": "POWER + Transactional Memory",
+  "abbrev": "POWER+TM",
+  "year": 2018,
+  "authors": ["Chong", "Sorensen", "Wickerson"],
+  "description": "An axiomatic extension of the IBM POWER memory model with rules for its hardware transactional memory. Successful transactions create cumulative memory barriers at their boundaries, contain an integrated barrier ordering observed writes before transactional writes, and appear atomic to other threads (strong isolation). The additions only constrain transactional events, so on programs without transactions the model coincides with POWER. Validated by synthesising forbidden litmus tests run 10M times each on an 80-core POWER8 machine, none of which were observed. The work also flagged an ambiguity in the Power TM specification and showed that coalescing transactions is unsound in Power.",
+  "references": ["Chong2018"],
+  "tags": ["hardware", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": ["IBM POWER"],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "specified", "basis": "cited", "ref": "Chong2018", "note": "The transactional rules are added in cat on top of ppc.cat and run in the authors' transaction-aware herd7."}
+}

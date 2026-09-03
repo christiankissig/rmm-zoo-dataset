@@ -1,0 +1,16 @@
+{
+  "id": "OpenCL",
+  "name": "OpenCL 2.0 Memory Model",
+  "abbrev": "OpenCL",
+  "year": 2016,
+  "authors": ["Batty", "Donaldson", "Wickerson"],
+  "description": "A scoped extension of the C11 model for heterogeneous compute, adding memory scopes (work-item, work-group, device, all-SVM-devices) on top of C11's atomic orderings. At all-devices scope it coincides with C11; narrower scopes permit additional weak behaviours. Formalised and repaired alongside C11 by Batty, Donaldson & Wickerson (POPL 2016).",
+  "references": ["Batty2016", "Alglave2015"],
+  "tags": ["language", "gpu", "formal", "scoped"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": ["OpenCL C", "OpenCL"],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": false, "in_order": false, "no_oota": false},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "specified", "basis": "cited", "ref": "Batty2016", "note": "The scoped OpenCL model is given in herd's bell/cat framework — scopes were added to cat for exactly this family (Alglave et al. 2015) — and run under herd7. The zoo's own scoped-GPU witnesses use herd7's plain C11 model as a proxy (cross-scope synchronisation degenerates to relaxed), not this cat model."}
+}

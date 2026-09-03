@@ -1,0 +1,8 @@
+{
+  "from": "Causal",
+  "to": "PRAM",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Causal memory is strictly stronger than PRAM consistency (Steinke & Nutt 2004)."
+}

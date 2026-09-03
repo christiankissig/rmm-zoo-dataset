@@ -1,0 +1,8 @@
+{
+  "from": "Java",
+  "to": "JAM",
+  "type": "incomparable",
+  "provenance": "litmus",
+  "evidence": "cited",
+  "note": "JAM is a proposed revision of the JMM built on VarHandle access modes (plain/opaque/release-acquire/volatile); it strengthens the treatment of atomics via RC11 while differing from the original JMM's causality machinery, so neither contains the other."
+}

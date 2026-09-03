@@ -1,0 +1,8 @@
+{
+  "from": "RMO",
+  "to": "Coherence",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "machine_run",
+  "note": "RMO still enforces per-address coherence; weaker models could violate it."
+}

@@ -1,0 +1,16 @@
+{
+  "id": "Px86axiom",
+  "name": "Axiomatic Px86 (Px86axiom)",
+  "abbrev": "Px86axiom",
+  "year": 2021,
+  "authors": ["Cho", "Lee", "Raad", "Kang"],
+  "description": "Cho et al.'s declarative Intel-x86 persistency model, which simplifies and fixes documented flaws in Raad et al.'s Px86. Formally, they prove (Thm 4.3) that Px86axiom is equivalent to SPx86, a strengthening of Px86 that executes clflush synchronously, and (Thm 5.3) that it is equivalent to the operational Px86view. The crash-free behaviour coincides with x86-TSO.",
+  "references": ["Cho2021"],
+  "tags": ["hardware", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": ["x86", "x86-64"],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Cho2021", "note": "Declarative persistency axioms over x86-TSO executions; cat-shaped, but herd7 has no persist/crash events to express them over."}
+}

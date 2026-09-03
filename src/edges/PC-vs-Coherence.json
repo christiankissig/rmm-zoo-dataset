@@ -1,0 +1,8 @@
+{
+  "from": "PC",
+  "to": "Coherence",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Processor consistency is strictly stronger than cache consistency (Goodman 1989; Steinke & Nutt 2004). The Coherence node is Goodman's cache consistency."
+}

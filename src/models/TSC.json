@@ -1,0 +1,15 @@
+{
+  "id": "TSC",
+  "name": "Theory of Speculative Computation",
+  "abbrev": "TSC",
+  "year": 2010,
+  "authors": ["Boudol", "Petri"],
+  "description": "A general framework for studying the effects of speculative computation in a shared-memory setting. The authors observe that under unrestricted speculation the external DRF theorem fails, while the internal DRF theorem can still be proved; the framework analyses speculation abstractly rather than proposing a concrete language model.",
+  "references": ["Boudol2010", "Moiseenko2021"],
+  "tags": ["language", "formal", "theoretical"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"edrf": false, "no_ub": true, "in_order": false, "no_oota": false},
+  "propertyProvenance": "survey",
+  "catSupport": {"status": "not-expressible", "basis": "cited", "ref": "Boudol2010", "note": "Speculative computation is a reduction relation over program terms; which speculations are admissible is not a function of a single candidate execution."}
+}

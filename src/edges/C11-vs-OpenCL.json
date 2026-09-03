@@ -1,0 +1,8 @@
+{
+  "from": "C11",
+  "to": "OpenCL",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "machine_run",
+  "note": "OpenCL 2.0 extends C11 with memory scopes; at all-SVM-devices scope it coincides with C11, but narrower scopes (work-group, device) permit synchronisation-free weak behaviours that flat C11 forbids. See Batty, Donaldson & Wickerson (POPL 2016)."
+}

@@ -1,0 +1,8 @@
+{
+  "from": "SC",
+  "to": "SRA",
+  "type": "strictly_weaker",
+  "provenance": "litmus",
+  "evidence": "machine_run",
+  "note": "SRA is the strongest of the release-acquire family and is still strictly weaker than SC: Lahav & Boker Ex. 3.5 marks the IRIW outcome allowed under WRA, RA and SRA alike, and SC forbids it. Store buffering is likewise allowed — SRA's compilation to x86-TSO uses plain accesses. The SRA paper supplies fences that restore sequential consistency, which is only meaningful because the model without them is weaker. Machine-checked: litmus/strictly-weaker/SC-vs-SRA/IRIW.litmus under litmus/models/abstract-sc.cat (Never 0 15) and litmus/models/sra.cat (Sometimes 1 15) — both admit 15 executions and differ on exactly the witness."
+}

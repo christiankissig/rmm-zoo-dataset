@@ -1,0 +1,8 @@
+{
+  "from": "LeakySemi",
+  "to": "RC11",
+  "type": "incomparable",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Leaky Semicolon §9: 'PwT-mca is incomparable to both RC11 ... and the promising semantics'. RC11 allows non-multi-copy-atomic behaviours that PwT-mca disallows, while PwT-mca allows optimisations that RC11's No-Thin-Air axiom forbids."
+}

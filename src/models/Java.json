@@ -1,0 +1,15 @@
+{
+  "id": "Java",
+  "name": "Java Memory Model",
+  "abbrev": "JMM",
+  "year": 2005,
+  "authors": ["Manson", "Pugh", "Adve"],
+  "description": "Formalised in JSR-133. Defines happens-before (HB) based on synchronisation actions. Provides DRF-SC guarantee. Known for complexities around causality and out-of-thin-air values.",
+  "references": ["Manson2005", "JSR133"],
+  "tags": ["language", "formal", "standard"],
+  "hardware": [],
+  "languages": ["Java", "JVM"],
+  "properties": {"comp_x86": true, "comp_power": false, "comp_armv7": true, "comp_armv8": true, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "elim_sl": true, "elim_ss": true, "elim_ll": false, "elim_ls": false, "ile": true, "sli": false, "rm": false, "tp": true, "cse": false, "ti": false, "edrf": true, "coh": false, "no_ub": true, "in_order": false, "no_oota": true},
+  "propertyProvenance": "survey",
+  "catSupport": {"status": "not-expressible", "basis": "cited", "ref": "Manson2005", "note": "The JMM validates an execution only relative to a *sequence* of committing executions. cat's verdict is a predicate on one candidate execution, so the commit-sequence quantifier is outside the language."}
+}

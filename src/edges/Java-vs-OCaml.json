@@ -1,0 +1,8 @@
+{
+  "from": "Java",
+  "to": "OCaml",
+  "type": "incomparable",
+  "provenance": "literature",
+  "evidence": "machine_run",
+  "note": "Both are language-level models providing DRF-SC but with different treatments of racy accesses."
+}

@@ -1,0 +1,8 @@
+{
+  "from": "SC",
+  "to": "CCv",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Bouajjani et al., POPL 2017, Example 7: history (2d) satisfies CC, CM and CCv, yet admits no total order over all its operations, so it is not sequentially consistent."
+}

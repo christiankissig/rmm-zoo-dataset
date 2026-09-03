@@ -1,0 +1,19 @@
+{
+  "id": "SC",
+  "name": "Sequential Consistency",
+  "abbrev": "SC",
+  "year": 1979,
+  "authors": ["Lamport"],
+  "description": "The strongest model. All operations appear to execute in a single global total order consistent with each thread's program order. No reordering of any kind is permitted.",
+  "references": ["Lamport1979", "AdveGharachorloo1996"],
+  "tags": ["theoretical", "formal"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"comp_x86": false, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": false, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": true, "ile": true, "sli": true, "rm": true, "irm": true, "strengthen": true, "tp": true, "cse": false, "rp": true, "ti": true, "edrf": true, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
+  "propertyProvenance": "survey",
+  "propertyCitations": {
+    "irm": {"ref": "PoetzlKroening2015", "note": "Poetzl & Kroening §4 prove inverse roach motel sound for the SC-for-DRF execution model, of which plain SC is the race-free contract."}
+  },
+  "catSupport": {"status": "specified", "basis": "cat-model", "ref": "Alglave2014", "note": "herd7 ships sc.cat; the zoo runs the portable litmus/models/abstract-sc.cat. A single acyclicity axiom over po and the communication relations."},
+  "katSupport": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "kater's kat/sc.kat: the single relation sc = po | rf | mo | fr, constrained acyclic."}
+}

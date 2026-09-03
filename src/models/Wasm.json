@@ -1,0 +1,16 @@
+{
+  "id": "Wasm",
+  "name": "WebAssembly Memory Model",
+  "abbrev": "Wasm",
+  "year": 2019,
+  "authors": ["Watt", "Rossberg", "Pichon-Pharabod"],
+  "description": "The first formal relaxed-memory model for WebAssembly's shared-memory threads and atomics, and the basis of the model later folded into the Wasm specification. Built on the C/C++11 axiomatic model of Batty et al., it exposes only two access modes — unordered (unord) non-atomics and sequentially-consistent (seqcst) atomics — and, unlike C/C++11, carefully avoids undefined behaviour, giving racy accesses defined but weak (thin-air-permitting) semantics. It is deliberately not sequentially consistent (the authors argue no SC semantics can be given to memory growth) but is proven to guarantee Sequential Consistency for Data-Race-Free programs (SC-DRF), the same guarantee class as C11; the paper also shows the contemporary JavaScript model's SC-DRF claim was false and proposes two conditions, since adopted by TC39, that align JavaScript's SharedArrayBuffer semantics with Wasm's.",
+  "references": ["Watt2019"],
+  "tags": ["language", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": ["WebAssembly"],
+  "properties": {"no_ub": true, "in_order": false, "no_oota": false},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Watt2019", "note": "Axiomatic and built on the C11 model — per-execution axioms plus byte-range accesses; expressible in mixed-size cat, though the spec's model is not given as one."}
+}

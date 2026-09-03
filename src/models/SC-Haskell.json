@@ -1,0 +1,18 @@
+{
+  "id": "SC-Haskell",
+  "name": "SC-Haskell",
+  "abbrev": "SC-Hs",
+  "year": 2017,
+  "authors": ["Vollmer", "Scott", "Musuvathi", "Newton"],
+  "description": "An SC-preserving model for Haskell that separates thread-local from shared mutable memory using Haskell's strong type system, so the type checker enforces the discipline needed to preserve SC. A modified GHC was measured on 1,279 benchmarks with only a 0.4% geometric-mean slowdown (just 12 benchmarks above 10%), helped by Haskell's purely functional style minimising shared mutable state. It admits exactly the SC behaviours.",
+  "references": ["Vollmer2017", "Moiseenko2021"],
+  "tags": ["language", "formal"],
+  "hardware": [],
+  "languages": ["Haskell"],
+  "properties": {"comp_x86": false, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": false, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": true, "ile": true, "sli": true, "rm": true, "irm": true, "strengthen": true, "tp": true, "cse": false, "rp": true, "ti": true, "edrf": true, "coh": true, "no_ub": true, "in_order": true, "no_oota": true},
+  "propertyProvenance": "survey",
+  "propertyCitations": {
+    "irm": {"ref": "PoetzlKroening2015", "note": "SC-for-DRF model; inverse roach motel sound for SC-for-DRF per Poetzl & Kroening §4."}
+  },
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Vollmer2017", "note": "Guarantees SC (sc.cat) for well-typed programs; the mechanism is the type discipline separating thread-local from shared state, not a weaker consistency predicate."}
+}

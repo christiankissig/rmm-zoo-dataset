@@ -1,0 +1,8 @@
+{
+  "from": "SC",
+  "to": "Causal",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Causal memory is strictly weaker than sequential consistency (Ahamad et al. 1995; Steinke & Nutt 2004)."
+}

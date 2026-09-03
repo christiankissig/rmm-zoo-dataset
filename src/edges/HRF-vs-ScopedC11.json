@@ -1,0 +1,8 @@
+{
+  "from": "HRF",
+  "to": "ScopedC11",
+  "type": "strictly_weaker",
+  "provenance": "memalloy",
+  "evidence": "machine_run",
+  "note": "Gaster et al.'s HRF-Relaxed loosens HRF-direct/indirect's exact scope-matching, admitting more programs and behaviours than the original HRF models."
+}

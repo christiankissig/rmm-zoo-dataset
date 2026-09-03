@@ -1,0 +1,18 @@
+{
+  "id": "DRFx",
+  "name": "DRFx Memory Model",
+  "abbrev": "DRFx",
+  "year": 2010,
+  "authors": ["Marino", "Singh", "Millstein", "Musuvathi", "Narayanasamy"],
+  "description": "An SC-preserving model with catch-fire semantics. A runtime is guaranteed to raise an exception if a program has a data race, and otherwise yields only sequentially consistent outcomes; the data-race detection is made practical through region-bounded checks with some hardware support. Any sequentially valid optimisation (instruction reordering, common-subexpression elimination) is sound within compiler-designated regions, but transformations that introduce speculative reads or writes are unsound. An efficient hardware-assisted implementation is reported at roughly 3.25% average overhead.",
+  "references": ["Marino2010", "Marino2016", "Moiseenko2021"],
+  "tags": ["language", "formal"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"comp_x86": false, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": false, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": true, "ile": true, "sli": false, "rm": true, "irm": true, "strengthen": true, "tp": true, "cse": false, "rp": true, "ti": true, "edrf": true, "coh": true, "no_ub": false, "in_order": true, "no_oota": true},
+  "propertyProvenance": "survey",
+  "propertyCitations": {
+    "irm": {"ref": "PoetzlKroening2015", "note": "DRFx is an SC-for-DRF (catch-fire) model; inverse roach motel is sound for SC-for-DRF per Poetzl & Kroening §4."}
+  },
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Marino2010", "note": "SC-or-exception: cat states 'SC unless a race is flagged' with the same flag mechanism the C11 models use for data races. The region-serialisability enforcement is an implementation obligation, outside cat."}
+}

@@ -1,0 +1,15 @@
+{
+  "id": "RMC",
+  "name": "Relaxed Memory Calculus",
+  "abbrev": "RMC",
+  "year": 2015,
+  "authors": ["Crary", "Sullivan"],
+  "description": "The Relaxed Memory Calculus, an alternative approach in which ordering constraints between memory accesses are specified directly in the source code rather than derived from per-access annotations. The approach is highly generic and subsumes the traditional annotation style of C11. The resulting model is very weak and permits thin-air values, but the authors prove the internal DRF theorem.",
+  "references": ["Crary2015", "Moiseenko2021"],
+  "tags": ["language", "formal"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"comp_x86": true, "comp_power": true, "comp_armv7": true, "comp_armv8": true, "edrf": false, "coh": true, "no_ub": true, "in_order": false, "no_oota": false},
+  "propertyProvenance": "survey",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Crary2015", "note": "Executions carry programmer-declared ordering edges and the consistency condition is acyclicity of the induced visibility/execution orders — a per-execution axiom set, given in the paper as inference rules rather than cat."}
+}

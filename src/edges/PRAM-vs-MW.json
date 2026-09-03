@@ -1,0 +1,8 @@
+{
+  "from": "PRAM",
+  "to": "MW",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Brzezinski et al. (2003) proved PRAM = read-your-writes ∧ monotonic reads ∧ monotonic writes (Viotti & Vukolić 2016, Eq. 20). PRAM implies monotonic writes while the converse fails, so monotonic writes is strictly weaker than PRAM."
+}

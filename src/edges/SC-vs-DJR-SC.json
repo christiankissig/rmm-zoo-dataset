@@ -1,0 +1,9 @@
+{
+  "from": "SC",
+  "to": "DJR-SC",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "by_construction",
+  "fragment_restricted": true,
+  "note": "Dongol, Jagadeesan & Riely (POPL 2018) give a transactional framework parametric in the base architecture and instantiate it at SC; its added transactional axioms only constrain transactional events, so on programs with no transactions the SC instance coincides with SC by construction. fragment_restricted: they coincide only on the non-transactional fragment — the framework adds an orthogonal transactional layer with observable-serializability guarantees."
+}

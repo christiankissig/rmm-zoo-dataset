@@ -1,0 +1,8 @@
+{
+  "from": "TSO",
+  "to": "ARMv8",
+  "type": "strictly_weaker",
+  "provenance": "memalloy",
+  "evidence": "machine_run",
+  "note": "Both halves decided by memalloy over the common Basic_HW fragment — the vocabulary the two ISAs share, with no fences and no acquire/release annotations, where every arch-specific term of the shipped models is empty rather than dropped (litmus/memalloy/derive-hw-fragment.sh derives the operands and records the restriction exactly). Witness: a 4-event MP, ARMv8-allowed and TSO-forbidden. Containment: no execution ARMv8 forbids and TSO allows, exhaustively to 7 events; the search does find witnesses at those bounds, so it is not vacuously clean. Bounded evidence, not a theorem: the Mador-Haim small-model result would need arguing for this pair rather than assuming it. The earlier reading — a one-sided witness plus a cross-ISA monotonicity argument — is superseded, but the fragment is the scope: this decides the edge over the common vocabulary, not over the full ISAs."
+}

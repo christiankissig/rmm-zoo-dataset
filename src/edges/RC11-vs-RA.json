@@ -1,0 +1,9 @@
+{
+  "from": "RC11",
+  "to": "RA",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "by_construction",
+  "fragment_restricted": true,
+  "note": "RA is the release/acquire fragment of the C/C++11 model — release stores, acquire reads, acquire-release RMWs (Lahav & Boker, §3.1). RC11's repairs concern the SC axioms and the relaxed/thin-air fragment, none of which this fragment contains, so RC11 and C11 coincide on it. Drawn against RC11 rather than C11 to match the existing PSI and SI compilation notes, which target 'the release-acquire (RA) fragment of RC11'."
+}

@@ -1,0 +1,16 @@
+{
+  "id": "SI",
+  "name": "Snapshot Isolation (SI)",
+  "abbrev": "SI",
+  "year": 2019,
+  "authors": ["Raad", "Lahav", "Vafeiadis"],
+  "description": "The snapshot-isolation transactional consistency model — the default in many databases — given simplified, timestamp-free semantics by Raad, Lahav & Vafeiadis as two lock-based multiple-readers-single-writer (MRSW) reference implementations (one eager/prescient, one lazy) built over the release-acquire (RA) fragment of C/C++11 and proved sound and complete against the declarative (acyclicity-axiom) SI specification. SI permits only the write-skew anomaly and otherwise coincides with serializability; it is strictly stronger than Parallel Snapshot Isolation, forbidding the long-fork anomaly PSI allows. The paper also introduces Robust SI (RSI) for mixed transactional/non-transactional code, again with sound-and-complete RA implementations.",
+  "references": ["RaadSI2019"],
+  "tags": ["theoretical", "formal"],
+  "formalism": ["axiomatic", "operational"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"coh": true, "no_oota": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "RaadSI2019", "note": "Declarative, timestamp-free acyclicity axioms over transactional executions — per-execution, and expressible in a transaction-aware cat."}
+}

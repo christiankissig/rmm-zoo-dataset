@@ -1,0 +1,9 @@
+{
+  "from": "RC11",
+  "to": "C11+TM",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "by_construction",
+  "fragment_restricted": true,
+  "note": "Chong, Sorensen & Wickerson (PLDI 2018, §7) build the C++ TM model on the baseline C++ model of Lahav et al. (RC11), making only two amendments (an unchanged race definition and transactional synchronisation folded into happens-before) that vanish when there are no transactions. On the non-transactional fragment it coincides with RC11 by construction."
+}

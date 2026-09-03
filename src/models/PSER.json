@@ -1,0 +1,16 @@
+{
+  "id": "PSER",
+  "name": "Persistent Serialisability (PSER)",
+  "abbrev": "PSER",
+  "year": 2019,
+  "authors": ["Raad", "Wickerson", "Vafeiadis"],
+  "description": "A transactional persistency model giving the first formalisation of transactional semantics in the non-volatile-memory setting: it extends serialisability with an orthogonal persist-order axiom over durable transactions. Proven to compile correctly to PARMv8.",
+  "references": ["Raad2019"],
+  "tags": ["theoretical", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"coh": true, "no_ub": true, "no_oota": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Raad2019", "note": "Serialisability plus an orthogonal persist-order axiom: both are per-execution conditions, but no shipped cat model has crash/persist events."}
+}

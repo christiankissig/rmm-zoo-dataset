@@ -1,0 +1,8 @@
+{
+  "from": "C11",
+  "to": "HRF",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "machine_run",
+  "note": "HRF generalises DRF to a scope hierarchy; restricted to a single global scope it matches C11's DRF-SC guarantee, while sub-global scopes admit additional weak behaviours."
+}

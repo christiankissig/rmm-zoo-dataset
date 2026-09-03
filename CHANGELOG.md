@@ -26,6 +26,25 @@ Each released version is published at
 
 ### Changed
 
+- **The dataset is now edited as one file per thing.** `models.json` is compiled
+  from a new `src/` tree by `make models` and is a build artifact from here on —
+  generated and committed, like `litmus.json`, never hand-edited. A model is
+  `src/models/<id>.json` and carries everything it asserts (its entry, its
+  property vector and provenance, per-cell citations, cat- and
+  kat-specifiability); an edge is `src/edges/<from>-vs-<to>.json`, named for its
+  pair the way its witness directory already is. The bibliography, the property
+  schema and the file's own prose header are `src/references.json`,
+  `src/properties.json` and `src/dataset.json`, and `src/models/_order.txt`
+  carries the strength order the models are published in. Changing a model now
+  touches that model's file and changing an edge touches that edge's file, so
+  work on different corners of the zoo no longer meets in one 4000-line diff.
+  `make check` runs the generator in `--check` mode first and fails while the
+  committed `models.json` differs from the sources.
+
+  **The published dataset is unchanged** — same models, same edges, same blocks,
+  same schema. Consumers fetch `models.json` exactly as before; only the edge
+  list is written in a different (pair-name) order, which it never carried
+  meaning in.
 - **`RA → WRA`** and **`SC → SRA`** upgraded from `literature`/`cited` to
   `litmus`/`machine_run`. Every strictly-weaker edge among SC, SRA, RA and WRA is
   now decided by herd7. Containment stays cited in both cases (Prop. 3.2 for the

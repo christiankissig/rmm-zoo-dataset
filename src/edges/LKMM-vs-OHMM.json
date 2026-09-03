@@ -1,0 +1,8 @@
+{
+  "from": "LKMM",
+  "to": "OHMM",
+  "type": "incomparable",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Both are syntactic-dependency-preserving models that forbid thin-air by respecting syntactic dependencies, but over different primitives (Linux-kernel barriers vs a JMM-style happens-before machine); neither subsumes the other."
+}

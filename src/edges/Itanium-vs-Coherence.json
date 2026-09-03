@@ -1,0 +1,8 @@
+{
+  "from": "Itanium",
+  "to": "Coherence",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Itanium guarantees cache coherence (a per-location total order on writes; Intel Itanium SDM, memory-ordering rules) and adds cross-location ordering via ld.acq/st.rel/mf; bare coherence has neither. Separating outcome: MP with acquire/release or mf on both sides, forbidden by Itanium, allowed by Coherence. Cited (no herd7 cat model for IA-64), not machine-run."
+}

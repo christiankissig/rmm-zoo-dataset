@@ -1,0 +1,8 @@
+{
+  "from": "SC",
+  "to": "Java",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "machine_run",
+  "note": "JMM guarantees SC for data-race-free programs but allows reordering for racy accesses."
+}

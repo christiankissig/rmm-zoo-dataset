@@ -1,0 +1,8 @@
+{
+  "from": "C11",
+  "to": "TSC",
+  "type": "incomparable",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "TSC is a general framework for the effects of speculative execution. Under unrestricted speculation the external DRF theorem fails (only internal DRF holds) and thin-air values appear; it studies speculation abstractly rather than refining C11, so the two are incomparable."
+}

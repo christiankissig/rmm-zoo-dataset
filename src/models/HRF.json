@@ -1,0 +1,16 @@
+{
+  "id": "HRF",
+  "name": "Heterogeneous-Race-Free (HRF)",
+  "abbrev": "HRF",
+  "year": 2014,
+  "authors": ["Hower", "Hechtman", "Beckmann", "Gaster", "Hill", "Reinhardt", "Wood"],
+  "description": "The foundational framework that introduced scoped synchronisation. It generalises data-race-free (DRF) to a scope hierarchy, distinguishing HRF-direct (scopes must match exactly) and HRF-indirect (transitive scope chains). Heterogeneous-race-free programs get an SC-like guarantee; using sub-global scopes admits behaviours flat DRF forbids. Most subsequent GPU models build on it.",
+  "references": ["Hower2014"],
+  "tags": ["theoretical", "gpu", "formal", "scoped"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Hower2014", "note": "HRF-direct and HRF-indirect are conditions on a single execution (scoped races, scoped happens-before), which herd's bell/cat scope support expresses; the paper gives them in prose and set notation."}
+}

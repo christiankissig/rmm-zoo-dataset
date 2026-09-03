@@ -1,0 +1,8 @@
+{
+  "from": "WebGPU",
+  "to": "Metal",
+  "type": "compilation",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "On Apple platforms WebGPU implementations lower WGSL to Metal."
+}

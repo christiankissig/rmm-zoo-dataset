@@ -1,0 +1,8 @@
+{
+  "from": "PRAM",
+  "to": "RYW",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Brzezinski et al. (2003) proved PRAM consistency holds iff a system provides read-your-writes, monotonic reads and monotonic writes (Viotti & Vukolić 2016, Eq. 20). PRAM is the conjunction of the three, so it implies read-your-writes while the converse fails: read-your-writes is strictly weaker than PRAM."
+}

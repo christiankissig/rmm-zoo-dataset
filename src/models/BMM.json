@@ -1,0 +1,16 @@
+{
+  "id": "BMM",
+  "name": "Buffered Memory Model",
+  "abbrev": "BMM",
+  "year": 2013,
+  "authors": ["Demange", "Laporte", "Zhao", "Jagannathan", "Pichardie", "Vitek"],
+  "description": "A pragmatic, TSO-style buffered memory model proposed as a candidate for Java, motivated by building a verified JVM in the spirit of CompCertTSO rather than fully replacing the JMM. Each thread has a store buffer, so the principal relaxation over SC is store→load reordering. The authors proved the external DRF theorem and the soundness of several program transformations, and modified an open-source JVM to preserve BMM at roughly 1% average overhead on x86.",
+  "references": ["Demange2013", "Moiseenko2021"],
+  "tags": ["language", "formal"],
+  "formalism": ["mechanistic"],
+  "hardware": [],
+  "languages": ["Java", "JVM"],
+  "properties": {"comp_x86": true, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": true, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "ile": true, "sli": true, "rm": false, "tp": true, "cse": false, "ti": false, "edrf": true, "coh": true, "no_ub": true, "in_order": true, "no_oota": true},
+  "propertyProvenance": "survey",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Demange2013", "note": "A TSO-style buffered abstract machine for Java; machines of this shape have equivalent per-execution axiomatic forms (as x86-TSO does with x86tso.cat), but none is published for BMM."}
+}

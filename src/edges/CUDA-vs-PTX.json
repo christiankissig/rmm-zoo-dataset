@@ -1,0 +1,8 @@
+{
+  "from": "CUDA",
+  "to": "PTX",
+  "type": "compilation",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "CUDA C++ atomics lower to PTX; the CUDA model is layered directly on the PTX memory model."
+}

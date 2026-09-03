@@ -1,0 +1,9 @@
+{
+  "from": "Wasm",
+  "to": "JSMM",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "cited",
+  "fragment_restricted": true,
+  "note": "Watt et al. 2019 §6.3 (Prop. 6.2): dropping Wasm's two strengthening conditions (†,‡) yields exactly the consistency behaviours of the (uncorrected) JavaScript model on shared array buffers. The paper proposes adding (†,‡) to JavaScript as a strict strengthening; TC39 adopted them, and the repaired model is this dataset's JSMM — so full Wasm and JSMM agree on the shared-memory data-access (SharedArrayBuffer) fragment (excluding traps, memory growth, and mixed-size beyond the shared subset)."
+}

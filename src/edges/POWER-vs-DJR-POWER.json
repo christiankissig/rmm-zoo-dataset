@@ -1,0 +1,9 @@
+{
+  "from": "POWER",
+  "to": "DJR-POWER",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "by_construction",
+  "fragment_restricted": true,
+  "note": "Dongol, Jagadeesan & Riely (POPL 2018) also instantiate their transactional framework at PPC (POWER); the added transactional axioms only constrain transactional events, so on programs with no transactions the POWER instance coincides with POWER by construction. fragment_restricted: the coincidence holds only on the non-transactional fragment."
+}

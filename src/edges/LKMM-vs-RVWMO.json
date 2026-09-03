@@ -1,0 +1,8 @@
+{
+  "from": "LKMM",
+  "to": "RVWMO",
+  "type": "compilation",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Linux kernel primitives compile correctly to RISC-V (RVWMO)."
+}

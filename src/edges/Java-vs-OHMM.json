@@ -1,0 +1,8 @@
+{
+  "from": "Java",
+  "to": "OHMM",
+  "type": "incomparable",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "OHMM is an operational attempt to repair the JMM — a global event buffer with a replay mechanism, tracking syntactic dependencies to forbid thin-air. It restructures the JMM's semantics rather than strictly refining it, so the two are incomparable."
+}

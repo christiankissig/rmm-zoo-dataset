@@ -1,0 +1,16 @@
+{
+  "id": "ArmVM",
+  "name": "Armv8-A Relaxed Virtual Memory",
+  "abbrev": "ArmVM",
+  "year": 2022,
+  "authors": ["Simner", "Armstrong", "Pichon-Pharabod", "Pulte", "Grisenthwaite", "Sewell"],
+  "description": "A Herd-style axiomatic concurrency model extending the base Armv8-A user model with virtual-memory and address-translation events (T translation-reads, TLBI, TE, ERET, MSR, DSB) and new relations (trf, tfr, iio, tob, obtlbi, ctxob, wco), in Strong and Weak variants, with soundness/metatheory proofs. For programs with stable, injectively-mapped address spaces it collapses exactly to the base Armv8-A user-mode concurrency model (Sec. 6); outside that fragment it admits additional executions arising from translation-table manipulation and TLB maintenance.",
+  "references": ["Simner2022"],
+  "tags": ["hardware", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": ["ARMv8", "AArch64"],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "in_order": false, "no_oota": true, "mca": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "specified", "basis": "cat-model", "ref": "Simner2022", "note": "Simner et al. give the virtual-memory model as a cat extension of the Armv8 model (translation-read, TLBI, DSB events), executable in Isla-axiomatic; herd7's aarch64.cat and aarch64bbm.cat carry the TLBI/break-before-make machinery."}
+}

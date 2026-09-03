@@ -1,0 +1,8 @@
+{
+  "from": "Causal",
+  "to": "WFR",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Brzezinski, Sobaniec & Wawrzyniak (PDP 2004) show that causal consistency requires all four session guarantees — read-your-writes, monotonic reads, monotonic writes and writes-follow-reads. Their data-centric models are the classical shared-memory taxonomy (atomic, sequential, causal, processor, PRAM, weak, release, scope, entry), so their causal consistency is causal memory, and this edge is correctly against the Causal node rather than CCv. Causal memory therefore implies writes-follow-reads while the converse fails — one session guarantee constrains far less than a per-site serialisation over the causal order — so writes-follow-reads is strictly weaker. Note this is an implication, not an equality: neither Brzezinski et al. nor Viotti & Vukolić state the converse here (see issue #11), and the earlier gloss 'causal = PRAM ∧ writes-follow-reads, Eq. 25' was wrong twice over — Eq. 25 is the definition of WritesFollowReads, not a theorem about causal consistency, and the sources assert only that causal consistency 'requires and includes them all'."
+}

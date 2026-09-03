@@ -1,0 +1,8 @@
+{
+  "from": "OD-LSO",
+  "to": "OD-Dep",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Ou & Demsky 2018, §1.3.2: preserving syntactic dependency (dependency ∪ reads-from acyclic) is explicitly 'a strictly weaker guarantee than the previous approach' of forbidding load-store reordering (sequence-before ∪ reads-from acyclic); dependency ⊆ sequence-before, so LSO-permitted executions are a subset of dependency-permitted ones."
+}

@@ -1,0 +1,824 @@
+{
+  "Kokologiannakis2023": {
+    "title": "Kater: Automating Weak Memory Model Metatheory and Consistency Checking",
+    "authors": ["Michalis Kokologiannakis", "Ori Lahav", "Viktor Vafeiadis"],
+    "venue": "Proc. ACM Program. Lang. 7 (POPL), Article 19",
+    "year": 2023,
+    "doi": "10.1145/3571212"
+  },
+  "Chong2018": {
+    "title": "The Semantics of Transactions and Weak Memory in x86, Power, ARM, and C++",
+    "authors": ["Nathan Chong", "Tyler Sorensen", "John Wickerson"],
+    "venue": "PLDI 2018",
+    "year": 2018,
+    "doi": "10.1145/3192366.3192373"
+  },
+  "Ou2018": {
+    "title": "Towards Understanding the Costs of Avoiding Out-of-Thin-Air Results",
+    "authors": ["Peizhao Ou", "Brian Demsky"],
+    "venue": "Proc. ACM Program. Lang. 2 (OOPSLA), Article 136",
+    "year": 2018,
+    "doi": "10.1145/3276506"
+  },
+  "BoehmDemsky2014": {
+    "title": "Outlawing Ghosts: Avoiding Out-of-Thin-Air Results",
+    "authors": ["Hans-J. Boehm", "Brian Demsky"],
+    "venue": "MSPC 2014 (Workshop on Memory Systems Performance and Correctness)",
+    "year": 2014,
+    "doi": "10.1145/2618128.2618134"
+  },
+  "Lamport1979": {
+    "title": "How to Make a Multiprocessor Computer That Correctly Executes Multiprocess Programs",
+    "authors": ["Leslie Lamport"],
+    "venue": "IEEE Transactions on Computers",
+    "year": 1979,
+    "doi": "10.1109/TC.1979.1675439"
+  },
+  "Boehm2008": {
+    "title": "Foundations of the C++ Concurrency Memory Model",
+    "authors": ["Hans-J. Boehm", "Sarita V. Adve"],
+    "venue": "PLDI 2008",
+    "year": 2008,
+    "doi": "10.1145/1375581.1375591"
+  },
+  "Batty2011": {
+    "title": "Mathematizing C++ Concurrency",
+    "authors": ["Mark Batty", "Scott Owens", "Susmit Sarkar", "Peter Sewell", "Tjark Weber"],
+    "venue": "POPL 2011",
+    "year": 2011,
+    "doi": "10.1145/1926385.1926394"
+  },
+  "ISO2011": {
+    "title": "ISO/IEC 14882:2011 — Programming Language C++",
+    "authors": ["ISO/IEC"],
+    "venue": "ISO Standard",
+    "year": 2011,
+    "url": "https://www.iso.org/standard/50372.html"
+  },
+  "ISO2020": {
+    "title": "ISO/IEC 14882:2020 — Programming Language C++",
+    "authors": ["ISO/IEC"],
+    "venue": "ISO Standard",
+    "year": 2020,
+    "url": "https://www.iso.org/standard/79358.html"
+  },
+  "ISO2017": {
+    "title": "ISO/IEC 14882:2017 — Programming Language C++",
+    "authors": ["ISO/IEC"],
+    "venue": "ISO Standard",
+    "year": 2017,
+    "url": "https://www.iso.org/standard/68564.html"
+  },
+  "Cooksey2025": {
+    "title": "C++ Memory Model and Forward Progress Testing (cpp_memory_model): per-version cat models for C++11/17/20 and RC11/RC17",
+    "authors": ["Cooksey", "Brito Gadeschi"],
+    "venue": "Open-source repository",
+    "year": 2025,
+    "url": "https://github.com/gonzalobg/cpp_memory_model"
+  },
+  "Boehm2018": {
+    "title": "P0668R5: Revising the C++ Memory Model",
+    "authors": ["Hans-J. Boehm", "Olivier Giroux", "Viktor Vafeiadis"],
+    "venue": "ISO/IEC JTC1/SC22/WG21",
+    "year": 2018,
+    "url": "https://wg21.link/p0668"
+  },
+  "Boehm2019": {
+    "title": "P0982R1: Weaken Release Sequences",
+    "authors": ["Hans-J. Boehm"],
+    "venue": "ISO/IEC JTC1/SC22/WG21",
+    "year": 2018,
+    "url": "https://wg21.link/p0982"
+  },
+  "Sewell2010": {
+    "title": "x86-TSO: A Rigorous and Usable Programmer's Model for x86 Multiprocessors",
+    "authors": ["Peter Sewell", "Susmit Sarkar", "Scott Owens", "Francesco Zappa Nardelli", "Magnus O. Myreen"],
+    "venue": "Communications of the ACM",
+    "year": 2010,
+    "doi": "10.1145/1785414.1785443"
+  },
+  "Owens2009": {
+    "title": "A Better x86 Memory Model: x86-TSO (Extended Version)",
+    "authors": ["Scott Owens", "Susmit Sarkar", "Peter Sewell"],
+    "venue": "TPHOLs 2009",
+    "year": 2009,
+    "doi": "10.1007/978-3-642-03359-9_24"
+  },
+  "SPARC1992": {
+    "title": "The SPARC Architecture Manual, Version 8",
+    "authors": ["SPARC International"],
+    "venue": "Prentice Hall",
+    "year": 1992,
+    "url": "https://sparc.org/technical-documents/"
+  },
+  "SPARC1994": {
+    "title": "The SPARC Architecture Manual, Version 9",
+    "authors": ["SPARC International"],
+    "venue": "Prentice Hall",
+    "year": 1994,
+    "url": "https://sparc.org/technical-documents/"
+  },
+  "Sites1992": {
+    "title": "Alpha Architecture Reference Manual",
+    "authors": ["Richard L. Sites"],
+    "venue": "Digital Press",
+    "year": 1992,
+    "doi": "10.5555/129616"
+  },
+  "LinuxMemBarriers": {
+    "title": "Linux Kernel Memory Barriers (Documentation/memory-barriers.txt)",
+    "authors": ["Paul E. McKenney", "David Howells"],
+    "venue": "Linux kernel documentation",
+    "year": 2021,
+    "url": "https://www.kernel.org/doc/Documentation/memory-barriers.txt"
+  },
+  "IntelItanium2002": {
+    "title": "Intel Itanium Architecture Software Developer's Manual, Volume 2: System Architecture (memory-ordering rules)",
+    "authors": ["Intel Corporation", "Hewlett-Packard"],
+    "venue": "Intel Corporation",
+    "year": 2002,
+    "url": "https://www.intel.com/content/www/us/en/products/docs/processors/itanium/itanium-architecture-software-developer-rev-2-3-manual.html"
+  },
+  "Yang2003": {
+    "title": "Analyzing the Intel Itanium Memory Ordering Rules Using Logic Programming and SAT",
+    "authors": ["Yue Yang", "Ganesh Gopalakrishnan", "Gary Lindstrom", "Konrad Slind"],
+    "venue": "CHARME 2003, LNCS 2860",
+    "year": 2003,
+    "doi": "10.1007/978-3-540-39724-3_9"
+  },
+  "Higham2007": {
+    "title": "What is Itanium Memory Consistency from the Programmer's Point of View?",
+    "authors": ["Lisa Higham", "LillAnne Jackson", "Jalal Kawash"],
+    "venue": "ENTCS 174(9) (TV@FLoC 2006)",
+    "year": 2007,
+    "doi": "10.1016/j.entcs.2007.04.007"
+  },
+  "Alglave2010": {
+    "title": "A Shared Memory Poetics",
+    "authors": ["Jade Alglave"],
+    "venue": "PhD Thesis, Université Paris 7",
+    "year": 2010,
+    "url": "https://www.cl.cam.ac.uk/~pes20/weakmemory/thesis.pdf"
+  },
+  "Sarkar2011": {
+    "title": "Understanding POWER Multiprocessors",
+    "authors": ["Susmit Sarkar", "Peter Sewell", "Jade Alglave", "Luc Maranget", "Derek Williams"],
+    "venue": "PLDI 2011",
+    "year": 2011,
+    "doi": "10.1145/1993498.1993520"
+  },
+  "Mador-Haim2012": {
+    "title": "An Axiomatic Memory Model for POWER Multiprocessors",
+    "authors": ["Sela Mador-Haim", "Luc Maranget", "Susmit Sarkar", "Kayvan Memarian", "Jade Alglave", "Scott Owens", "Rajeev Alur", "Milo Martin", "Peter Sewell", "Derek Williams"],
+    "venue": "CAV 2012",
+    "year": 2012,
+    "doi": "10.1007/978-3-642-31424-7_30"
+  },
+  "Alglave2014": {
+    "title": "Herding Cats: Modelling, Simulation, Testing, and Data Mining for Weak Memory",
+    "authors": ["Jade Alglave", "Luc Maranget", "Michael Tautschnig"],
+    "venue": "ACM TOPLAS",
+    "year": 2014,
+    "doi": "10.1145/2627752"
+  },
+  "Alglave2009": {
+    "title": "Semantics of Power and ARM Multiprocessor Machine Code",
+    "authors": ["Jade Alglave", "Anthony Fox", "Samin Ishtiaq", "Magnus O. Myreen", "Susmit Sarkar", "Peter Sewell", "Francesco Zappa Nardelli"],
+    "venue": "DAMP 2009",
+    "year": 2009,
+    "doi": "10.1145/1481839.1481842"
+  },
+  "Pulte2018": {
+    "title": "Simplifying ARM Concurrency: Multicopy-atomic Axiomatic and Operational Models for ARMv8",
+    "authors": ["Christopher Pulte", "Shaked Flur", "Will Deacon", "Jon French", "Susmit Sarkar", "Peter Sewell"],
+    "venue": "POPL 2018",
+    "year": 2018,
+    "doi": "10.1145/3158107"
+  },
+  "Simner2022": {
+    "title": "Relaxed virtual memory in Armv8-A",
+    "authors": ["Ben Simner", "Alasdair Armstrong", "Jean Pichon-Pharabod", "Christopher Pulte", "Richard Grisenthwaite", "Peter Sewell"],
+    "venue": "ESOP 2022",
+    "year": 2022,
+    "doi": "10.1007/978-3-030-99336-8_6"
+  },
+  "Simner2020": {
+    "title": "ARMv8-A System Semantics: Instruction Fetch in Relaxed Architectures",
+    "authors": ["Ben Simner", "Shaked Flur", "Christopher Pulte", "Alasdair Armstrong", "Jean Pichon-Pharabod", "Luc Maranget", "Peter Sewell"],
+    "venue": "ESOP 2020",
+    "year": 2020,
+    "doi": "10.1007/978-3-030-44914-8_23"
+  },
+  "Manson2005": {
+    "title": "The Java Memory Model",
+    "authors": ["Jeremy Manson", "William Pugh", "Sarita V. Adve"],
+    "venue": "POPL 2005",
+    "year": 2005,
+    "doi": "10.1145/1040305.1040336"
+  },
+  "JSR133": {
+    "title": "JSR-133: Java Memory Model and Thread Specification",
+    "authors": ["Doug Lea", "Jeremy Manson", "William Pugh"],
+    "venue": "Java Community Process",
+    "year": 2004,
+    "url": "https://www.cs.umd.edu/~pugh/java/memoryModel/"
+  },
+  "Lahav2017": {
+    "title": "Repairing Sequential Consistency in C/C++11",
+    "authors": ["Ori Lahav", "Viktor Vafeiadis", "Jeehoon Kang", "Chung-Kil Hur", "Derek Dreyer"],
+    "venue": "PLDI 2017",
+    "year": 2017,
+    "doi": "10.1145/3062341.3062352"
+  },
+  "Semenyuk2023": {
+    "title": "Verifying Read-Copy Update Under RC11",
+    "authors": ["Mikhail Semenyuk", "Mark Batty", "Brijesh Dongol"],
+    "venue": "SEFM 2023 (LNCS 14323)",
+    "year": 2023,
+    "doi": "10.1007/978-3-031-47115-5_17"
+  },
+  "Podkopaev2019": {
+    "title": "Bridging the Gap between Programming Languages and Hardware Weak Memory Models",
+    "authors": ["Anton Podkopaev", "Ori Lahav", "Viktor Vafeiadis"],
+    "venue": "POPL 2019",
+    "year": 2019,
+    "doi": "10.1145/3290382"
+  },
+  "Kang2017": {
+    "title": "A Promising Semantics for Relaxed-Memory Concurrency",
+    "authors": ["Jeehoon Kang", "Chung-Kil Hur", "Ori Lahav", "Viktor Vafeiadis", "Derek Dreyer"],
+    "venue": "POPL 2017",
+    "year": 2017,
+    "doi": "10.1145/3009837.3009850"
+  },
+  "Lee2020": {
+    "title": "Promising 2.0: Global Optimizations in Relaxed-Memory Concurrency",
+    "authors": ["Sung-Hwan Lee", "Minki Cho", "Anton Podkopaev", "Soham Chakraborty", "Chung-Kil Hur", "Ori Lahav", "Viktor Vafeiadis"],
+    "venue": "PLDI 2020",
+    "year": 2020,
+    "doi": "10.1145/3385412.3386000"
+  },
+  "Paviotti2020": {
+    "title": "Modular Relaxed Dependencies in Weak Memory Concurrency",
+    "authors": ["Marco Paviotti", "Simon Cooksey", "Anouk Paradis", "Daniel Wright", "Scott Owens", "Mark Batty"],
+    "venue": "ESOP 2020",
+    "year": 2020,
+    "doi": "10.1007/978-3-030-44914-8_22"
+  },
+  "Richards2025": {
+    "title": "Symbolic MRD: Dynamic Memory, Undefined Behaviour, and Extrinsic Choice",
+    "authors": ["Jay Richards", "Daniel Wright", "Simon Cooksey", "Mark Batty"],
+    "venue": "OOPSLA 2025 (PACMPL vol. 9)",
+    "year": 2025,
+    "doi": "10.1145/3721089"
+  },
+  "Dolan2018": {
+    "title": "Bounding Data Races in Space and Time",
+    "authors": ["Stephen Dolan", "KC Sivaramakrishnan", "Anil Madhavapeddy"],
+    "venue": "PLDI 2018",
+    "year": 2018,
+    "doi": "10.1145/3192366.3192421"
+  },
+  "Morisset2019": {
+    "title": "The OCaml Memory Model",
+    "authors": ["Robin Morisset"],
+    "venue": "Unpublished manuscript / SIGPLAN blog",
+    "year": 2019,
+    "url": "https://kcsrk.info/papers/memory_model_ocaml19.pdf"
+  },
+  "RISCV2019": {
+    "title": "The RISC-V Instruction Set Manual, Volume I: Unprivileged ISA — Chapter on Memory Model (RVWMO)",
+    "authors": ["Andrew Waterman", "Yunsup Lee", "Krste Asanovic", "David Patterson"],
+    "venue": "RISC-V Foundation",
+    "year": 2019,
+    "url": "https://riscv.org/technical/specifications/"
+  },
+  "Pulte2019": {
+    "title": "Promising-ARM/RISC-V: A Simpler and Faster Operational Concurrency Model",
+    "authors": ["Christopher Pulte", "Jean Pichon-Pharabod", "Jeehoon Kang", "Sung-Hwan Lee", "Chung-Kil Hur"],
+    "venue": "PLDI 2019",
+    "year": 2019,
+    "doi": "10.1145/3314221.3314624"
+  },
+  "Alglave2018": {
+    "title": "Frightening Small Children and Disconcerting Grown-ups: Concurrency in the Linux Kernel",
+    "authors": ["Jade Alglave", "Luc Maranget", "Paul E. McKenney", "Andrea Parri", "Alan Stern"],
+    "venue": "ASPLOS 2018",
+    "year": 2018,
+    "doi": "10.1145/3173162.3177156"
+  },
+  "Adve1990": {
+    "title": "Weak Ordering — A New Definition",
+    "authors": ["Sarita V. Adve", "Mark D. Hill"],
+    "venue": "ISCA 1990",
+    "year": 1990,
+    "doi": "10.1145/325164.325100"
+  },
+  "Lustig2019": {
+    "title": "A Formal Analysis of the NVIDIA PTX Memory Consistency Model",
+    "authors": ["Daniel Lustig", "Sameer Sahasrabuddhe", "Olivier Giroux"],
+    "venue": "ASPLOS 2019",
+    "year": 2019,
+    "doi": "10.1145/3297858.3304043"
+  },
+  "TileIR2026": {
+    "title": "Tile IR Memory Model (CUDA Tile IR documentation, §7)",
+    "authors": ["NVIDIA"],
+    "venue": "NVIDIA CUDA Toolkit Documentation (CUDA 13.1)",
+    "year": 2026,
+    "url": "https://docs.nvidia.com/cuda/tile-ir/latest/sections/memory_model.html"
+  },
+  "Batty2016": {
+    "title": "Overhauling SC Atomics in C11 and OpenCL",
+    "authors": ["Mark Batty", "Alastair F. Donaldson", "John Wickerson"],
+    "venue": "POPL 2016",
+    "year": 2016,
+    "doi": "10.1145/2837614.2837637"
+  },
+  "Hower2014": {
+    "title": "Heterogeneous-Race-Free Memory Models",
+    "authors": ["Derek R. Hower", "Blake A. Hechtman", "Bradford M. Beckmann", "Benedict R. Gaster", "Mark D. Hill", "Steven K. Reinhardt", "David A. Wood"],
+    "venue": "ASPLOS 2014",
+    "year": 2014,
+    "doi": "10.1145/2541940.2541981"
+  },
+  "Gaster2015": {
+    "title": "HRF-Relaxed: Adapting HRF to the Complexities of Industrial Heterogeneous Memory Models",
+    "authors": ["Benedict R. Gaster", "Derek Hower", "Lee Howes"],
+    "venue": "ACM TACO",
+    "year": 2015,
+    "doi": "10.1145/2701618"
+  },
+  "Alglave2015": {
+    "title": "GPU Concurrency: Weak Behaviours and Programming Assumptions",
+    "authors": ["Jade Alglave", "Mark Batty", "Alastair F. Donaldson", "Ganesh Gopalakrishnan", "Jeroen Ketema", "Daniel Poetzl", "Tyler Sorensen", "John Wickerson"],
+    "venue": "ASPLOS 2015",
+    "year": 2015,
+    "doi": "10.1145/2694344.2694391"
+  },
+  "VulkanMM": {
+    "title": "Vulkan Memory Model (Vulkan Specification — Memory Model chapter)",
+    "authors": ["Khronos Group"],
+    "venue": "Khronos Vulkan Registry",
+    "year": 2018,
+    "url": "https://docs.vulkan.org/spec/latest/chapters/memorymodel.html"
+  },
+  "WGSL": {
+    "title": "WebGPU Shading Language (WGSL) Specification — Memory Model",
+    "authors": ["W3C GPU for the Web Working Group"],
+    "venue": "W3C",
+    "year": 2023,
+    "url": "https://www.w3.org/TR/WGSL/"
+  },
+  "MetalSpec": {
+    "title": "Metal Shading Language Specification",
+    "authors": ["Apple Inc."],
+    "venue": "Apple Developer Documentation",
+    "year": 2023,
+    "url": "https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf"
+  },
+  "Marino2011": {
+    "title": "A Case for an SC-Preserving Compiler",
+    "authors": ["Daniel Marino", "Abhayendra Singh", "Todd Millstein", "Madanlal Musuvathi", "Satish Narayanasamy"],
+    "venue": "PLDI 2011",
+    "year": 2011,
+    "doi": "10.1145/1993316.1993522"
+  },
+  "Singh2012": {
+    "title": "End-to-End Sequential Consistency",
+    "authors": ["Abhayendra Singh", "Satish Narayanasamy", "Daniel Marino", "Todd Millstein", "Madanlal Musuvathi"],
+    "venue": "ISCA 2012",
+    "year": 2012,
+    "doi": "10.1109/ISCA.2012.6237045"
+  },
+  "Liu2017": {
+    "title": "A Volatile-by-Default JVM for Server Applications",
+    "authors": ["Lun Liu", "Todd Millstein", "Madanlal Musuvathi"],
+    "venue": "OOPSLA 2017 (PACMPL vol. 1)",
+    "year": 2017,
+    "doi": "10.1145/3133873"
+  },
+  "Liu2019": {
+    "title": "Accelerating Sequential Consistency for Java with Speculative Compilation",
+    "authors": ["Lun Liu", "Todd Millstein", "Madanlal Musuvathi"],
+    "venue": "PLDI 2019",
+    "year": 2019,
+    "doi": "10.1145/3314221.3314611"
+  },
+  "Vollmer2017": {
+    "title": "SC-Haskell: Sequential Consistency in Languages That Minimize Mutable Shared Heap",
+    "authors": ["Michael Vollmer", "Ryan G. Scott", "Madanlal Musuvathi", "Ryan R. Newton"],
+    "venue": "PPoPP 2017",
+    "year": 2017,
+    "doi": "10.1145/3018743.3018746"
+  },
+  "Choi2011": {
+    "title": "DeNovo: Rethinking the Memory Hierarchy for Disciplined Parallelism",
+    "authors": ["Byn Choi", "Rakesh Komuravelli", "Hyojin Sung", "Robert Smolinski", "Nima Honarmand", "Sarita V. Adve", "Vikram S. Adve", "Nicholas P. Carter", "Ching-Tsun Chou"],
+    "venue": "PACT 2011",
+    "year": 2011,
+    "doi": "10.1109/PACT.2011.21"
+  },
+  "Sung2013": {
+    "title": "DeNovoND: Efficient Hardware Support for Disciplined Non-Determinism",
+    "authors": ["Hyojin Sung", "Rakesh Komuravelli", "Sarita V. Adve"],
+    "venue": "ASPLOS 2013",
+    "year": 2013,
+    "doi": "10.1145/2451116.2451119"
+  },
+  "Sung2015": {
+    "title": "DeNovoSync: Efficient Support for Arbitrary Synchronization without Writer-Initiated Invalidations",
+    "authors": ["Hyojin Sung", "Sarita V. Adve"],
+    "venue": "ASPLOS 2015",
+    "year": 2015,
+    "doi": "10.1145/2775054.2694356"
+  },
+  "Alsop2018": {
+    "title": "Spandex: A Flexible Interface for Efficient Heterogeneous Coherence",
+    "authors": ["Johnathan Alsop", "Matthew D. Sinclair", "Sarita V. Adve"],
+    "venue": "ISCA 2018",
+    "year": 2018,
+    "doi": "10.1109/ISCA.2018.00031"
+  },
+  "Marino2010": {
+    "title": "DRFx: A Simple and Efficient Memory Model for Concurrent Programming Languages",
+    "authors": ["Daniel Marino", "Abhayendra Singh", "Todd Millstein", "Madanlal Musuvathi", "Satish Narayanasamy"],
+    "venue": "PLDI 2010",
+    "year": 2010,
+    "doi": "10.1145/1806596.1806636"
+  },
+  "Marino2016": {
+    "title": "DRFx: An Understandable, High Performance, and Flexible Memory Model for Concurrent Languages",
+    "authors": ["Daniel Marino", "Abhayendra Singh", "Todd Millstein", "Madanlal Musuvathi", "Satish Narayanasamy"],
+    "venue": "ACM Transactions on Programming Languages and Systems (TOPLAS)",
+    "year": 2016,
+    "doi": "10.1145/2925988"
+  },
+  "Demange2013": {
+    "title": "Plan B: A Buffered Memory Model for Java",
+    "authors": ["Delphine Demange", "Vincent Laporte", "Lei Zhao", "Suresh Jagannathan", "David Pichardie", "Jan Vitek"],
+    "venue": "POPL 2013",
+    "year": 2013,
+    "doi": "10.1145/2429069.2429110"
+  },
+  "Sevcik2013": {
+    "title": "CompCertTSO: A Verified Compiler for Relaxed-Memory Concurrency",
+    "authors": ["Jaroslav Ševčík", "Viktor Vafeiadis", "Francesco Zappa Nardelli", "Suresh Jagannathan", "Peter Sewell"],
+    "venue": "Journal of the ACM 60(3), Article 22",
+    "year": 2013,
+    "doi": "10.1145/2487241.2487248"
+  },
+  "Sevcik2011": {
+    "title": "Relaxed-Memory Concurrency and Verified Compilation",
+    "authors": ["Jaroslav Ševčík", "Viktor Vafeiadis", "Francesco Zappa Nardelli", "Suresh Jagannathan", "Peter Sewell"],
+    "venue": "POPL 2011",
+    "year": 2011,
+    "doi": "10.1145/1926385.1926393"
+  },
+  "Boudol2009": {
+    "title": "Relaxed Memory Models: An Operational Approach",
+    "authors": ["Gérard Boudol", "Gustavo Petri"],
+    "venue": "POPL 2009",
+    "year": 2009,
+    "doi": "10.1145/1480881.1480930"
+  },
+  "Doherty2019": {
+    "title": "Verifying C11 Programs Operationally",
+    "authors": ["Simon Doherty", "Brijesh Dongol", "Heike Wehrheim", "John Derrick"],
+    "venue": "PPoPP 2019",
+    "year": 2019,
+    "doi": "10.1145/3293883.3295702"
+  },
+  "Dang2019": {
+    "title": "RustBelt Meets Relaxed Memory",
+    "authors": ["Hoang-Hai Dang", "Jacques-Henri Jourdan", "Jan-Oliver Kaiser", "Derek Dreyer"],
+    "venue": "POPL 2020 (PACMPL vol. 4)",
+    "year": 2019,
+    "doi": "10.1145/3371102"
+  },
+  "Dodds2018": {
+    "title": "Compositional Verification of Compiler Optimisations on Relaxed Memory",
+    "authors": ["Mike Dodds", "Mark Batty", "Alexey Gotsman"],
+    "venue": "ESOP 2018",
+    "year": 2018,
+    "doi": "10.1007/978-3-319-89884-1_36"
+  },
+  "Bender2019": {
+    "title": "A Formalization of Java's Concurrent Access Modes",
+    "authors": ["John Bender", "Jens Palsberg"],
+    "venue": "OOPSLA 2019 (PACMPL vol. 3)",
+    "year": 2019,
+    "doi": "10.1145/3360568"
+  },
+  "Zhang2016": {
+    "title": "An Operational Happens-Before Memory Model",
+    "authors": ["Yang Zhang", "Xinyu Feng"],
+    "venue": "Frontiers of Computer Science",
+    "year": 2016,
+    "doi": "10.1007/s11704-015-4492-4"
+  },
+  "Chakraborty2019": {
+    "title": "Grounding Thin-Air Reads with Event Structures",
+    "authors": ["Soham Chakraborty", "Viktor Vafeiadis"],
+    "venue": "POPL 2019 (PACMPL vol. 3)",
+    "year": 2019,
+    "doi": "10.1145/3290383"
+  },
+  "Chakraborty2017": {
+    "title": "Formalizing the Concurrency Semantics of an LLVM Fragment",
+    "authors": ["Soham Chakraborty", "Viktor Vafeiadis"],
+    "venue": "CGO 2017",
+    "year": 2017,
+    "doi": "10.1109/CGO.2017.7863732"
+  },
+  "Jagadeesan2020": {
+    "title": "Pomsets with Preconditions: A Simple Model of Relaxed Memory",
+    "authors": ["Radha Jagadeesan", "Alan Jeffrey", "James Riely"],
+    "venue": "Proc. ACM Program. Lang. 4(OOPSLA), Article 194",
+    "year": 2020,
+    "doi": "10.1145/3428262"
+  },
+  "PichonPharabod2016": {
+    "title": "A Concurrency Semantics for Relaxed Atomics that Permits Optimisation and Avoids Thin-Air Executions",
+    "authors": ["Jean Pichon-Pharabod", "Peter Sewell"],
+    "venue": "POPL 2016",
+    "year": 2016,
+    "doi": "10.1145/2837614.2837616"
+  },
+  "Jeffrey2022": {
+    "title": "The Leaky Semicolon: Compositional Semantic Dependencies for Relaxed-Memory Concurrency",
+    "authors": ["Alan Jeffrey", "James Riely", "Mark Batty", "Simon Cooksey", "Ilya Kaysin", "Anton Podkopaev"],
+    "venue": "Proc. ACM Program. Lang. 6(POPL), Article 54",
+    "year": 2022,
+    "doi": "10.1145/3498716"
+  },
+  "Jeffrey2016": {
+    "title": "On Thin Air Reads: Towards an Event Structures Model of Relaxed Memory",
+    "authors": ["Alan Jeffrey", "James Riely"],
+    "venue": "LICS 2016",
+    "year": 2016,
+    "doi": "10.1145/2933575.2934536"
+  },
+  "Jagadeesan2010": {
+    "title": "Generative Operational Semantics for Relaxed Memory Models",
+    "authors": ["Radha Jagadeesan", "Corin Pitcher", "James Riely"],
+    "venue": "ESOP 2010",
+    "year": 2010,
+    "doi": "10.1007/978-3-642-11957-6_17"
+  },
+  "Watt2019": {
+    "title": "Weakening WebAssembly",
+    "authors": ["Conrad Watt", "Andreas Rossberg", "Jean Pichon-Pharabod"],
+    "venue": "PACMPL 3(OOPSLA), Article 133 (SPLASH/OOPSLA 2019); corrigendum Dec 2020",
+    "year": 2019,
+    "doi": "10.1145/3360559"
+  },
+  "Watt2020": {
+    "title": "Repairing and Mechanising the JavaScript Relaxed Memory Model",
+    "authors": ["Conrad Watt", "Christopher Pulte", "Anton Podkopaev", "Guillaume Barbier", "Stephen Dolan", "Shaked Flur", "Jean Pichon-Pharabod", "Shu-yu Guo"],
+    "venue": "PLDI 2020",
+    "year": 2020,
+    "doi": "10.1145/3385412.3385973"
+  },
+  "Crary2015": {
+    "title": "A Calculus for Relaxed Memory",
+    "authors": ["Karl Crary", "Michael J. Sullivan"],
+    "venue": "POPL 2015",
+    "year": 2015,
+    "doi": "10.1145/2676726.2676984"
+  },
+  "Saraswat2007": {
+    "title": "A Theory of Memory Models",
+    "authors": ["Vijay A. Saraswat", "Radha Jagadeesan", "Maged Michael", "Christoph von Praun"],
+    "venue": "PPoPP 2007",
+    "year": 2007,
+    "doi": "10.1145/1229428.1229469"
+  },
+  "Boudol2010": {
+    "title": "A Theory of Speculative Computation",
+    "authors": ["Gérard Boudol", "Gustavo Petri"],
+    "venue": "ESOP 2010",
+    "year": 2010,
+    "doi": "10.1007/978-3-642-11957-6_10"
+  },
+  "Batty2015": {
+    "title": "The Problem of Programming Language Concurrency Semantics",
+    "authors": ["Mark Batty", "Kayvan Memarian", "Kyndylan Nienhuis", "Jean Pichon-Pharabod", "Peter Sewell"],
+    "venue": "ESOP 2015",
+    "year": 2015,
+    "doi": "10.1007/978-3-662-46669-8_12"
+  },
+  "Moiseenko2021": {
+    "title": "A Survey of Programming Language Memory Models",
+    "authors": ["Evgenii Moiseenko", "Anton Podkopaev", "Dmitrii Koznov"],
+    "venue": "Programming and Computer Software 47(6), pp. 439–456",
+    "year": 2021,
+    "doi": "10.1134/S0361768821060050"
+  },
+  "SteinkeNutt2004": {
+    "title": "A Unified Theory of Shared Memory Consistency",
+    "authors": ["Robert C. Steinke", "Gary J. Nutt"],
+    "venue": "Journal of the ACM 51(5)",
+    "year": 2004,
+    "url": "https://arxiv.org/abs/cs/0208027"
+  },
+  "Goodman1989": {
+    "title": "Cache Consistency and Sequential Consistency",
+    "authors": ["James R. Goodman"],
+    "venue": "Technical Report 61, IEEE Scalable Coherent Interface Working Group / University of Wisconsin-Madison",
+    "year": 1989
+  },
+  "LiptonSandberg1988": {
+    "title": "PRAM: A Scalable Shared Memory",
+    "authors": ["Richard J. Lipton", "Jonathan S. Sandberg"],
+    "venue": "Technical Report CS-TR-180-88, Princeton University",
+    "year": 1988
+  },
+  "Ahamad1995": {
+    "title": "Causal Memory: Definitions, Implementation, and Programming",
+    "authors": ["Mustaque Ahamad", "Gil Neiger", "James E. Burns", "Prince Kohli", "Phillip W. Hutto"],
+    "venue": "Distributed Computing 9(1)",
+    "year": 1995,
+    "doi": "10.1007/BF01784241"
+  },
+  "HuttoAhamad1990": {
+    "title": "Slow Memory: Weakening Consistency to Enhance Concurrency in Distributed Shared Memories",
+    "authors": ["Phillip W. Hutto", "Mustaque Ahamad"],
+    "venue": "Proc. 10th International Conference on Distributed Computing Systems (ICDCS)",
+    "year": 1990
+  },
+  "BatallerBernabeu1997": {
+    "title": "Synchronized DSM Models",
+    "authors": ["Jordi Bataller", "José M. Bernabéu-Aubán"],
+    "venue": "Proc. Euro-Par",
+    "year": 1997
+  },
+  "Lahav2016": {
+    "title": "Taming Release-Acquire Consistency",
+    "authors": ["Ori Lahav", "Nick Giannarakis", "Viktor Vafeiadis"],
+    "venue": "POPL 2016",
+    "year": 2016,
+    "doi": "10.1145/2837614.2837643"
+  },
+  "LahavBoker2020": {
+    "title": "Decidable Verification under a Causally Consistent Shared Memory",
+    "authors": ["Ori Lahav", "Udi Boker"],
+    "venue": "PLDI 2020",
+    "year": 2020,
+    "doi": "10.1145/3385412.3385966"
+  },
+  "LahavBoker2022": {
+    "title": "What's Decidable about Causally Consistent Shared Memory?",
+    "authors": ["Ori Lahav", "Udi Boker"],
+    "venue": "ACM Trans. Program. Lang. Syst. 44(2), Article 8",
+    "year": 2022,
+    "doi": "10.1145/3505273"
+  },
+  "Bouajjani2017": {
+    "title": "On Verifying Causal Consistency",
+    "authors": ["Ahmed Bouajjani", "Constantin Enea", "Rachid Guerraoui", "Jad Hamza"],
+    "venue": "POPL 2017",
+    "year": 2017,
+    "doi": "10.1145/3009837.3009888"
+  },
+  "Perrin2016": {
+    "title": "Causal Consistency: Beyond Memory",
+    "authors": ["Matthieu Perrin", "Achour Mostéfaoui", "Claude Jard"],
+    "venue": "PPoPP 2016",
+    "year": 2016,
+    "doi": "10.1145/2851141.2851170"
+  },
+  "BurckhardtGotsmanYang2013": {
+    "title": "Understanding Eventual Consistency",
+    "authors": ["Sebastian Burckhardt", "Alexey Gotsman", "Hongseok Yang"],
+    "venue": "Microsoft Research Technical Report MSR-TR-2013-39",
+    "year": 2013,
+    "url": "https://www.microsoft.com/en-us/research/publication/understanding-eventual-consistency/"
+  },
+  "BurckhardtRDT2014": {
+    "title": "Replicated Data Types: Specification, Verification, Optimality",
+    "authors": ["Sebastian Burckhardt", "Alexey Gotsman", "Hongseok Yang", "Marek Zawirski"],
+    "venue": "POPL 2014",
+    "year": 2014,
+    "doi": "10.1145/2535838.2535848"
+  },
+  "ViottiVukolic2016": {
+    "title": "Consistency in Non-Transactional Distributed Storage Systems",
+    "authors": ["Paolo Viotti", "Marko Vukolić"],
+    "venue": "ACM Computing Surveys 49(1)",
+    "year": 2016,
+    "doi": "10.1145/2926965"
+  },
+  "TerryDS1994": {
+    "title": "Session Guarantees for Weakly Consistent Replicated Data",
+    "authors": ["Douglas B. Terry", "Alan J. Demers", "Karin Petersen", "Mike Spreitzer", "Marvin Theimer", "Brent B. Welch"],
+    "venue": "Parallel and Distributed Information Systems (PDIS)",
+    "year": 1994,
+    "doi": "10.1109/PDIS.1994.331722"
+  },
+  "LloydCOPS2011": {
+    "title": "Don't Settle for Eventual: Scalable Causal Consistency for Wide-Area Storage with COPS",
+    "authors": ["Wyatt Lloyd", "Michael J. Freedman", "Michael Kaminsky", "David G. Andersen"],
+    "venue": "SOSP 2011",
+    "year": 2011,
+    "doi": "10.1145/2043556.2043593"
+  },
+  "Brzezinski2003": {
+    "title": "Session Guarantees to Achieve PRAM Consistency of Replicated Shared Objects",
+    "authors": ["Jerzy Brzezinski", "Cezary Sobaniec", "Dariusz Wawrzyniak"],
+    "venue": "Parallel Processing and Applied Mathematics (PPAM), LNCS 3019",
+    "year": 2003,
+    "doi": "10.1007/978-3-540-24669-5_1"
+  },
+  "Brzezinski2004": {
+    "title": "From Session Causality to Causal Consistency",
+    "authors": ["Jerzy Brzezinski", "Cezary Sobaniec", "Dariusz Wawrzyniak"],
+    "venue": "Euromicro Workshop on Parallel, Distributed and Network-Based Processing (PDP)",
+    "year": 2004,
+    "doi": "10.1109/EMPDP.2004.1271440"
+  },
+  "Mahajan2011": {
+    "title": "Consistency, Availability, and Convergence",
+    "authors": ["Prince Mahajan", "Lorenzo Alvisi", "Mike Dahlin"],
+    "venue": "University of Texas at Austin, Technical Report TR-11-22",
+    "year": 2011,
+    "url": "https://www.cs.utexas.edu/users/dahlin/papers/cac-tr-2011-updated.pdf"
+  },
+  "Raad2018": {
+    "title": "Persistence Semantics for Weak Memory: Integrating Epoch Persistency with the TSO Memory Model",
+    "authors": ["Azalea Raad", "Viktor Vafeiadis"],
+    "venue": "PACMPL 2(OOPSLA), Article 137",
+    "year": 2018,
+    "doi": "10.1145/3276507"
+  },
+  "Raad2019": {
+    "title": "Weak Persistency Semantics from the Ground Up: Formalising the Persistency Semantics of ARMv8 and Transactional Models",
+    "authors": ["Azalea Raad", "John Wickerson", "Viktor Vafeiadis"],
+    "venue": "PACMPL 3(OOPSLA), Article 135",
+    "year": 2019,
+    "doi": "10.1145/3360561"
+  },
+  "Raad2020": {
+    "title": "Persistency Semantics of the Intel-x86 Architecture",
+    "authors": ["Azalea Raad", "John Wickerson", "Gil Neiger", "Viktor Vafeiadis"],
+    "venue": "PACMPL 4(POPL), Article 11",
+    "year": 2020,
+    "doi": "10.1145/3371079"
+  },
+  "KhyzhaLahav2021": {
+    "title": "Taming x86-TSO Persistency",
+    "authors": ["Artem Khyzha", "Ori Lahav"],
+    "venue": "PACMPL 5(POPL), Article 47",
+    "year": 2021,
+    "doi": "10.1145/3434328"
+  },
+  "Cho2021": {
+    "title": "Revamping Hardware Persistency Models: View-Based and Axiomatic Persistency Models for Intel-x86 and Armv8",
+    "authors": ["Kyeongmin Cho", "Sung-Hwan Lee", "Azalea Raad", "Jeehoon Kang"],
+    "venue": "PLDI 2021",
+    "year": 2021,
+    "doi": "10.1145/3453483.3454027"
+  },
+  "Raad2022": {
+    "title": "Extending Intel-x86 Consistency and Persistency: Formalising the Semantics of Intel-x86 Memory Types and Non-temporal Stores",
+    "authors": ["Azalea Raad", "Luc Maranget", "Viktor Vafeiadis"],
+    "venue": "PACMPL 6(POPL), Article 22",
+    "year": 2022,
+    "doi": "10.1145/3498683"
+  },
+  "Dongol2018": {
+    "title": "Transactions in Relaxed Memory Architectures",
+    "authors": ["Brijesh Dongol", "Radha Jagadeesan", "James Riely"],
+    "venue": "PACMPL 2(POPL), Article 18",
+    "year": 2018,
+    "doi": "10.1145/3158106"
+  },
+  "RaadPSI2018": {
+    "title": "On Parallel Snapshot Isolation and Release/Acquire Consistency",
+    "authors": ["Azalea Raad", "Ori Lahav", "Viktor Vafeiadis"],
+    "venue": "ESOP 2018",
+    "year": 2018,
+    "doi": "10.1007/978-3-319-89884-1_33"
+  },
+  "RaadSI2019": {
+    "title": "On the Semantics of Snapshot Isolation",
+    "authors": ["Azalea Raad", "Ori Lahav", "Viktor Vafeiadis"],
+    "venue": "VMCAI 2019",
+    "year": 2019,
+    "doi": "10.1007/978-3-030-11245-5_1"
+  },
+  "AdveGharachorloo1996": {
+    "title": "Shared Memory Consistency Models: A Tutorial",
+    "authors": ["Sarita V. Adve", "Kourosh Gharachorloo"],
+    "venue": "IEEE Computer 29(12)",
+    "year": 1996,
+    "doi": "10.1109/2.546611"
+  },
+  "PoetzlKroening2015": {
+    "title": "Formalizing and Checking Thread Refinement for Data-Race-Free Execution Models",
+    "authors": ["Daniel Poetzl", "Daniel Kroening"],
+    "venue": "arXiv:1510.07171",
+    "year": 2015,
+    "url": "https://arxiv.org/abs/1510.07171"
+  }
+}

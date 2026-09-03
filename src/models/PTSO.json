@@ -1,0 +1,16 @@
+{
+  "id": "PTSO",
+  "name": "Persistent TSO (PTSO)",
+  "abbrev": "PTSO",
+  "year": 2018,
+  "authors": ["Raad", "Vafeiadis"],
+  "description": "Persistent-memory model layering buffered epoch persistency on top of the TSO / x86-TSO consistency model. It adds an orthogonal persist-order axiom (what survives a crash on non-volatile memory) rather than reordering reads/writes: the crash-free behaviour coincides with TSO, while persistency governs the order in which store-buffered writes reach NVM. Given both operationally and declaratively.",
+  "references": ["Raad2018"],
+  "tags": ["hardware", "formal"],
+  "formalism": ["axiomatic", "operational"],
+  "hardware": ["x86", "SPARC-TSO"],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Raad2018", "note": "A declarative epoch-persistency axiom layered on TSO — per-execution, but persist and crash events are outside herd7's event vocabulary, so no cat model exists."}
+}

@@ -4,6 +4,11 @@
 Turns the manual audit into an automatic gate. Run via `make check` (and as a
 dependency of `make build`/`make deploy`). Exits non-zero on any violation.
 
+models.json is the compiled dataset, not the source: it is assembled from the
+per-model and per-edge files under src/ by tools/gen-models.py, which owns the
+structural checks (fields, file names, unknown keys) and which `make check` runs
+in --check mode first, so what is checked here is what the sources compile to.
+
 What it guarantees, so the dataset cannot silently drift from its claims:
 
   STRUCTURE (models.json)

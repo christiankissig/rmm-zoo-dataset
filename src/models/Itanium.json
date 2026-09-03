@@ -1,0 +1,16 @@
+{
+  "id": "Itanium",
+  "name": "Intel Itanium (IA-64) Memory Ordering",
+  "abbrev": "Itanium",
+  "year": 2002,
+  "authors": ["Intel", "HP"],
+  "description": "The memory-ordering model of the Intel Itanium (IA-64) architecture. Ordinary loads and stores are 'unordered' and may be reordered in all four directions; ordering is imposed explicitly by acquire loads (ld.acq), release stores (st.rel) and the memory fence (mf) — a ld.acq is ordered before every following memory operation and a st.rel after every preceding one. This ISA-level acquire/release design is closer in spirit to ARMv8's LDAR/STLR than to a bare relaxed-plus-barrier model like POWER/ARMv7. Cache coherence (a per-location total order on writes) is guaranteed. Two independent academic formalizations exist: Yang et al. (CHARME 2003), a logic-programming/SAT axiomatization of the ordering rules, and Higham, Jackson & Kawash (2007), a programmer-centric 'views' characterization which finds the vendor specification not fully tight (the model lies between two closely related definitions). Neither formalization nor the vendor manual states a machine-checked containment or incomparability against another model in this dataset, so no strength edge is drawn.",
+  "references": ["IntelItanium2002", "Yang2003", "Higham2007"],
+  "tags": ["hardware", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": ["IA-64", "Itanium"],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Yang2003", "note": "Axiomatic and per-execution (Yang et al.'s first-order Nemos formalisation): the per-processor visibility orders are exactly what cat's 'with S from linearisations(...)' enumerates. No cat model has been published."}
+}

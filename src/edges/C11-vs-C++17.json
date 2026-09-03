@@ -1,0 +1,8 @@
+{
+  "from": "C11",
+  "to": "C++17",
+  "type": "strictly_weaker",
+  "provenance": "litmus",
+  "evidence": "machine_run",
+  "note": "C++17 narrows release sequences relative to C++11/14: only RMWs continue a release sequence, no longer later same-thread relaxed stores. That removes happens-before edges, so C++17 admits a non-synchronising message-passing outcome C++11 forbids and forbids nothing C++11 allows (the narrowing is monotone by construction). Mechanised: the all-atomic mp-rs-st-eadd-atomics is Never under cpp11.cat (C++11) and Sometimes under cpp17.cat (C++17). Models vendored from gonzalobg/cpp_memory_model; see litmus/strictly-weaker/C11-vs-C++17."
+}

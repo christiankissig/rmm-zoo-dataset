@@ -1,0 +1,8 @@
+{
+  "from": "SC",
+  "to": "TSO",
+  "type": "strictly_weaker",
+  "provenance": "kater",
+  "evidence": "machine_run",
+  "note": "TSO allows store-load reordering; SC does not. Containment is machine-checked: kater decides tso ⊆ sc⁺ over kater's sc.kat and tso.kat, so every SC-consistent execution is TSO-consistent — unbounded, not up to a bound (litmus/kater/queries/strictly-weaker-SC-vs-TSO.kat). Strictness is the SB witness in litmus/strictly-weaker/SC-vs-TSO/."
+}

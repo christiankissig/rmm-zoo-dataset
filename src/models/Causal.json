@@ -1,0 +1,16 @@
+{
+  "id": "Causal",
+  "name": "Causal Consistency",
+  "abbrev": "Causal",
+  "year": 1995,
+  "authors": ["Ahamad", "Neiger", "Burns", "Kohli", "Hutto"],
+  "description": "Causal memory (CM): for each process, its own operations plus all writes known to it appear to that process in a single total order that respects Lamport's potential causality (writes as sends, reads as receives). A site may order causally unrelated operations differently from another site, but may never revise its own ordering. Steinke & Nutt (2004) restate Ahamad et al.'s definition verbatim (Def. 2.5), characterise it as a per-process serial view over the causal relation (Thm. 3.6), and place it in their lattice as GPO+GWO (Thm. 4.18). Strictly weaker than SC; strictly stronger than PRAM; incomparable to processor and cache consistency. Incomparable also to causal convergence (CCv), which instead demands one global arbitration order rather than a per-site serialisation.",
+  "references": ["Ahamad1995", "SteinkeNutt2004"],
+  "tags": ["theoretical", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"coh": false, "mca": false},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Ahamad1995", "note": "Causal memory is an acyclicity condition over the causal order (po union rf, transitively closed) together with per-process serialisations — all per-execution."}
+}

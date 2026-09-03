@@ -1,0 +1,8 @@
+{
+  "from": "PRAM",
+  "to": "Slow",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Slow consistency is strictly weaker than PRAM consistency (Hutto & Ahamad 1990; Steinke & Nutt 2004)."
+}

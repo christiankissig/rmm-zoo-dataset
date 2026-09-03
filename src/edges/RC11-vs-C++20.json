@@ -1,0 +1,8 @@
+{
+  "from": "RC11",
+  "to": "C++20",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "machine_run",
+  "note": "C++20 adopts RC11's repaired SC (P0668) but, unlike RC11, does not adopt the no-thin-air axiom acyclic(po ∪ rf): it still permits out-of-thin-air / plain load-buffering reads that RC11 forbids. So RC11 is strictly stronger."
+}

@@ -1,0 +1,9 @@
+{
+  "from": "SC",
+  "to": "DRFx",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "by_construction",
+  "fragment_restricted": true,
+  "note": "Both yield only sequentially consistent outcomes for data-race-free programs. DRFx additionally gives racy programs catch-fire semantics — a runtime raises an exception when it detects a region-bounded data race — so the survey groups it with SC rather than weakening the behaviour of well-synchronised code."
+}

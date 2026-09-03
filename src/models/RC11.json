@@ -1,0 +1,17 @@
+{
+  "id": "RC11",
+  "name": "Repaired C11 (RC11)",
+  "abbrev": "RC11",
+  "year": 2017,
+  "authors": ["Lahav", "Vafeiadis", "Kang", "Hur", "Dreyer"],
+  "description": "A repaired version of C11 that fixes the SC axioms, eliminates the 'out-of-thin-air' problem for SC and release-acquire accesses, and supports DRF-SC. Fully compositional and supports modular reasoning.",
+  "references": ["Lahav2017"],
+  "tags": ["language", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": ["C11-variant"],
+  "properties": {"comp_x86": true, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": false, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "sli": false, "rm": true, "strengthen": true, "tp": true, "cse": false, "rp": true, "ti": true, "edrf": true, "coh": true, "no_ub": false, "in_order": true, "no_oota": true, "mca": false},
+  "propertyProvenance": "survey",
+  "catSupport": {"status": "specified", "basis": "cat-model", "ref": "Lahav2017", "note": "herd7 ships rc11.cat (cat coding by Simon Colin); the zoo also runs the vendored litmus/models/cpp/rc11.cat."},
+  "katSupport": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "kater's kat/rc11.kat (with kat/rc112.kat, an alternative formulation proved equivalent, and kat/rc11-genmc.kat for code export)."}
+}

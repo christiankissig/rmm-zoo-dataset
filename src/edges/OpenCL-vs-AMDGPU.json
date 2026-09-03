@@ -1,0 +1,8 @@
+{
+  "from": "OpenCL",
+  "to": "AMDGPU",
+  "type": "compilation",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "OpenCL kernels compile to AMD's GPU ISA via the HSA-based model."
+}

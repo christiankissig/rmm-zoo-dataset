@@ -1,0 +1,9 @@
+{
+  "from": "RC11",
+  "to": "RAR",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "by_construction",
+  "fragment_restricted": true,
+  "note": "RAR is an operational reformulation of RC11's release-acquire and relaxed fragment, used as the basis for an invariant-based proof calculus."
+}

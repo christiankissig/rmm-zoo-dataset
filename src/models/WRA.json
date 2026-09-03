@@ -1,0 +1,16 @@
+{
+  "id": "WRA",
+  "name": "Weak Release-Acquire",
+  "abbrev": "WRA",
+  "year": 2020,
+  "authors": ["Lahav", "Boker"],
+  "description": "The weakening of RA giving the most minimal guarantees a model needs to be causally consistent. Modification order plays no role at all: RA's write-coherence and read-coherence are replaced by weak-read-coherence, which uses the per-location restriction of happens-before rather than mo to decide which of two writes to the same location is the later, and RMW atomicity weakens to 'no two RMW events read from the same write'. Consequently WRA does not provide SC-per-location — even single-location programs may behave non-sequentially (Lahav & Boker Ex. 3.7: WW, Oscillating, SF). It is a fragment of the weak RC11 model, has been considered as a candidate shared-memory semantics in its own right, and is equivalent to the weak causal consistency CC.",
+  "references": ["LahavBoker2020", "LahavBoker2022"],
+  "tags": ["language", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": ["C11-fragment"],
+  "properties": {"coh": false, "no_oota": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "LahavBoker2022", "note": "irr-hb, weak-read-coherence over hb|loc — cat states the per-location restriction of a relation directly — and the weakened RMW condition. Per-execution; mo is not used at all."}
+}

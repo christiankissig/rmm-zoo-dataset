@@ -1,0 +1,8 @@
+{
+  "from": "C11+TM",
+  "to": "POWER+TM",
+  "type": "compilation",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Chong, Sorensen & Wickerson (PLDI 2018) prove (up to a bound) that C++ transactions compile soundly to Power; the mapping targets the POWER transactional model."
+}

@@ -1,0 +1,8 @@
+{
+  "from": "C11",
+  "to": "RAO",
+  "type": "incomparable",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "RAO explains relaxed behaviour via transformations over an SC execution. Its authors claim external DRF while still permitting thin-air values — two properties known to be incompatible in general (Batty et al., ESOP 2015) — which the survey attributes to restrictions on the input language (no general conditionals). Incomparable with C11."
+}

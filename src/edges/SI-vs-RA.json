@@ -1,0 +1,8 @@
+{
+  "from": "SI",
+  "to": "RA",
+  "type": "compilation",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Raad, Lahav & Vafeiadis (VMCAI 2019) give SI two timestamp-free lock-based (MRSW) reference implementations built on the release-acquire (RA) fragment of C/C++11, proved sound and complete against the declarative SI specification (and likewise Robust SI). Retargeted from RC11 onto RA in 1.4.1: the target has always been the release-acquire fragment, as this note already said, and RA became a node in 1.4.0."
+}

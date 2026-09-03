@@ -1,0 +1,8 @@
+{
+  "from": "POWER",
+  "to": "Coherence",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "machine_run",
+  "note": "POWER enforces coherence as a baseline."
+}

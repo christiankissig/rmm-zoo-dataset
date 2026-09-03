@@ -1,0 +1,9 @@
+{
+  "from": "RC11",
+  "to": "ORC11",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "by_construction",
+  "fragment_restricted": false,
+  "note": "ORC11 is an operational version of RC11 developed for RustBelt to verify Rust standard-library synchronisation primitives against a program logic."
+}

@@ -1,0 +1,8 @@
+{
+  "from": "PSI",
+  "to": "RA",
+  "type": "compilation",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Raad, Lahav & Vafeiadis (ESOP 2018) give PSI a lock-based reference implementation built on the release-acquire (RA) fragment of the C/C++11 memory model, proved sound and complete against the declarative PSI specification (and likewise Robust PSI). Retargeted from RC11 onto RA in 1.4.1: the target has always been the release-acquire fragment, as this note already said, and RA became a node in 1.4.0."
+}

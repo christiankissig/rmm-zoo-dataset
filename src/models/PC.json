@@ -1,0 +1,16 @@
+{
+  "id": "PC",
+  "name": "Processor Consistency",
+  "abbrev": "PC",
+  "year": 1989,
+  "authors": ["Goodman"],
+  "description": "Goodman's processor consistency: PRAM consistency together with cache consistency — writes by each process are seen by all processes in the order issued, and all writes to a single location are seen in one sequential order. Strictly weaker than SC; strictly stronger than both PRAM and cache consistency; incomparable to causal consistency.",
+  "references": ["Goodman1989", "SteinkeNutt2004", "AdveGharachorloo1996"],
+  "tags": ["theoretical", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"coh": true, "mca": false},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "SteinkeNutt2004", "note": "Processor consistency is PRAM plus per-location coherence: both conjuncts are per-execution acyclicity conditions that cat states directly (cat's own scperloc axiom is the coherence half)."}
+}

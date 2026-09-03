@@ -1,0 +1,17 @@
+{
+  "id": "LKMM",
+  "name": "Linux Kernel Memory Model",
+  "abbrev": "LKMM",
+  "year": 2018,
+  "authors": ["Alglave", "Maranget", "McKenney", "Parri", "Stern"],
+  "description": "An axiomatic (cat/herd7) model for the Linux kernel's own concurrency primitives — READ_ONCE/WRITE_ONCE, smp_mb()/smp_rmb()/smp_wmb()/smp_store_release()/smp_load_acquire(), RCU, and locking. Deliberately defined as a weak 'virtual architecture' so that code verified against it is sound on every CPU the kernel supports (x86, ARM, POWER, RISC-V, …). Notably formalises RCU grace-period ordering, which language standards such as C11 do not express.",
+  "references": ["Alglave2018"],
+  "tags": ["language", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": ["Linux kernel C"],
+  "properties": {"comp_x86": true, "comp_power": true, "comp_armv7": true, "comp_armv8": true, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "tp": false, "cse": false, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
+  "propertyProvenance": "survey",
+  "catSupport": {"status": "specified", "basis": "cat-model", "ref": "Alglave2018", "note": "linux-kernel.cat, maintained in the kernel tree (tools/memory-model) and run by herd7 — the model was written in cat from the start, with kernel.cfg/kernel.def shipped by herdtools7."},
+  "katSupport": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "kater's kat/lkmm2.kat states LKMM's axioms in the fragment but is written over internal (-imm) relations, which kater rejects in every mode — including when that file is the one it was handed — so as shipped it is neither a comparison operand nor a checking target. The relations it redefines from their -imm counterparts (po, po-loc, mo, fr, rmw, ctrl, addr, data) are all in kater's builtin theory, so litmus/kater/derive-lkmm.sh restates it over those at run time; comparisons run against that derived file, not the shipped one. Its endpoints are untyped where IMM's are ([ACQ];po, not [R];(deps)+;[W]), which is what still blocks the LKMM compilation edges — see litmus/kater/open/compilation-LKMM-vs-x86-TSO.kat."}
+}

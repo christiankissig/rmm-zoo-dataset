@@ -1,0 +1,8 @@
+{
+  "from": "CCv",
+  "to": "CC",
+  "type": "strictly_weaker",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Bouajjani et al., POPL 2017, Lemma 2 (after Perrin et al.): every CCv history is CC, since AxArb gives co subset of arb and hence AxCausalArb implies AxCausalValue. Strictness is the same Fig. 2 history (2c), which is CC but not CCv."
+}

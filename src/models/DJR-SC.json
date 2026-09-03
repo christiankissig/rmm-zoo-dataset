@@ -1,0 +1,16 @@
+{
+  "id": "DJR-SC",
+  "name": "SC + DJR Transactions",
+  "abbrev": "SC+DJR",
+  "year": 2018,
+  "authors": ["Dongol", "Jagadeesan", "Riely"],
+  "description": "The SC instance of the unified declarative transactional framework of Dongol, Jagadeesan & Riely (POPL 2018), which adds transactions to a relaxed-memory architecture parametric in the base model (the paper instantiates it at SC, TSO, ARMv8 and PPC/POWER). Following Alglave et al.'s vocabulary it treats relaxed memory as a restricted distributed system with no global real-time clock, and replaces strict serializability with an observation-based 'observable serializability' criterion (a committed-transaction order need only respect the observable coherence and causal orders), admitting flexible STM-style abort. A genuine sibling to the Chong-Sorensen-Wickerson TM cluster with a distinct construction and authorship. The added transactional axioms only constrain transactional events, so on programs with no transactions this instance coincides with SC by construction.",
+  "references": ["Dongol2018"],
+  "tags": ["theoretical", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"reorder_sl": false, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Dongol2018", "note": "The framework is declarative: transactions are a per-execution axiom set parametric in the base model, so this instance is 'sc.cat plus transaction axioms'. No cat files accompany the paper."}
+}

@@ -13,7 +13,7 @@ separate "kater" list: they are proofs, not witnesses, and the site labels them
 as such. A kater-only edge (a compilation edge, say, which has no witness
 directory) still gets an entry, with an empty "tests".
 
-Output shape, keyed by "<from>|<to>" (matching models.json edge endpoints):
+Output shape, keyed by "<from>|<to>" (matching the edge endpoints in src/edges/):
 
     { "SC|TSO": {
         "relationship": "strictly-weaker",
@@ -31,7 +31,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 LITMUS_DIR = ROOT / "litmus"
-MODELS_JSON = ROOT / "models.json"
+# The model ids come from the sources, not from the compiled models.json, so the
+# two generators do not have to be run in a particular order.
+MODELS_DIR = ROOT / "src" / "models"
 OUT_JSON = ROOT / "litmus.json"
 
 # Relationship sub-trees that contain per-pair test directories.
@@ -54,8 +56,8 @@ TEST_EXTS = {
 
 
 def model_ids():
-    data = json.loads(MODELS_JSON.read_text())
-    return {m["id"] for m in data["models"]}
+    """One src/models/<id>.json per model, so the file names are the id set."""
+    return {p.stem for p in MODELS_DIR.glob("*.json")}
 
 
 def split_pair(dirname):

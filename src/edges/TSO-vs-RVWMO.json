@@ -1,0 +1,8 @@
+{
+  "from": "TSO",
+  "to": "RVWMO",
+  "type": "strictly_weaker",
+  "provenance": "memalloy",
+  "evidence": "machine_run",
+  "note": "Both halves decided by memalloy over the common Basic_HW fragment, as for TSO → ARMv8. memalloy ships no RISC-V model, so the operand is litmus/memalloy/models/zoo_hw_rvwmo.cat, authored here directly from the thirteen ppo rules of the RVWMO chapter of the RISC-V unprivileged spec; the file annotates each rule it renders and each that is empty on the fragment. Witness at 4 events; containment clean exhaustively to 7. Independent check on the rendering: over the same fragment it is contained in the ARMv8 operand and ARMv8 is not contained in it, which is the direction the same-address ppo rules predict. Bounded evidence about that rendering, not a theorem about RVWMO."
+}

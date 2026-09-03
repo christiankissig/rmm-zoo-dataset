@@ -1,0 +1,16 @@
+{
+  "id": "Local",
+  "name": "Local Consistency",
+  "abbrev": "Local",
+  "year": 1997,
+  "authors": ["Bataller", "Bernabéu-Aubán"],
+  "description": "The weakest consistency model: each process's own operations appear in its program order, with no constraint on the order in which writes by other processes become visible, and different processes may see different orders. The bottom of the Steinke–Nutt lattice.",
+  "references": ["BatallerBernabeu1997", "SteinkeNutt2004"],
+  "tags": ["theoretical", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"coh": false, "mca": false},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "BatallerBernabeu1997", "note": "Only each process's own operations are constrained to appear in program order — a single per-execution axiom, weaker than cat's usual scperloc."}
+}

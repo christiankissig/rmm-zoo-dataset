@@ -1,0 +1,8 @@
+{
+  "from": "C11",
+  "to": "Promising",
+  "type": "incomparable",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Promising Semantics is an alternative to C11 at a similar level, not a direct subset/superset."
+}

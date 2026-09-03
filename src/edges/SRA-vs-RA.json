@@ -1,0 +1,8 @@
+{
+  "from": "SRA",
+  "to": "RA",
+  "type": "strictly_weaker",
+  "provenance": "litmus",
+  "evidence": "machine_run",
+  "note": "SRA replaces RA's write-coherence (mo;hb irreflexive — a local agreement between modification order and happens-before) with strong-write-coherence ((hb ∪ mo)+ irreflexive — a global one), keeping RA's other axioms (Lahav & Boker, Table 1); containment is immediate. Strictness is the 2+2W program of Lahav et al. 2016, Lahav & Boker Ex. 3.6: x:=1; y:=2; a:=y || y:=1; x:=2; b:=x with a=b=1. The outcome forces mo edges W(y,2) -> W(y,1) and W(x,2) -> W(x,1), closing an (hb ∪ mo) cycle that SRA forbids while each mo;hb step alone satisfies write-coherence, so RA allows it. Machine-checked: litmus/models/ra.cat and litmus/models/sra.cat are authored for this dataset and differ in that one axiom, and litmus/strictly-weaker/SRA-vs-RA/ runs 2+2W under both (Sometimes 1 8 vs Never 0 5). Because both cat models are hand-written rather than vendored, the directory also carries controls run by run.sh: MP+relacq must be forbidden by both, and IRIW must be allowed by both — the latter checked against Lahav & Boker Ex. 3.5, which marks IRIW allowed under RA and SRA alike. Containment remains the cited one-axiom argument; herd7 decides the strictness half only."
+}

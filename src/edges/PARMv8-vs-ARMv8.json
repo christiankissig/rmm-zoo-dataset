@@ -1,0 +1,9 @@
+{
+  "from": "PARMv8",
+  "to": "ARMv8",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "cited",
+  "fragment_restricted": true,
+  "note": "Raad, Wickerson & Vafeiadis (OOPSLA 2019): PARMv8's crash-free behaviour coincides with ARMv8. fragment_restricted because the equivalence holds only on the crash-free fragment; the persist-order axiom is orthogonal."
+}

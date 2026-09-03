@@ -1,0 +1,16 @@
+{
+  "id": "PARMv8",
+  "name": "Persistent ARMv8 (PARMv8)",
+  "abbrev": "PARMv8",
+  "year": 2019,
+  "authors": ["Raad", "Wickerson", "Vafeiadis"],
+  "description": "First formalisation of the persistency semantics of the ARMv8 architecture, layering a persist-order axiom (what survives a crash on non-volatile memory) on top of the ARMv8 consistency model. The persist dimension is orthogonal to ARMv8's read/write reordering; the crash-free behaviour coincides with ARMv8.",
+  "references": ["Raad2019"],
+  "tags": ["hardware", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": ["ARMv8", "AArch64"],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Raad2019", "note": "A declarative persist-order axiom layered on the ARMv8 consistency model (aarch64.cat); per-execution, but no cat model covers the persistency dimension."}
+}

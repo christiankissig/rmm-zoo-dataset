@@ -1,0 +1,20 @@
+{
+  "id": "x86-TSO",
+  "name": "x86-TSO",
+  "abbrev": "x86-TSO",
+  "year": 2010,
+  "authors": ["Sewell", "Sarkar", "Owens", "Zappa Nardelli", "Myreen"],
+  "description": "A rigorous formal model for x86 multiprocessor memory, validated against AMD and Intel hardware. Captures FIFO store buffers, lock prefixes, and MFENCE barriers precisely.",
+  "references": ["Sewell2010", "AdveGharachorloo1996"],
+  "tags": ["hardware", "formal"],
+  "formalism": ["mechanistic", "axiomatic"],
+  "hardware": ["x86", "x86-64"],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": false, "reorder_ll": false, "reorder_ls": false, "coh": true, "no_ub": true, "in_order": true, "no_oota": true, "mca": true},
+  "propertyProvenance": "extrapolated",
+  "propertyCitations": {
+    "mca": {"ref": "Sewell2010", "note": "x86-TSO places a single shared memory behind per-thread FIFO store buffers, so a store becomes visible to all other threads at once — multicopy atomic."}
+  },
+  "catSupport": {"status": "specified", "basis": "cat-model", "ref": "Alglave2014", "note": "herd7's x86tso.cat is the standard cat rendering; Herding cats proves it equivalent to Sewell et al.'s store-buffer machine, and x86tso-mixed.cat covers mixed-size accesses."},
+  "katSupport": {"status": "specified", "basis": "kat-model", "ref": "Kokologiannakis2023", "note": "Covered by kater's kat/tso.kat, which is the same rendering the zoo's by-construction TSO ≡ x86-TSO edge identifies. kat/pex86.kat is the persistency-extended Px86, not this node."}
+}

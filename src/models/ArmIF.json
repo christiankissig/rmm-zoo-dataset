@@ -1,0 +1,16 @@
+{
+  "id": "ArmIF",
+  "name": "Armv8-A System Semantics: Instruction Fetch",
+  "abbrev": "ArmIF",
+  "year": 2020,
+  "authors": ["Simner", "Flur", "Pulte", "Armstrong", "Pichon-Pharabod", "Maranget", "Sewell"],
+  "description": "A rigorous concurrency model for the 'system semantics' of instruction fetch and instruction/data-cache maintenance in Armv8-A, capturing self-modifying code, program loading, dynamic linking and JIT patterns (Sec. 4-5). It extends the base Armv8-A user-mode concurrency (Flat) model with instruction-fetch events, a fetched-from (fetch-read) relation, and instruction-cache (IC) and data-cache (DC) maintenance events, showing that instruction fetches are more relaxed than data accesses and that even coherence for the fetched stream is not guaranteed without explicit IC/DC/ISB synchronisation. Given in both an operational (extending Flat) and a functionally-equivalent axiomatic style. On programs that perform no instruction fetch or cache maintenance it coincides with the base Armv8-A user-mode model (validated identical over the 8950-test Flat regression suite, Sec. 6); outside that fragment it admits additional executions arising from stale instruction caches.",
+  "references": ["Simner2020"],
+  "tags": ["hardware", "formal"],
+  "formalism": ["axiomatic", "operational"],
+  "hardware": ["ARMv8", "AArch64"],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "in_order": false, "no_oota": true, "mca": true},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "specified", "basis": "cat-model", "ref": "Simner2020", "note": "The instruction-fetch model is a cat extension of the base Armv8 model; herd7 supports the fetch/cache-maintenance events (ifetch-cos.cat, IC events in aarch64.cat)."}
+}

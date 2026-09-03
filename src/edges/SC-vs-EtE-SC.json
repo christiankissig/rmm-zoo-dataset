@@ -1,0 +1,9 @@
+{
+  "from": "SC",
+  "to": "EtE-SC",
+  "type": "equivalent",
+  "provenance": "literature",
+  "evidence": "by_construction",
+  "fragment_restricted": false,
+  "note": "EtE-SC restores end-to-end sequential consistency via an SC-preserving LLVM compiler and modified x86 hardware; it admits exactly the SC outcomes, differing from SC only in enforcement mechanism and performance, not in allowed behaviours."
+}

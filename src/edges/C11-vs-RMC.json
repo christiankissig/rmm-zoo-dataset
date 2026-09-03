@@ -1,0 +1,8 @@
+{
+  "from": "C11",
+  "to": "RMC",
+  "type": "incomparable",
+  "provenance": "literature",
+  "evidence": "machine_run",
+  "note": "The Relaxed Memory Calculus specifies ordering constraints directly in source code rather than deriving them from access annotations. It is very weak and permits thin-air values (only internal DRF is proved); its primitives differ from C11's, so the two are incomparable."
+}

@@ -1,0 +1,8 @@
+{
+  "from": "LKMM",
+  "to": "ARMv8",
+  "type": "compilation",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Linux kernel primitives compile correctly to ARMv8/AArch64."
+}

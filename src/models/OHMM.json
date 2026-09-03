@@ -1,0 +1,16 @@
+{
+  "id": "OHMM",
+  "name": "Operational Happens-Before Model",
+  "abbrev": "OHMM",
+  "year": 2016,
+  "authors": ["Zhang", "Feng"],
+  "description": "An operational happens-before model proposed to repair the Java Memory Model. Its abstract machine uses a global event buffer, where events may be reordered before propagating to a global history main memory, together with a replay mechanism to simulate speculative executions. To avoid thin-air outcomes it tracks syntactic dependencies between events and forbids reordering dependent events. The authors proved the external DRF theorem and the soundness of several transformations.",
+  "references": ["Zhang2016", "Moiseenko2021"],
+  "tags": ["language", "formal", "operational"],
+  "formalism": ["operational"],
+  "hardware": [],
+  "languages": ["Java", "JVM"],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": true, "ile": true, "sli": true, "rm": true, "tp": false, "edrf": true, "no_ub": true, "in_order": false, "no_oota": true},
+  "propertyProvenance": "survey",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Zhang2016", "note": "An abstract machine with a global reorderable event buffer; the happens-before discipline it enforces is per-execution, but no declarative characterisation has been published."}
+}

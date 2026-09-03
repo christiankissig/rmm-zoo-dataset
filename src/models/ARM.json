@@ -1,0 +1,19 @@
+{
+  "id": "ARM",
+  "name": "ARM Memory Model",
+  "abbrev": "ARM",
+  "year": 2011,
+  "authors": ["Alglave", "Maranget", "Sarkar", "Sewell"],
+  "description": "The ARMv7/v8 model is similar to POWER in permitting non-MCA behaviour and extensive reorderings. ARMv8 was later strengthened to be multi-copy atomic. Barriers: DMB, DSB, ISB.",
+  "references": ["Alglave2009", "Pulte2018"],
+  "tags": ["hardware", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": ["ARMv7", "ARMv8"],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
+  "propertyProvenance": "extrapolated",
+  "propertyCitations": {
+    "mca": {"ref": "Pulte2018", "note": "Pre-v8 ARM is non-multicopy-atomic; Pulte et al. adopt multicopy atomicity for ARMv8, explicitly departing from the earlier non-MCA ARM model."}
+  },
+  "catSupport": {"status": "specified", "basis": "cat-model", "ref": "Alglave2009", "note": "herd7's arm.cat / aarch32.cat, the ARMv7 model in the same Herding cats lineage."}
+}

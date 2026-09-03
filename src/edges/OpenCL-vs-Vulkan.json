@@ -1,0 +1,8 @@
+{
+  "from": "OpenCL",
+  "to": "Vulkan",
+  "type": "incomparable",
+  "provenance": "memalloy",
+  "evidence": "machine_run",
+  "note": "Both are scoped GPU API models, but differ in scope sets and synchronisation primitives — Vulkan adds explicit availability/visibility operations that OpenCL lacks; neither contains the other."
+}

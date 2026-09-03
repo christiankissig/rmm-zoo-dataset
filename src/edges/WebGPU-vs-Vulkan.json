@@ -1,0 +1,8 @@
+{
+  "from": "WebGPU",
+  "to": "Vulkan",
+  "type": "compilation",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Browser WebGPU implementations lower WGSL to Vulkan (and to Metal/Direct3D 12); the WGSL model is derived from Vulkan's."
+}

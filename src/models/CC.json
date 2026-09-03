@@ -1,0 +1,16 @@
+{
+  "id": "CC",
+  "name": "Weak Causal Consistency (CC)",
+  "abbrev": "CC",
+  "year": 2017,
+  "authors": ["Bouajjani", "Enea", "Guerraoui", "Hamza"],
+  "description": "The weakest notion of causal consistency in the literature: it asks only that some causal order exist which, per operation, explains that operation's return value (axioms AxCausal and AxCausalValue). Unlike causal memory it lets a site order causally unrelated operations one way and revise that ordering later — modelling implementations that speculate on an order and roll back — and unlike causal convergence it requires no global arbitration order. Strictly weaker than both CM and CCv (Bouajjani et al., POPL 2017, Fig. 1), with Fig. 2 history (2c) satisfying CC and neither of the others. Equivalent to the WRA memory model, which is what makes it the causal-consistency counterpart of the C/C++11 release-acquire family.",
+  "references": ["Bouajjani2017", "Perrin2016"],
+  "tags": ["theoretical", "formal"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"coh": false, "mca": false},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Bouajjani2017", "note": "AxCausal and AxCausalValue over an existentially quantified causal order, with a per-operation serialisation of that operation's causal past — the same shape as the Causal and CCv entries, and per-execution."}
+}

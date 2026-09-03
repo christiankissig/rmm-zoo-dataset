@@ -1,6 +1,6 @@
 # Litmus tests for the memory-model ordering edges
 
-This tree backs the ordering edges drawn in [`../src/models.json`](../src/models.json).
+This tree backs the ordering edges in [`../src/edges/`](../src/edges).
 For every **strictly-weaker** edge `A → B` there is a litmus test whose
 distinguishing outcome is **allowed by the weaker model `B`** and **forbidden by
 the stronger model `A`**. For every **incomparable** edge there is a test that
@@ -32,7 +32,7 @@ litmus/
 └── incomparable/<A>-vs-<B>/
 ```
 
-`<A>-vs-<B>` directory names follow the edge direction in `models.json`
+`<A>-vs-<B>` directory names follow the edge's own file name in `../src/edges/`
 (`from` = stronger, `to` = weaker). Each directory has its own `README.md` with
 the exact commands and expected output.
 
@@ -166,6 +166,6 @@ Observation <name> Sometimes k N    # outcome ALLOWED   (k of N executions match
 
 ## References
 
-Authors, venues and DOIs for every model are in the `references` block of
-[`../src/models.json`](../src/models.json). Each pair README cites the specific
-paper for its test.
+Authors, venues and DOIs for every model are in
+[`../src/references.json`](../src/references.json). Each pair README cites the
+specific paper for its test.

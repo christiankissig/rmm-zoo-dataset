@@ -1,0 +1,16 @@
+{
+  "id": "ScopedC11",
+  "name": "Scoped C11 / HRF-Relaxed",
+  "abbrev": "Scoped C11",
+  "year": 2015,
+  "authors": ["Gaster", "Hower", "Howes"],
+  "description": "A generalisation of the C11 DRF framework with a scope hierarchy, relaxing HRF-direct/indirect's strict scope-matching to suit industrial heterogeneous models. It underpins the scoped-atomics designs adopted by OpenCL, HSA and the GPU vendor models.",
+  "references": ["Gaster2015", "Hower2014"],
+  "tags": ["theoretical", "gpu", "formal", "scoped"],
+  "formalism": ["axiomatic"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": false, "in_order": false, "no_oota": false},
+  "propertyProvenance": "extrapolated",
+  "catSupport": {"status": "expressible", "basis": "extrapolated", "ref": "Gaster2015", "note": "A scoped generalisation of the C11 DRF framework: per-execution scoped happens-before and race conditions, expressible in scoped cat but not published as one."}
+}
