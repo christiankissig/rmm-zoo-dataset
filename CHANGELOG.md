@@ -14,6 +14,19 @@ Each released version is published at
 
 ### Added
 
+- **`Promising2` (PS 2.0, Lee et al., PLDI 2020)**, split out of `Promising`, which
+  now stands for PS 1.0 (Kang et al., POPL 2017) alone. The survey's single
+  `PRM [17, 18]` row merges the two papers, and its values are PS 2.0's, so
+  `Promising2` takes that row (`survey`). `Promising` keeps it except for three
+  cells, now cited to Lee et al.: register promotion and value-range analysis are
+  the global optimisations PS 2.0 was introduced for, and PS 1.0's relaxed RMWs
+  need an extra fence on ARMv8, so its optimal ARMv8 mapping is not sound. The row
+  is marked `extrapolated` accordingly.
+- **`Promising → IMM`** and **`Promising2 → IMM`** compilation edges, cited to
+  Podkopaev et al. (POPL 2019) and Lee et al. Thm. 6.9. These are `Promising2`'s
+  only edges. No containment between PS 1.0 and PS 2.0 is proved, and the
+  1.0-specific separations below do not transfer, so no other edge is drawn.
+
 - **`litmus/models/wra.cat`**, completing the trio. Modification order is
   deliberately unused: `hb|loc`, not `mo`, decides which of two writes to a
   location is the later, which is exactly what costs WRA its SC-per-location.
@@ -25,6 +38,30 @@ Each released version is published at
   executions and differ on exactly the witness.
 
 ### Changed
+
+- **`C11 ↔ Promising` and `Promising ↔ Weakestmo` are now explicitly PS 1.0
+  edges.** The Weakestmo paper compares against PS 1.0, and the FADD witness that
+  separates it from Weakestmo is the RMW case PS 2.0's reservations were added to
+  fix.
+
+### Removed
+
+- **`Promising ↔ CSRA`** (`incomparable`, `literature`/`cited`) and its witness
+  directory. Only one direction was supported: CSRA allows the relaxed-RMW load
+  buffering LB+FADD, which PS 1.0 forbids (Podkopaev et al. 2019, Ex. 3.10). The
+  other direction was argued only from register promotion and value-range
+  analysis. Those are PS 2.0's global transformations, not PS 1.0's, and no
+  separating program was ever given. The survey, cited as the source, makes no
+  incomparability claim. The schema has no one-sided relation, so the edge goes.
+  The LB+FADD fact is now in CSRA's description.
+
+### Fixed
+
+- **`Lee2020` DOI** corrected from `10.1145/3385412.3386000` (an unrelated paper)
+  to `10.1145/3385412.3386010`.
+- **The `Promising` description** no longer claims PS 2.0 adds mixed-size
+  accesses. It does not: it redesigns certification (capped memory,
+  reservations).
 
 - **The dataset is now edited as one file per thing.** `models.json` is compiled
   from a new `src/` tree by `make models` and is a build artifact from here on —

@@ -4,5 +4,5 @@
   "type": "incomparable",
   "provenance": "literature",
   "evidence": "cited",
-  "note": "Promising Semantics is an alternative to C11 at a similar level, not a direct subset/superset."
+  "note": "PS 1.0 is an alternative to C11 at a similar level, not a direct subset or superset: C11 allows out-of-thin-air load buffering, which PS forbids by certification. PS 2.0 has no edge to C11 yet."
 }

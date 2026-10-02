@@ -237,5 +237,5 @@ echo "  strictly-weaker/RC11-vs-JAM  -> JAM Coq artifact; thin-air at plain mode
 echo "  strictly-weaker/Weakestmo-vs-C11 -> event-structure model (cited; reclassified from incomparable)"
 echo "  incomparable/Java-vs-OHMM    -> JMM/OHMM operational models (cited)"
 echo "  incomparable/C11-vs-{GOS,JSMM,RAO,TSC} -> survey research models (cited / model-level)"
-echo "  incomparable/Promising-vs-{Weakestmo,CSRA} -> Promising + event-structure artifacts (cited)"
+echo "  incomparable/Promising-vs-Weakestmo -> Promising + event-structure artifacts (cited)"
 [ "$fail" -eq 0 ]

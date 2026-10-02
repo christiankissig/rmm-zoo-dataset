@@ -259,12 +259,25 @@
     },
     {
       "id": "Promising",
-      "name": "Promising Semantics",
+      "name": "Promising Semantics 1.0",
       "abbrev": "PS",
       "year": 2017,
       "authors": ["Kang", "Hur", "Lahav", "Vafeiadis", "Dreyer"],
-      "description": "An operational model for relaxed memory based on the notion of thread-local 'promises': a thread may promise a future write and later fulfil it. Eliminates thin-air values, supports DRF-SC, and can express optimisation-friendly behaviour. Extended to PS 2.0 for mixed-size and non-atomic accesses.",
-      "references": ["Kang2017", "Lee2020"],
+      "description": "An operational model for relaxed memory based on the notion of thread-local 'promises': a thread may promise a future write, provided it can certify the promise by a thread-local execution under every possible future memory. Eliminates thin-air values, supports DRF guarantees and validates the standard thread-local optimisations, but not global ones such as register promotion or value-range analysis, and its relaxed RMWs need an extra fence on ARMv8. Has no SC accesses. Superseded by PS 2.0, which redesigns certification.",
+      "references": ["Kang2017"],
+      "tags": ["language", "formal", "operational"],
+      "formalism": ["operational"],
+      "hardware": [],
+      "languages": []
+    },
+    {
+      "id": "Promising2",
+      "name": "Promising Semantics 2.0",
+      "abbrev": "PS 2.0",
+      "year": 2020,
+      "authors": ["Lee", "Cho", "Podkopaev", "Chakraborty", "Hur", "Lahav", "Vafeiadis"],
+      "description": "A redesign of the Promising Semantics' certification: promises are certified against a single 'capped' future memory rather than every future memory, and threads may reserve timestamp space for later RMWs. Keeps every PS 1.0 result (thread-local optimisations, hardware mappings, DRF theorems) and additionally validates global optimisations, namely register promotion and transformations based on value-range analysis. It also removes the extra fence that PS 1.0's relaxed RMWs needed on ARMv8. Compilation to x86-TSO, POWER, ARMv7, ARMv8 and RISC-V goes through IMM and is proved in Coq. Like PS 1.0 it has no SC accesses.",
+      "references": ["Lee2020", "Kang2017"],
       "tags": ["language", "formal", "operational"],
       "formalism": ["operational"],
       "hardware": [],
@@ -671,8 +684,8 @@
       "abbrev": "CSRA",
       "year": 2016,
       "authors": ["Pichon-Pharabod", "Sewell"],
-      "description": "A concurrency semantics for relaxed atomics that permits optimisation while avoiding thin-air executions. It pairs a memory subsystem inspired by the POWER model with a thread subsystem in which each thread is represented as an event structure; at each step the machine may either commit an event to memory or transform one of the event structures. Soundness of the optimal compilation mappings to x86 and POWER was shown, though the mappings to ARMv7/ARMv8 were later revealed to be non-optimal.",
-      "references": ["PichonPharabod2016", "Moiseenko2021"],
+      "description": "A concurrency semantics for relaxed atomics that permits optimisation while avoiding thin-air executions. It pairs a memory subsystem inspired by the POWER model with a thread subsystem in which each thread is represented as an event structure; at each step the machine may either commit an event to memory or transform one of the event structures. Soundness of the optimal compilation mappings to x86 and POWER was shown, though the mappings to ARMv7/ARMv8 were later revealed to be non-optimal. It allows the relaxed-RMW load buffering LB+FADD that the Promising Semantics 1.0 forbids (Podkopaev et al. 2019, Ex. 3.10), but no program is known that PS 1.0 allows and CSRA forbids, so the zoo draws no edge between them.",
+      "references": ["PichonPharabod2016", "Moiseenko2021", "Podkopaev2019"],
       "tags": ["language", "formal"],
       "formalism": ["event-structure"],
       "hardware": [],
@@ -1521,7 +1534,7 @@
       "type": "incomparable",
       "provenance": "literature",
       "evidence": "cited",
-      "note": "Promising Semantics is an alternative to C11 at a similar level, not a direct subset/superset."
+      "note": "PS 1.0 is an alternative to C11 at a similar level, not a direct subset or superset: C11 allows out-of-thin-air load buffering, which PS forbids by certification. PS 2.0 has no edge to C11 yet."
     },
     {
       "from": "C11",
@@ -2069,11 +2082,11 @@
     },
     {
       "from": "Promising",
-      "to": "CSRA",
-      "type": "incomparable",
+      "to": "IMM",
+      "type": "compilation",
       "provenance": "literature",
       "evidence": "cited",
-      "note": "Both are semantic-dependency-preserving models avoiding thin-air; CSRA's compilation to x86 and POWER is sound, but unlike Promising its mappings to ARMv7/ARMv8 were later shown non-optimal. Neither contains the other."
+      "note": "Podkopaev, Lahav & Vafeiadis (POPL 2019) prove in Coq that compilation from the Promising Semantics to IMM is correct, and from there to x86-TSO, POWER and ARMv8. On ARMv8, PS 1.0's relaxed RMWs need an extra ld fence, because the intended mapping is unsound (the FADD load-buffering, Chakraborty & Vafeiadis 2019 Fig. 6). PS 2.0 removes that fence."
     },
     {
       "from": "Promising",
@@ -2081,7 +2094,15 @@
       "type": "incomparable",
       "provenance": "litmus",
       "evidence": "cited",
-      "note": "Both are semantic-dependency-preserving models that forbid out-of-thin-air, admit the optimal compilation mappings, and give external DRF. Weakestmo is built on event structures (vs Promising's promises/certification) and, unlike the Promising semantics, supports sequentially consistent accesses; neither is a subset of the other."
+      "note": "Chakraborty & Vafeiadis (POPL 2019) §4.3 state that Weakestmo and PS (1.0, the 2017 model they compare against) are incomparable, with a witness each way: Coh-CYC (PS allows, Weakestmo forbids) and FADD (Weakestmo allows, PS forbids). Both are semantic-dependency-preserving models that forbid out-of-thin-air and give external DRF. Weakestmo is built on event structures rather than promises and certification, and unlike PS it supports SC accesses. PS 2.0 added reservations to fix the RMW mapping problem that FADD exposes, so it is not established that the FADD direction still holds for PS 2.0, and PS 2.0 has no edge to Weakestmo."
+    },
+    {
+      "from": "Promising2",
+      "to": "IMM",
+      "type": "compilation",
+      "provenance": "literature",
+      "evidence": "cited",
+      "note": "Lee et al. (PLDI 2020), Theorem 6.9, mechanised in Coq: Beh_PS2.0(P) ⊇ Beh_IMM(P), so the mappings already proved correct from IMM (x86-TSO, POWER, ARMv7, ARMv8, RISC-V) are correct from PS 2.0, without PS 1.0's extra fence after RMWs. The mechanised proof needs a control dependency from the read part of each RMW, which relaxed fetch-and-adds must fake on ARMv8 (§6.5)."
     },
     {
       "from": "PromisingARM",
@@ -2937,7 +2958,7 @@
       "authors": ["Sung-Hwan Lee", "Minki Cho", "Anton Podkopaev", "Soham Chakraborty", "Chung-Kil Hur", "Ori Lahav", "Viktor Vafeiadis"],
       "venue": "PLDI 2020",
       "year": 2020,
-      "doi": "10.1145/3385412.3386000"
+      "doi": "10.1145/3385412.3386010"
     },
     "Paviotti2020": {
       "title": "Modular Relaxed Dependencies in Weak Memory Concurrency",
@@ -3597,7 +3618,8 @@
     "C++17": {"comp_x86": true, "comp_power": true, "comp_armv7": true, "comp_armv8": true, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "sli": false, "rm": true, "strengthen": true, "tp": true, "cse": false, "ti": true, "edrf": false, "coh": true, "no_ub": false, "in_order": false, "no_oota": false, "mca": false},
     "RC17": {"comp_x86": true, "comp_power": false, "comp_armv7": false, "comp_armv8": false, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": false, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": false, "sli": false, "rm": true, "strengthen": true, "tp": true, "cse": false, "rp": true, "ti": true, "edrf": true, "coh": true, "no_ub": false, "in_order": true, "no_oota": true, "mca": false},
     "IMM": {"comp_x86": true, "comp_power": true, "comp_armv8": true, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "edrf": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
-    "Promising": {"comp_x86": true, "comp_power": true, "comp_armv7": true, "comp_armv8": true, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": true, "ile": true, "sli": true, "rm": true, "strengthen": true, "tp": true, "cse": true, "rp": true, "ti": false, "vr": true, "edrf": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
+    "Promising": {"comp_x86": true, "comp_power": true, "comp_armv7": true, "comp_armv8": false, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": true, "ile": true, "sli": true, "rm": true, "strengthen": true, "tp": true, "cse": true, "rp": false, "ti": false, "vr": false, "edrf": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
+    "Promising2": {"comp_x86": true, "comp_power": true, "comp_armv7": true, "comp_armv8": true, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": true, "ile": true, "sli": true, "rm": true, "strengthen": true, "tp": true, "cse": true, "rp": true, "ti": false, "vr": true, "edrf": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
     "MRD": {"comp_x86": true, "comp_power": true, "comp_armv7": true, "comp_armv8": true, "edrf": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true},
     "sMRD": {"comp_x86": true, "comp_power": true, "comp_armv7": true, "comp_armv8": true, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": true, "ile": true, "strengthen": true, "tp": true, "vr": true, "coh": true, "no_ub": false, "in_order": false, "no_oota": true},
     "OD-LSO": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": false, "coh": true, "no_oota": true},
@@ -3684,7 +3706,7 @@
     "PArmv8axiom": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": true},
     "PromisingARM": {"reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": true}
   },
-  "modelPropertyProvenance": {"SC": "survey", "TSO": "extrapolated", "x86-TSO": "extrapolated", "PSO": "extrapolated", "RMO": "extrapolated", "Alpha": "extrapolated", "POWER": "extrapolated", "ARM": "extrapolated", "ARMv8": "extrapolated", "ArmVM": "extrapolated", "ArmIF": "extrapolated", "Itanium": "extrapolated", "C11": "survey", "Java": "survey", "RC11": "survey", "RC11z": "survey", "C++20": "extrapolated", "C++17": "extrapolated", "RC17": "extrapolated", "IMM": "extrapolated", "Promising": "survey", "MRD": "survey", "sMRD": "survey", "OD-LSO": "extrapolated", "OD-Dep": "extrapolated", "OCaml": "survey", "LKMM": "survey", "RVWMO": "extrapolated", "PTX": "extrapolated", "TileIR": "extrapolated", "AMDGPU": "extrapolated", "OpenCL": "extrapolated", "Vulkan": "extrapolated", "CUDA": "extrapolated", "WebGPU": "extrapolated", "Metal": "extrapolated", "HRF": "extrapolated", "ScopedC11": "extrapolated", "Coherence": "extrapolated", "DRFx": "survey", "BMM": "survey", "ClightTSO": "extrapolated", "RMMOA": "survey", "RAR": "survey", "SRA": "extrapolated", "RA": "extrapolated", "WRA": "extrapolated", "ORC11": "survey", "CRC": "survey", "JAM": "survey", "OHMM": "survey", "Weakestmo": "survey", "CSRA": "survey", "WJES": "survey", "LeakySemi": "extrapolated", "PwP": "extrapolated", "GOS": "survey", "JSMM": "survey", "Wasm": "extrapolated", "RMC": "survey", "RAO": "survey", "TSC": "survey", "EtE-SC": "survey", "VbD": "survey", "SC-Haskell": "survey", "DeNovo": "extrapolated", "DeNovoND": "extrapolated", "DeNovoSync": "extrapolated", "Spandex": "extrapolated", "PC": "extrapolated", "PRAM": "extrapolated", "Causal": "extrapolated", "CCv": "extrapolated", "CC": "extrapolated", "Slow": "extrapolated", "Local": "extrapolated", "EC": "extrapolated", "CausalPlus": "extrapolated", "RTCausal": "extrapolated", "POCausal": "extrapolated", "RYW": "extrapolated", "MR": "extrapolated", "MW": "extrapolated", "WFR": "extrapolated", "x86-TSO+TM": "extrapolated", "POWER+TM": "extrapolated", "ARMv8+TM": "extrapolated", "PTSO": "extrapolated", "PARMv8": "extrapolated", "C11+TM": "extrapolated", "DJR-SC": "extrapolated", "DJR-TSO": "extrapolated", "DJR-ARMv8": "extrapolated", "DJR-POWER": "extrapolated", "PSI": "extrapolated", "SI": "extrapolated", "PSER": "extrapolated", "Px86": "extrapolated", "PTSOsyn": "extrapolated", "PSC": "extrapolated", "Px86view": "extrapolated", "Px86axiom": "extrapolated", "PEx86": "extrapolated", "PArmv8view": "extrapolated", "PArmv8axiom": "extrapolated", "PromisingARM": "extrapolated"},
+  "modelPropertyProvenance": {"SC": "survey", "TSO": "extrapolated", "x86-TSO": "extrapolated", "PSO": "extrapolated", "RMO": "extrapolated", "Alpha": "extrapolated", "POWER": "extrapolated", "ARM": "extrapolated", "ARMv8": "extrapolated", "ArmVM": "extrapolated", "ArmIF": "extrapolated", "Itanium": "extrapolated", "C11": "survey", "Java": "survey", "RC11": "survey", "RC11z": "survey", "C++20": "extrapolated", "C++17": "extrapolated", "RC17": "extrapolated", "IMM": "extrapolated", "Promising": "extrapolated", "Promising2": "survey", "MRD": "survey", "sMRD": "survey", "OD-LSO": "extrapolated", "OD-Dep": "extrapolated", "OCaml": "survey", "LKMM": "survey", "RVWMO": "extrapolated", "PTX": "extrapolated", "TileIR": "extrapolated", "AMDGPU": "extrapolated", "OpenCL": "extrapolated", "Vulkan": "extrapolated", "CUDA": "extrapolated", "WebGPU": "extrapolated", "Metal": "extrapolated", "HRF": "extrapolated", "ScopedC11": "extrapolated", "Coherence": "extrapolated", "DRFx": "survey", "BMM": "survey", "ClightTSO": "extrapolated", "RMMOA": "survey", "RAR": "survey", "SRA": "extrapolated", "RA": "extrapolated", "WRA": "extrapolated", "ORC11": "survey", "CRC": "survey", "JAM": "survey", "OHMM": "survey", "Weakestmo": "survey", "CSRA": "survey", "WJES": "survey", "LeakySemi": "extrapolated", "PwP": "extrapolated", "GOS": "survey", "JSMM": "survey", "Wasm": "extrapolated", "RMC": "survey", "RAO": "survey", "TSC": "survey", "EtE-SC": "survey", "VbD": "survey", "SC-Haskell": "survey", "DeNovo": "extrapolated", "DeNovoND": "extrapolated", "DeNovoSync": "extrapolated", "Spandex": "extrapolated", "PC": "extrapolated", "PRAM": "extrapolated", "Causal": "extrapolated", "CCv": "extrapolated", "CC": "extrapolated", "Slow": "extrapolated", "Local": "extrapolated", "EC": "extrapolated", "CausalPlus": "extrapolated", "RTCausal": "extrapolated", "POCausal": "extrapolated", "RYW": "extrapolated", "MR": "extrapolated", "MW": "extrapolated", "WFR": "extrapolated", "x86-TSO+TM": "extrapolated", "POWER+TM": "extrapolated", "ARMv8+TM": "extrapolated", "PTSO": "extrapolated", "PARMv8": "extrapolated", "C11+TM": "extrapolated", "DJR-SC": "extrapolated", "DJR-TSO": "extrapolated", "DJR-ARMv8": "extrapolated", "DJR-POWER": "extrapolated", "PSI": "extrapolated", "SI": "extrapolated", "PSER": "extrapolated", "Px86": "extrapolated", "PTSOsyn": "extrapolated", "PSC": "extrapolated", "Px86view": "extrapolated", "Px86axiom": "extrapolated", "PEx86": "extrapolated", "PArmv8view": "extrapolated", "PArmv8axiom": "extrapolated", "PromisingARM": "extrapolated"},
   "_propertyProvenanceComment": "Per-property (column) provenance. The default source for the property columns is the Moiseenko–Podkopaev–Koznov survey (Tables 1–2); this map records only the columns whose definition/data come from a different source, so a reader knows a given cell is not survey-tabulated even when the per-model modelPropertyProvenance says 'survey'. Absence here = the survey default.",
   "propertyProvenance": {"irm": "Inverse (reversed) roach motel reordering — moving a shared access out of a critical section. Not tabulated by the Moiseenko et al. survey; the transformation and its soundness for the SC-for-DRF execution model were introduced by Poetzl & Kroening, 'Formalizing and Checking Thread Refinement for Data-Race-Free Execution Models' (arXiv:1510.07171, 2015), §4. The 'yes' cells are therefore author-assigned to the SC-preserving / SC-for-DRF models on the strength of that result, not taken from the survey.", "mca": "Multicopy atomicity — not from the Moiseenko et al. survey but from Su & Colvin, 'Weak Memory Model Formalisms: Introduction and Survey' (Concurrency Comput. Pract. Exper. 38(2), 2026), §2.4."},
   "_modelPropertyCitationsComment": "Per-(model, property) provenance: cites the specific piece of literature that establishes a given property value for a given model, overriding the coarser per-model modelPropertyProvenance and per-column propertyProvenance. Keyed model id -> property key -> { ref (a key into references), note (optional) }. Absent cells fall back to the column/model provenance.",
@@ -3706,6 +3728,11 @@
     },
     "ARMv8": {
       "mca": {"ref": "Pulte2018", "note": "Pulte et al. give ARMv8 an explicitly multicopy-atomic semantics — the revised architecture (and this paper's title) fixes each write to become visible to all other threads at a single point."}
+    },
+    "Promising": {
+      "comp_armv8": {"ref": "Lee2020", "note": "The survey's single PRM row merges PS 1.0 and 2.0. Under PS 1.0 the intended ARMv8 mapping of relaxed RMWs is unsound and needs an extra ld fence (Lee et al. 2020, §1 fn. 1; the FADD load-buffering of Chakraborty & Vafeiadis 2019, Fig. 6), so the optimal mapping is not sound."},
+      "rp": {"ref": "Lee2020", "note": "Register promotion is one of the global optimisations PS 2.0 was introduced to support; PS 1.0's certification against all future memories does not validate it (Lee et al. 2020, §§2–3). The survey's merged PRM row reports the 2.0 result."},
+      "vr": {"ref": "Lee2020", "note": "Transformations based on global value-range analysis are, like register promotion, a PS 2.0 result that PS 1.0 does not validate (Lee et al. 2020, §§2–3). The survey's merged PRM row reports the 2.0 result."}
     },
     "RVWMO": {
       "mca": {"ref": "RISCV2019", "note": "The RISC-V RVWMO chapter specifies the model to be multicopy atomic — a store's visibility to all other harts is a single global event."}
@@ -3758,6 +3785,7 @@
     "RC17": {"status": "specified", "basis": "cat-model", "ref": "Cooksey2025", "note": "Mechanised as litmus/models/cpp/rc17.cat (vendored from gonzalobg/cpp_memory_model, herd7-checked)."},
     "IMM": {"status": "expressible", "basis": "extrapolated", "ref": "Podkopaev2019", "note": "Declarative by construction: acyclicity and irreflexivity axioms over one candidate execution, mechanised in Coq. The axioms transcribe to cat directly, but no cat file accompanies the development."},
     "Promising": {"status": "not-expressible", "basis": "cited", "ref": "Podkopaev2019", "note": "A promise is legal only if the promising thread can certify it by a future thread-local execution, so whether one execution is allowed depends on other executions — not statable as a per-execution cat predicate. IMM was introduced precisely to give Promising a declarative over-approximation."},
+    "Promising2": {"status": "not-expressible", "basis": "cited", "ref": "Lee2020", "note": "Certification still quantifies over a thread-local future execution (now against the capped memory), so whether one execution is allowed depends on other executions — not statable as a per-execution cat predicate. Its compilation proof goes through IMM, the declarative model that stands in for it."},
     "MRD": {"status": "not-expressible", "basis": "cited", "ref": "Paviotti2020", "note": "Dependencies are computed denotationally over an event structure that holds many conflicting executions at once; the verdict is not a filter on a single candidate execution. Checked by MoRDor rather than herd7."},
     "sMRD": {"status": "not-expressible", "basis": "cited", "ref": "Richards2025", "note": "Same event-structure/denotational shape as MRD, with symbolic addresses on top; no per-candidate-execution predicate to encode in cat."},
     "OD-LSO": {"status": "expressible", "basis": "extrapolated", "ref": "Ou2018", "note": "The criterion is literally a cat axiom: acyclic(sb | rf)."},

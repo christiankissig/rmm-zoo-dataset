@@ -1,0 +1,8 @@
+{
+  "from": "Promising",
+  "to": "IMM",
+  "type": "compilation",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Podkopaev, Lahav & Vafeiadis (POPL 2019) prove in Coq that compilation from the Promising Semantics to IMM is correct, and from there to x86-TSO, POWER and ARMv8. On ARMv8, PS 1.0's relaxed RMWs need an extra ld fence, because the intended mapping is unsound (the FADD load-buffering, Chakraborty & Vafeiadis 2019 Fig. 6). PS 2.0 removes that fence."
+}

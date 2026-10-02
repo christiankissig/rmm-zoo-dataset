@@ -1,8 +1,0 @@
-{
-  "from": "Promising",
-  "to": "CSRA",
-  "type": "incomparable",
-  "provenance": "literature",
-  "evidence": "cited",
-  "note": "Both are semantic-dependency-preserving models avoiding thin-air; CSRA's compilation to x86 and POWER is sound, but unlike Promising its mappings to ARMv7/ARMv8 were later shown non-optimal. Neither contains the other."
-}

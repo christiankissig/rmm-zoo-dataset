@@ -653,7 +653,7 @@
   },
   "C11|Promising": {
     "relationship": "incomparable",
-    "summary": "Promising Semantics is an operational relaxed-memory model (threads may make a \"promise\" to write a value in the future and must later certify it). It is not a herd7 cat model, so neither side is exhibited in herd7 here; results are cited.",
+    "summary": "This edge is about PS 1.0 (Kang et al., POPL 2017), the Promising node. PS 2.0 (Promising2) is its own node and has no edge to C11 yet.",
     "tests": [
       {
         "name": "LB-oota",
@@ -792,18 +792,6 @@
         "file": "MP+scoped.litmus",
         "lang": "smrd",
         "code": "C MP+scoped\n\"PTX and AMD-GPU (HSA) are both scoped release-consistency ISA models. On their\n COMMON feature set -- a scoped release/acquire message pass -- they agree, exactly\n as herd's arm.cat and ppc.cat agree on the common instruction set (see\n ../ARM-vs-POWER). This file is that shared shape: a release/acquire MP at a scope\n the producer and consumer share is FORBIDDEN in both; narrowed below the shared\n scope it is ALLOWED in both. The incomparability is at the FEATURE level, not in\n this reordering -- see README for the two feature-specific witnesses:\n\n   PTX allows, AMD has no counterpart:\n     ld/st with the PTX .cta / .cluster scope and the proxy/membar.proxy fences\n     (alias ordering between the generic and surface/texture proxies).\n   AMD allows, PTX has no counterpart:\n     loads/stores carrying HSA cache-control qualifiers (.glc global-coherent,\n     .slc system-level-coherent / .dlc) and the work-group vs agent scope split,\n     which order cache traffic in ways PTX's scope-only model does not express.\n\n herd7 ships neither model; this shared-feature shape is shown with relaxed atomics\n (=> Sometimes is the sub-scope behaviour both allow). See README.\"\n{ int x=0; int f=0; }\nP0 (atomic_int* x, atomic_int* f) {\n  atomic_store_explicit(x,1,memory_order_relaxed);\n  atomic_store_explicit(f,1,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* f) {\n  int r0 = atomic_load_explicit(f,memory_order_relaxed);\n  int r1 = atomic_load_explicit(x,memory_order_relaxed);\n}\nexists (1:r0=1 /\\ 1:r1=0)\n"
-      }
-    ]
-  },
-  "Promising|CSRA": {
-    "relationship": "incomparable",
-    "summary": "The Promising Semantics (Kang et al., POPL 2017) and CSRA -- A Concurrency Semantics for Relaxed Atomics that Permits Optimisation and Avoids Thin-Air Executions (Pichon-Pharabod & Sewell, POPL 2016) -- are both thin-air-free C/C++ relaxed models on different machines: Promising uses timestamps/promises/ certification; CSRA pairs a POWER-like (non-multi-copy-atomic) memory subsystem with per-thread event structures. Neither supports SC accesses, so an SC litmus cannot separate them. The survey classes both as semantic-dependency preserving and the two are incomparable -- though only one direction has a concrete published program.",
-    "tests": [
-      {
-        "name": "LB+FADD",
-        "file": "LB+FADD.litmus",
-        "lang": "smrd",
-        "code": "C LB+FADD\n\"CSRA allows, Promising (1.0) forbids -- the relaxed-RMW load buffering of\n 'Bridging the Gap' Example 3.10. P0 reads y into a and writes z=a; P1 reads z\n into b, does c=fetch_add(x,1), and writes y=c+1. Target a=1 /\\ b=1 /\\ c=0.\n CSRA ALLOWS it: its POWER-like, non-multi-copy-atomic storage subsystem admits\n the whole load-buffering family (CSRA supports RMWs; see CSRA section 8).\n Promising 1.0 FORBIDS it: realising y=1 needs a promise of y=1 that fails\n certification under future-memory quantification -- the same uncertifiable-RMW\n mechanism documented as the PS-1.0 -> ARMv8 compilation unsoundness. (Promising\n 2.0 repairs the RMW case, narrowing this separation.) Neither model is in\n herd7; verdicts CITED. This file documents the shape. See README.\"\n{ int x=0; int y=0; int z=0; }\nP0 (atomic_int* x, atomic_int* y, atomic_int* z) {\n  int a = atomic_load_explicit(y,memory_order_relaxed);\n  atomic_store_explicit(z,a,memory_order_relaxed);\n}\nP1 (atomic_int* x, atomic_int* y, atomic_int* z) {\n  int b = atomic_load_explicit(z,memory_order_relaxed);\n  int c = atomic_fetch_add_explicit(x,1,memory_order_relaxed);\n  atomic_store_explicit(y,c+1,memory_order_relaxed);\n}\nexists (0:a=1 /\\ 1:b=1 /\\ 1:c=0)\n"
       }
     ]
   },

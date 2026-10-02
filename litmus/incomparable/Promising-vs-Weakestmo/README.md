@@ -27,6 +27,12 @@ forces a different `Y`). This is exactly the unsoundness that forced a `dmb.ld`
 after every RMW in the Promising->ARMv8 compilation (Podkopaev et al., POPL 2019).
 
 Because each model allows a behaviour the other forbids, they are incomparable.
+
+This edge is about **PS 1.0**, the model the Weakestmo paper compares against.
+PS 2.0 (`Promising2`, Lee et al., PLDI 2020) added *reservations* to fix the
+RMW mapping problem that FADD exposes, so its compilation to ARMv8 needs no extra
+fence after RMWs. Whether Direction 2 still separates PS 2.0 from Weakestmo is
+not established, so `Promising2` has no edge to Weakestmo.
 (Orthogonally, the survey notes Promising 1.0 lacks SC accesses while Weakestmo
 supports them -- a feature gap -- but FADD and Coh-CYC are the clean behavioural
 witnesses.)

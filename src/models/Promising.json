@@ -1,16 +1,21 @@
 {
   "id": "Promising",
-  "name": "Promising Semantics",
+  "name": "Promising Semantics 1.0",
   "abbrev": "PS",
   "year": 2017,
   "authors": ["Kang", "Hur", "Lahav", "Vafeiadis", "Dreyer"],
-  "description": "An operational model for relaxed memory based on the notion of thread-local 'promises': a thread may promise a future write and later fulfil it. Eliminates thin-air values, supports DRF-SC, and can express optimisation-friendly behaviour. Extended to PS 2.0 for mixed-size and non-atomic accesses.",
-  "references": ["Kang2017", "Lee2020"],
+  "description": "An operational model for relaxed memory based on the notion of thread-local 'promises': a thread may promise a future write, provided it can certify the promise by a thread-local execution under every possible future memory. Eliminates thin-air values, supports DRF guarantees and validates the standard thread-local optimisations, but not global ones such as register promotion or value-range analysis, and its relaxed RMWs need an extra fence on ARMv8. Has no SC accesses. Superseded by PS 2.0, which redesigns certification.",
+  "references": ["Kang2017"],
   "tags": ["language", "formal", "operational"],
   "formalism": ["operational"],
   "hardware": [],
   "languages": [],
-  "properties": {"comp_x86": true, "comp_power": true, "comp_armv7": true, "comp_armv8": true, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": true, "ile": true, "sli": true, "rm": true, "strengthen": true, "tp": true, "cse": true, "rp": true, "ti": false, "vr": true, "edrf": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
-  "propertyProvenance": "survey",
+  "properties": {"comp_x86": true, "comp_power": true, "comp_armv7": true, "comp_armv8": false, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": true, "ile": true, "sli": true, "rm": true, "strengthen": true, "tp": true, "cse": true, "rp": false, "ti": false, "vr": false, "edrf": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
+  "propertyProvenance": "extrapolated",
+  "propertyCitations": {
+    "comp_armv8": {"ref": "Lee2020", "note": "The survey's single PRM row merges PS 1.0 and 2.0. Under PS 1.0 the intended ARMv8 mapping of relaxed RMWs is unsound and needs an extra ld fence (Lee et al. 2020, §1 fn. 1; the FADD load-buffering of Chakraborty & Vafeiadis 2019, Fig. 6), so the optimal mapping is not sound."},
+    "rp": {"ref": "Lee2020", "note": "Register promotion is one of the global optimisations PS 2.0 was introduced to support; PS 1.0's certification against all future memories does not validate it (Lee et al. 2020, §§2–3). The survey's merged PRM row reports the 2.0 result."},
+    "vr": {"ref": "Lee2020", "note": "Transformations based on global value-range analysis are, like register promotion, a PS 2.0 result that PS 1.0 does not validate (Lee et al. 2020, §§2–3). The survey's merged PRM row reports the 2.0 result."}
+  },
   "catSupport": {"status": "not-expressible", "basis": "cited", "ref": "Podkopaev2019", "note": "A promise is legal only if the promising thread can certify it by a future thread-local execution, so whether one execution is allowed depends on other executions — not statable as a per-execution cat predicate. IMM was introduced precisely to give Promising a declarative over-approximation."}
 }

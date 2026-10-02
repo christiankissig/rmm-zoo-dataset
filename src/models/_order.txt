@@ -27,6 +27,7 @@ C++17
 RC17
 IMM
 Promising
+Promising2
 MRD
 sMRD
 OD-LSO

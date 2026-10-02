@@ -1,5 +1,8 @@
 # C11 ↔ Promising  (incomparable)
 
+This edge is about **PS 1.0** (Kang et al., POPL 2017), the `Promising` node.
+PS 2.0 (`Promising2`) is its own node and has no edge to C11 yet.
+
 Promising Semantics is an *operational* relaxed-memory model (threads may make a
 "promise" to write a value in the future and must later certify it). It is not a
 herd7 `cat` model, so neither side is exhibited in herd7 here; results are cited.
@@ -25,8 +28,8 @@ it cannot *build* an OOTA execution, not that C11 forbids it.)
 
 Promising was designed to be sound for a *larger* set of compiler optimisations
 than the C11 axioms permit. Its promise mechanism legitimises certain
-read-after-write and reordering outcomes (e.g. results of register promotion /
-redundant-load elimination across relaxed atomics) that the per-execution C11
+read-after-write and reordering outcomes (e.g. results of redundant-load
+elimination across relaxed atomics) that the per-execution C11
 model rejects. These are the behaviours Promising adds in the other direction,
 making the two genuinely incomparable rather than one a subset of the other.
 

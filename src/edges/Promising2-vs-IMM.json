@@ -1,0 +1,8 @@
+{
+  "from": "Promising2",
+  "to": "IMM",
+  "type": "compilation",
+  "provenance": "literature",
+  "evidence": "cited",
+  "note": "Lee et al. (PLDI 2020), Theorem 6.9, mechanised in Coq: Beh_PS2.0(P) ⊇ Beh_IMM(P), so the mappings already proved correct from IMM (x86-TSO, POWER, ARMv7, ARMv8, RISC-V) are correct from PS 2.0, without PS 1.0's extra fence after RMWs. The mechanised proof needs a control dependency from the read part of each RMW, which relaxed fetch-and-adds must fake on ARMv8 (§6.5)."
+}

@@ -114,8 +114,7 @@ A few honest caveats, all detailed in the per-pair READMEs:
   model's own artifact, following the same convention as `MRD-vs-C11` and
   `C11-vs-Promising`. A few separations are *reasoning-guarantee* differences
   (external DRF) or transformation-soundness differences rather than single
-  litmus outcomes (`C11-vs-GOS`, `C11-vs-RAO`, `C11-vs-TSC`, `Promising-vs-CSRA`
-  direction 2); those READMEs say so explicitly.
+  litmus outcomes (`C11-vs-GOS`, `C11-vs-RAO`, `C11-vs-TSC`); those READMEs say so explicitly.
 
 * **`ARM ↔ POWER` and `ARMv8 ↔ RVWMO` coincide on the common instruction set.**
   herd7's `arm.cat`/`ppc.cat` (resp. `aarch64.cat`/`riscv.cat`) agree on every

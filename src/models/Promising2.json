@@ -1,0 +1,16 @@
+{
+  "id": "Promising2",
+  "name": "Promising Semantics 2.0",
+  "abbrev": "PS 2.0",
+  "year": 2020,
+  "authors": ["Lee", "Cho", "Podkopaev", "Chakraborty", "Hur", "Lahav", "Vafeiadis"],
+  "description": "A redesign of the Promising Semantics' certification: promises are certified against a single 'capped' future memory rather than every future memory, and threads may reserve timestamp space for later RMWs. Keeps every PS 1.0 result (thread-local optimisations, hardware mappings, DRF theorems) and additionally validates global optimisations, namely register promotion and transformations based on value-range analysis. It also removes the extra fence that PS 1.0's relaxed RMWs needed on ARMv8. Compilation to x86-TSO, POWER, ARMv7, ARMv8 and RISC-V goes through IMM and is proved in Coq. Like PS 1.0 it has no SC accesses.",
+  "references": ["Lee2020", "Kang2017"],
+  "tags": ["language", "formal", "operational"],
+  "formalism": ["operational"],
+  "hardware": [],
+  "languages": [],
+  "properties": {"comp_x86": true, "comp_power": true, "comp_armv7": true, "comp_armv8": true, "reorder_sl": true, "reorder_ss": true, "reorder_ll": true, "reorder_ls": true, "elim_sl": true, "elim_ss": true, "elim_ll": true, "elim_ls": true, "ile": true, "sli": true, "rm": true, "strengthen": true, "tp": true, "cse": true, "rp": true, "ti": false, "vr": true, "edrf": true, "coh": true, "no_ub": true, "in_order": false, "no_oota": true, "mca": false},
+  "propertyProvenance": "survey",
+  "catSupport": {"status": "not-expressible", "basis": "cited", "ref": "Lee2020", "note": "Certification still quantifies over a thread-local future execution (now against the capped memory), so whether one execution is allowed depends on other executions — not statable as a per-execution cat predicate. Its compilation proof goes through IMM, the declarative model that stands in for it."}
+}

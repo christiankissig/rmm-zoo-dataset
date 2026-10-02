@@ -256,7 +256,7 @@
     "authors": ["Sung-Hwan Lee", "Minki Cho", "Anton Podkopaev", "Soham Chakraborty", "Chung-Kil Hur", "Ori Lahav", "Viktor Vafeiadis"],
     "venue": "PLDI 2020",
     "year": 2020,
-    "doi": "10.1145/3385412.3386000"
+    "doi": "10.1145/3385412.3386010"
   },
   "Paviotti2020": {
     "title": "Modular Relaxed Dependencies in Weak Memory Concurrency",
