@@ -12,6 +12,8 @@ Each released version is published at
 
 ## [Unreleased]
 
+## [1.5.0] — 2026-10-02
+
 ### Added
 
 - **Every witness in `litmus.json` names its `tool`**: `herd7`, `mordor`,
@@ -417,7 +419,8 @@ once carried live in `rmm-zoo-tool-paper` and `rmm-zoo.kissig.org`, and the
 history was squashed at the split. Releases before 1.2.0 were made from the
 combined repository and are not itemised here.
 
-[Unreleased]: https://github.com/christiankissig/rmm-zoo-dataset/compare/v1.4.1...HEAD
+[Unreleased]: https://github.com/christiankissig/rmm-zoo-dataset/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/christiankissig/rmm-zoo-dataset/compare/v1.4.1...v1.5.0
 [1.4.1]: https://github.com/christiankissig/rmm-zoo-dataset/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/christiankissig/rmm-zoo-dataset/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/christiankissig/rmm-zoo-dataset/compare/v1.2.0...v1.3.0
