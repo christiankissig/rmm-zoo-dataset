@@ -39,9 +39,9 @@ The same separation appears in sMRD's over-alignment (Example 1.3,
 
 ## Running
 
-Neither model has a herd7 `cat` formalisation, and no sMRD/mordor checker is
+Neither model has a herd7 `cat` formalisation, and no sMRD/MoRDor checker is
 bundled in this repository, so **both verdicts are cited, not machine-run.**
-`LB+UB+data.lit` carries the mordor-family program with the embedded
+`LB+UB+data.lit` carries the MoRDor-family program with the embedded
 `allow (r0 = 1 && r1 = 1)` (sMRD's verdict; MRD forbids the same outcome).
 
 For completeness the C rendering runs in herd7 (with `1/!r1` written as the

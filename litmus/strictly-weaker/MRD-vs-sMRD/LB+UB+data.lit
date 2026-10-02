@@ -1,4 +1,4 @@
-// sMRD Example 1.1a (mordor-family syntax): load buffering with a FALSE
+// sMRD Example 1.1a (MoRDor-family syntax): load buffering with a FALSE
 // dependency masked by undefined behaviour. The store to y is guarded by a
 // computation (1/!r1) that is DEFINED only when r1 == 0; a compiler may assume
 // well-definedness, constant-fold the store to y := 1, and break the

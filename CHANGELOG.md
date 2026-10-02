@@ -14,6 +14,11 @@ Each released version is published at
 
 ### Added
 
+- **Every witness in `litmus.json` names its `tool`**: `herd7`, `mordor`,
+  `kater`, `java` or `ocaml`. An edge could already carry several witnesses for
+  different tools, but which tool ran one was implied only by its file extension.
+  Now a consumer can group them without guessing. The field is additive, and
+  `tests`/`kater` keep their shape.
 - **`Promising2` (PS 2.0, Lee et al., PLDI 2020)**, split out of `Promising`, which
   now stands for PS 1.0 (Kang et al., POPL 2017) alone. The survey's single
   `PRM [17, 18]` row merges the two papers, and its values are PS 2.0's, so

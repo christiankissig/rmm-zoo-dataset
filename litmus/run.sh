@@ -6,7 +6,7 @@
 # Usage:  ./run.sh            # run all
 #         ./run.sh -v         # also echo each herd7 command
 #
-# The Java / OCaml / mordor tests are NOT run here (different toolchains); see the
+# The Java / OCaml / MoRDor tests are NOT run here (different toolchains); see the
 # per-pair READMEs.  Tests that require a model herd7 does not ship (IMM,
 # Promising) are listed at the end as SKIP with a pointer to their README.
 
@@ -225,14 +225,14 @@ echo "Summary: $pass passed, $fail failed."
 echo
 echo "Not run here (see per-pair READMEs):"
 echo "  strictly-weaker/SC-vs-Java   -> javac SB.java && java SB"
-echo "  strictly-weaker/MRD-vs-C11   -> mordor (forbids OOTA); C11 permits it"
+echo "  strictly-weaker/MRD-vs-C11   -> MoRDor (forbids OOTA); C11 permits it"
 echo "  incomparable/Java-vs-OCaml   -> java SB / ocaml sb.ml + literature"
 echo "  incomparable/RC11-vs-IMM     -> needs the IMM Coq artifact (not in herd7)"
 echo "  incomparable/C11-vs-Promising-> needs the Promising tool (not in herd7)"
 echo "  strictly-weaker/HRF-vs-ScopedC11 -> scope-matching rule; memalloy + literature"
 echo "  incomparable/PTX-vs-AMDGPU   -> no scoped arch in herd7; memalloy + literature"
 echo "  incomparable/OpenCL-vs-Vulkan-> no scoped arch in herd7; memalloy + literature"
-echo "  strictly-weaker/MRD-vs-sMRD  -> mordor-family; false-dependency optimisation (cited)"
+echo "  strictly-weaker/MRD-vs-sMRD  -> MoRDor-family; false-dependency optimisation (cited)"
 echo "  strictly-weaker/RC11-vs-JAM  -> JAM Coq artifact; thin-air at plain mode (cited)"
 echo "  strictly-weaker/Weakestmo-vs-C11 -> event-structure model (cited; reclassified from incomparable)"
 echo "  incomparable/Java-vs-OHMM    -> JMM/OHMM operational models (cited)"

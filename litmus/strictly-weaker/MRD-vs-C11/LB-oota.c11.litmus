@@ -2,7 +2,7 @@ C LB-oota
 "Out-of-thin-air load buffering. C11 relaxed atomics permit r1=r2=42 (the
  standard fails to forbid it). herd cannot *exhibit* OOTA executions, so it
  reports Never here; the permission is a property of the C11 axioms, not of
- what herd enumerates. See the README and the mordor (.lit) companion."
+ what herd enumerates. See the README and the MoRDor (.lit) companion."
 { int x=0; int y=0; }
 P0 (atomic_int* x, atomic_int* y) {
   int r1 = atomic_load_explicit(x,memory_order_relaxed);

@@ -27,7 +27,7 @@ atomics compilation mappings and the ISO semantic-dependency desiderata, it does
 not lose any non-thin-air behaviour, so the only separating outcomes are OOTA
 ones -- making C11 strictly weaker.
 
-A mordor-syntax companion `LB-oota.lit` encodes the same value-invention shape
+A MoRDor-syntax companion `LB-oota.lit` encodes the same value-invention shape
 with the embedded assertion `forbid (r0 = 42 && r1 = 42)`, matching the MRD/sMRD
 `avoidoota` test style.
 
@@ -43,7 +43,7 @@ herd7 -c11 LB-oota.litmus     # Observation LB-oota Never 0 4
 
 `Never` here reflects the tool's inability to build the execution, not a C11
 prohibition -- the permission is a property of the C11 axioms as written. On the
-sMRD side, no sMRD/mordor checker is bundled in this repository, so the
+sMRD side, no sMRD/MoRDor checker is bundled in this repository, so the
 `forbid (r0 = 42 && r1 = 42)` verdict on `LB-oota.lit` is documented from the
 paper rather than machine-run.
 

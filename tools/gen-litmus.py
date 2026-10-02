@@ -19,10 +19,16 @@ Output shape, keyed by "<from>|<to>" (matching the edge endpoints in src/edges/)
         "relationship": "strictly-weaker",
         "summary": "<first prose paragraph of the pair's README.md>",
         "tests": [ { "name": "SB", "file": "SB.litmus", "lang": "smrd",
-                     "code": "<verbatim file contents>" } ],
+                     "tool": "herd7", "code": "<verbatim file contents>" } ],
         "kater": [ { "name": "strictly-weaker-SC-vs-TSO", "file": "...kat",
-                     "lang": "none", "summary": "<the query's header comment>",
+                     "lang": "none", "tool": "kater",
+                     "summary": "<the query's header comment>",
                      "code": "<verbatim file contents>" } ] } }
+
+Every entry names the `tool` that runs it, so a pair can carry witnesses for
+several tools side by side (a herd7 test and a MoRDor test, say) and a consumer
+can group them without guessing from the extension. `tests` holds the witnesses
+and `kater` the proofs, as before.
 """
 import json
 import re
@@ -43,15 +49,15 @@ RELATIONSHIPS = ["strictly-weaker", "incomparable"]
 KATER_DIR = LITMUS_DIR / "kater" / "queries"
 KATER_TYPES = ["strictly-weaker", "incomparable", "equivalent", "compilation"]
 
-# File extension -> Prism language. ".lit" is sMRD/MoRDor and ".litmus" is
-# herd7 assembly; both use the bundled `smrd` grammar (its own alias is
-# `litmus`). ".cat" has no grammar -> plain. Unknown extensions -> plain.
+# File extension -> (Prism language, the tool that runs it). ".lit" is
+# sMRD/MoRDor and ".litmus" is herd7 assembly; both use the bundled `smrd`
+# grammar (its own alias is `litmus`). ".cat" has no grammar -> plain.
 TEST_EXTS = {
-    ".lit": "smrd",
-    ".litmus": "smrd",
-    ".java": "java",
-    ".ml": "ocaml",
-    ".cat": "none",
+    ".lit": ("smrd", "mordor"),
+    ".litmus": ("smrd", "herd7"),
+    ".java": ("java", "java"),
+    ".ml": ("ocaml", "ocaml"),
+    ".cat": ("none", "herd7"),
 }
 
 
@@ -138,6 +144,7 @@ def kater_queries(ids, warnings):
             "name": stem,
             "file": f.name,
             "lang": "none",
+            "tool": "kater",
             "relationship": rel,
             "summary": header_summary(f),
             "code": f.read_text(),
@@ -174,11 +181,14 @@ def main():
                 if ext not in TEST_EXTS:
                     warnings.append(f"unhandled extension: {rel}/{pair_dir.name}/{f.name}")
                     continue
+                lang, tool = TEST_EXTS[ext]
+                code = f.read_text()
                 tests.append({
                     "name": test_name(f.name),
                     "file": f.name,
-                    "lang": TEST_EXTS[ext],
-                    "code": f.read_text(),
+                    "lang": lang,
+                    "tool": tool,
+                    "code": code,
                 })
 
             if not tests:

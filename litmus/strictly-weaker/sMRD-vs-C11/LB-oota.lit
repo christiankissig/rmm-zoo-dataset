@@ -2,7 +2,7 @@
 // The value 42 can only appear by speculating it into existence. C11's relaxed
 // atomics permit (r0 = 42 && r1 = 42); Symbolic MRD forbids it (semantic
 // dependency from each read to its dependent write closes a cycle in rf u sd).
-// Cited from the OOPSLA 2025 paper; no sMRD/mordor checker is bundled here.
+// Cited from the OOPSLA 2025 paper; no sMRD/MoRDor checker is bundled here.
 x := 0; y := 0;
 {
   r0 := y;

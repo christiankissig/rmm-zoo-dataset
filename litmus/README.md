@@ -13,7 +13,7 @@ suite). A handful use other systems where herd7 has no suitable model:
 | System | Used for | How |
 |---|---|---|
 | herd7 | most hardware + C11/RC11 edges | `herd7 -model <model>.cat test.litmus` |
-| [mordor](../../mordor) | the MRD (thin-air) side | `mordor run --single test.lit` |
+| [MoRDor](https://github.com/christiankissig/mordor) | the MRD (thin-air) side | `mordor run --single test.lit` |
 | Java (JDK) | `SC → Java` | `javac SB.java && java SB` |
 | OCaml ≥ 5 | `Java ↔ OCaml` | `ocaml sb.ml` |
 | herd7 `-c11` (relaxed model) | scoped GPU edges `C11 → {OpenCL, CUDA, HRF}` | cross-scope sync ≡ `relaxed`; see those READMEs |
@@ -36,6 +36,14 @@ litmus/
 (`from` = stronger, `to` = weaker). Each directory has its own `README.md` with
 the exact commands and expected output.
 
+A directory can hold several witnesses, and they need not all be for the same
+tool. The extension says which tool runs a test: `.litmus` (and `.cat`) for
+herd7, `.lit` for MoRDor, `.java` and `.ml` for the JDK and OCaml. `make litmus`
+records the tool on every entry of `litmus.json`, and the site's viewer groups
+an edge's witnesses by it. kater queries live in `kater/queries/` and are listed
+under the `kater` tool. The viewer can open a MoRDor test in a running
+MoRDor web frontend (`mordor-web`), with the program already loaded.
+
 ## Quick start
 
 ```sh
@@ -46,7 +54,7 @@ eval $(opam env)
 
 Expected: `65 passed, 0 failed`. The suite runs on every push and pull request
 (see [`.github/workflows/litmus.yml`](../.github/workflows/litmus.yml)). The
-Java/OCaml/mordor tests, and the research-model pairs that have no herd7 model
+Java/OCaml/MoRDor tests, and the research-model pairs that have no herd7 model
 (see below), are run or documented from their own directories (see those
 READMEs).
 
@@ -77,7 +85,7 @@ A few honest caveats, all detailed in the per-pair READMEs:
 * **herd7 cannot exhibit out-of-thin-air (OOTA) executions.** Its candidate
   generation ties read values to actual stores, so OOTA outcomes never appear.
   This affects `MRD → C11` (the difference between them *is* thin-air): the MRD
-  side is checked in mordor (which forbids it); the C11 permission is a property
+  side is checked in MoRDor (which forbids it); the C11 permission is a property
   of the standard's axioms, cited rather than exhibited.
 
 * **`PSO ↔ POWER` was not actually incomparable, and has been reclassified.**
